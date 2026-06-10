@@ -190,17 +190,21 @@ main(int argc, char* argv[])
         maxUtil = std::max({maxUtil, u0, u1});
     }
 
-    // --- packet loss via FlowMonitor ---
+    // --- QoS metrics via FlowMonitor: loss, delay, delivered throughput ---
     fm->CheckForLostPackets();
     auto stats = fm->GetFlowStats();
-    uint64_t txP = 0, rxP = 0, lostP = 0;
+    uint64_t txP = 0, rxP = 0, rxBytes = 0;
+    double delaySumS = 0.0;
     for (auto& kv : stats)
     {
         txP += kv.second.txPackets;
         rxP += kv.second.rxPackets;
-        lostP += kv.second.lostPackets;
+        rxBytes += kv.second.rxBytes;
+        delaySumS += kv.second.delaySum.GetSeconds();
     }
     double lossPct = (txP > 0) ? 100.0 * (double)(txP - rxP) / txP : 0.0;
+    double meanDelayMs = (rxP > 0) ? 1000.0 * delaySumS / rxP : 0.0;
+    double throughputMbps = rxBytes * 8.0 / (window * 1e6);
 
     json out;
     out["routing"] = routing;
@@ -209,14 +213,17 @@ main(int argc, char* argv[])
     out["rx_packets"] = rxP;
     out["lost_packets"] = (txP >= rxP) ? (txP - rxP) : 0;
     out["loss_pct"] = lossPct;
+    out["mean_delay_ms"] = meanDelayMs;
+    out["throughput_mbps"] = throughputMbps;
     out["link_utils"] = linkUtils;
     std::ofstream so(statePath);
     so << out.dump(2) << std::endl;
 
     std::cout << "\n=== " << routing << " ===\n"
               << "  max offered util: " << std::fixed << std::setprecision(1) << maxUtil << "%\n"
-              << "  tx=" << txP << " rx=" << rxP
-              << " loss=" << std::setprecision(2) << lossPct << "%\n"
+              << "  loss=" << std::setprecision(2) << lossPct << "%"
+              << "  mean delay=" << meanDelayMs << " ms"
+              << "  throughput=" << std::setprecision(0) << throughputMbps << " Mbps\n"
               << "  -> " << statePath << "\n";
 
     Simulator::Destroy();
