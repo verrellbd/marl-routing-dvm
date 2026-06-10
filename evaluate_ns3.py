@@ -7,6 +7,7 @@ delay, delivered throughput. Aggregates OSPF vs GNN as mean ± std.
 
 This makes ns-3 (not the analytical model) the judge of the result.
 """
+import argparse
 import json
 import subprocess
 from pathlib import Path
@@ -28,10 +29,15 @@ K_PATHS = 3
 OVERLOAD_SEEDS = [1009, 1013, 1018]
 FEASIBLE_SEEDS = [1004, 1011, 1008]
 TEST_SEEDS = OVERLOAD_SEEDS + FEASIBLE_SEEDS
-MODEL = "results/generalization/gnn_generalist"
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--model", default="results/generalization/gnn_generalist")
+_ap.add_argument("--tag", default="", help="suffix for output dir (e.g. _qos)")
+_ARGS, _ = _ap.parse_known_args()
+
+MODEL = _ARGS.model
 NS3_DIR = Path("~/thesis/ns-3-dev").expanduser()
 RATESCALE, SIMTIME = 20, 8
-OUT = Path("~/thesis/results/ns3_eval").expanduser().resolve(); OUT.mkdir(parents=True, exist_ok=True)
+OUT = Path(f"~/thesis/results/ns3_eval{_ARGS.tag}").expanduser().resolve(); OUT.mkdir(parents=True, exist_ok=True)
 
 
 def gnn_paths_for(model, env, pairs, pair_paths, rates):

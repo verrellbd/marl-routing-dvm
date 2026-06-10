@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+"""
+Train a QoS-aware GNN generalist: reward = -(marginal max-util) - delay_penalty*(extra hops).
+The delay term makes the policy prefer SHORT paths when the network is uncongested
+(matching OSPF delay) and detour only to relieve congestion -> aim for strict
+dominance over OSPF (big loss/delay cuts under overload, no penalty when feasible).
+
+Heavier run than the first generalist: more timesteps. Trains on a distribution of
+gravity matrices (seeds 0-29), saves to results/generalization_qos/.
+"""
+import json
+from pathlib import Path
+
+import numpy as np
+from stable_baselines3 import PPO
+
+from marl_routing.traffic import generate_matrix
+from marl_routing.topology import load as load_topology
+from marl_routing.sequential_routing_env import MultiTrafficSequentialEnv
+from marl_routing.gnn_extractor import SeqGNNExtractor
+
+TOPO = "abilene"
+LOAD_FACTOR = 3.0
+K_PATHS = 3
+DELAY_PENALTY = 0.5
+TIMESTEPS = 250_000
+TRAIN_SEEDS = list(range(0, 30))
+RESULTS = Path("results/generalization_qos"); RESULTS.mkdir(parents=True, exist_ok=True)
+
+
+def main():
+    topo = load_topology(TOPO); n = topo.n_nodes
+    pairs = [(i, j) for i in range(n) for j in range(n) if i != j]
+    train_mats = [np.array([generate_matrix(TOPO, LOAD_FACTOR, seed=s)[a, b] for a, b in pairs])
+                  for s in TRAIN_SEEDS]
+
+    env = MultiTrafficSequentialEnv(TOPO, pairs, train_mats, k_paths=K_PATHS, seed=0,
+                                    delay_penalty=DELAY_PENALTY)
+    print(f"[train] QoS reward (delay_penalty={DELAY_PENALTY}), {TIMESTEPS} steps, "
+          f"{len(train_mats)} train matrices")
+
+    policy_kwargs = {
+        "features_extractor_class": SeqGNNExtractor,
+        "features_extractor_kwargs": {
+            "n_nodes": n, "n_arcs": env.n_arcs, "arc_list": env.arcs, "hidden_dim": 64},
+    }
+    model = PPO("MlpPolicy", env, learning_rate=3e-4, n_steps=2048, batch_size=256,
+                n_epochs=10, gamma=0.995, gae_lambda=0.95, ent_coef=0.01,
+                device="cpu", policy_kwargs=policy_kwargs, verbose=0)
+    model.learn(total_timesteps=TIMESTEPS, progress_bar=True)
+    model.save(RESULTS / "gnn_generalist_qos")
+    print(f"\n[saved] {RESULTS/'gnn_generalist_qos'}.zip")
+
+    # quick analytical check on a few held-out matrices vs OSPF
+    print("\n[analytical check on held-out seeds]")
+    for seed in [1009, 1018, 1004, 1011]:
+        T = generate_matrix(TOPO, LOAD_FACTOR, seed=seed)
+        rates = np.array([T[a, b] for a, b in pairs])
+        ospf = env.ospf_max_util(rates)
+        env.set_matrix(rates); obs, _ = env.reset(); done = False
+        while not done:
+            a, _ = model.predict(obs, deterministic=True); obs, _, done, _, info = env.step(a)
+        print(f"  seed {seed}: OSPF util {ospf:.1f}%  ->  GNN-QoS util {info['max_util']:.1f}%")
+
+
+if __name__ == "__main__":
+    main()

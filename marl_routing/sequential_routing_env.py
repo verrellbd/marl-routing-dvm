@@ -183,10 +183,15 @@ class MultiTrafficSequentialEnv(gym.Env):
 
     metadata = {"render_modes": []}
 
-    def __init__(self, topo_name: str, pairs, matrices, k_paths: int = 3, seed: int = 0):
+    def __init__(self, topo_name: str, pairs, matrices, k_paths: int = 3, seed: int = 0,
+                 delay_penalty: float = 0.0):
         self.topo_name = topo_name
         self.topo = load_topology(topo_name)
         self.k_paths = k_paths
+        # QoS-aware reward: penalize each extra hop over the shortest path, so the
+        # agent prefers short paths when uncongested and only detours to relieve
+        # congestion. delay_penalty=0 recovers the pure max-util objective.
+        self.delay_penalty = delay_penalty
         self.pairs = list(pairs)
         self.matrices = [np.asarray(m, dtype=np.float64) for m in matrices]
         self._rng = np.random.RandomState(seed)
@@ -269,10 +274,13 @@ class MultiTrafficSequentialEnv(gym.Env):
 
     def step(self, action):
         pair_i = self.order[self.pos]
-        arc_path = self.pair_arc_paths[pair_i][int(action) % self.k_paths]
+        k = int(action) % self.k_paths
+        arc_path = self.pair_arc_paths[pair_i][k]
         self.load[arc_path] += self.rates[pair_i]
         new_max = float((100.0 * self.load / self.cap).max())
-        reward = float(-(new_max - self.cur_max))
+        # marginal bottleneck increase + QoS penalty for detouring off the shortest path
+        extra_hops = len(arc_path) - len(self.pair_arc_paths[pair_i][0])
+        reward = float(-(new_max - self.cur_max) - self.delay_penalty * extra_hops)
         self.cur_max = new_max
         self.pos += 1
         terminated = self.pos >= len(self.order)
