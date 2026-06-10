@@ -1,0 +1,24 @@
+{
+  "test_seed": 1018,
+  "analytical": {
+    "ospf_max_util": 121.51,
+    "gnn_max_util": 93.82
+  },
+  "ns3": {
+    "rateScale": 20,
+    "simTime": 8,
+    "ospf": {
+      "max_util_pct": 87.53,
+      "loss_pct": 13.08,
+      "tx": 1124934,
+      "rx": 977753
+    },
+    "gnn": {
+      "max_util_pct": 83.51,
+      "loss_pct": 0.39,
+      "tx": 1124934,
+      "rx": 1120527
+    },
+    "loss_reduction_x": 33.4
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "flows": [
+    {"src": 0, "dst": 1, "rate_mbps": 100, "start": 1.0, "stop": 19.0},
+    {"src": 0, "dst": 2, "rate_mbps": 150, "start": 1.0, "stop": 19.0},
+    {"src": 0, "dst": 3, "rate_mbps": 200, "start": 1.0, "stop": 19.0},
+    {"src": 1, "dst": 4, "rate_mbps": 120, "start": 1.0, "stop": 19.0},
+    {"src": 2, "dst": 5, "rate_mbps": 180, "start": 1.0, "stop": 19.0},
+    {"src": 3, "dst": 6, "rate_mbps": 100, "start": 1.0, "stop": 19.0},
+    {"src": 4, "dst": 7, "rate_mbps": 150, "start": 1.0, "stop": 19.0},
+    {"src": 5, "dst": 8, "rate_mbps": 140, "start": 1.0, "stop": 19.0},
+    {"src": 6, "dst": 9, "rate_mbps": 110, "start": 1.0, "stop": 19.0},
+    {"src": 7, "dst": 10, "rate_mbps": 130, "start": 1.0, "stop": 19.0}
+  ],
+  "summary": {"n_flows": 10, "total_demand_mbps": 1360}
+}

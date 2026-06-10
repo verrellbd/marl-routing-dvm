@@ -1,0 +1,37 @@
+{
+  "name": "Abilene",
+  "description": "Internet2/Abilene US research backbone. 12 nodes, 15 bidirectional OC-192 (10 Gbps) links. Canonical TE/RL routing benchmark.",
+  "capacity_unit": "Mbps",
+  "delay_unit": "ms",
+  "nodes": [
+    {"id": 0,  "name": "STTL", "city": "Seattle",      "lat": 47.6062, "lon": -122.3321},
+    {"id": 1,  "name": "SNVA", "city": "Sunnyvale",    "lat": 37.3688, "lon": -122.0363},
+    {"id": 2,  "name": "LOSA", "city": "Los Angeles",  "lat": 34.0522, "lon": -118.2437},
+    {"id": 3,  "name": "DNVR", "city": "Denver",       "lat": 39.7392, "lon": -104.9903},
+    {"id": 4,  "name": "KSCY", "city": "Kansas City",  "lat": 39.0997, "lon":  -94.5786},
+    {"id": 5,  "name": "HSTN", "city": "Houston",      "lat": 29.7604, "lon":  -95.3698},
+    {"id": 6,  "name": "IPLS", "city": "Indianapolis", "lat": 39.7684, "lon":  -86.1581},
+    {"id": 7,  "name": "ATLA", "city": "Atlanta",      "lat": 33.7490, "lon":  -84.3880},
+    {"id": 8,  "name": "CHIN", "city": "Chicago",      "lat": 41.8781, "lon":  -87.6298},
+    {"id": 9,  "name": "WASH", "city": "Washington",   "lat": 38.9072, "lon":  -77.0369},
+    {"id": 10, "name": "NYCM", "city": "New York",     "lat": 40.7128, "lon":  -74.0060},
+    {"id": 11, "name": "ATLA-M5", "city": "Atlanta M5", "lat": 33.7600, "lon":  -84.3700}
+  ],
+  "links": [
+    {"src": 0,  "dst": 1,  "capacity": 10000, "delay":  8.6},
+    {"src": 0,  "dst": 3,  "capacity": 10000, "delay": 13.2},
+    {"src": 1,  "dst": 2,  "capacity": 10000, "delay":  3.7},
+    {"src": 1,  "dst": 3,  "capacity": 10000, "delay": 15.0},
+    {"src": 2,  "dst": 5,  "capacity": 10000, "delay": 19.0},
+    {"src": 3,  "dst": 4,  "capacity": 10000, "delay":  7.6},
+    {"src": 4,  "dst": 5,  "capacity": 10000, "delay":  9.5},
+    {"src": 4,  "dst": 6,  "capacity": 10000, "delay":  6.5},
+    {"src": 5,  "dst": 7,  "capacity": 10000, "delay": 11.3},
+    {"src": 6,  "dst": 7,  "capacity": 10000, "delay":  5.6},
+    {"src": 6,  "dst": 8,  "capacity": 10000, "delay":  2.6},
+    {"src": 7,  "dst": 11, "capacity": 10000, "delay":  0.3},
+    {"src": 8,  "dst": 10, "capacity": 10000, "delay":  9.5},
+    {"src": 9,  "dst": 10, "capacity": 10000, "delay":  3.7},
+    {"src": 9,  "dst": 11, "capacity": 10000, "delay":  7.7}
+  ]
+}

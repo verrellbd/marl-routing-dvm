@@ -1,0 +1,87 @@
+/home/uceedv1/thesis/ns3ai-venv/lib64/python3.9/site-packages/networkx/utils/backends.py:135: RuntimeWarning: networkx backend defined more than once: nx-loopback
+  backends.update(_get_backends("networkx.backends"))
+
+======================================================================
+TRAINING GNN AGENTS FOR HEAVIER TRAFFIC
+======================================================================
+✅ CUDA available: 4 GPUs
+  GPU 0: NVIDIA H100 NVL
+  GPU 1: NVIDIA H100 NVL
+  GPU 2: NVIDIA H100 NVL
+  GPU 3: NVIDIA H100 NVL
+
+######################################################################
+# Training for α=1.0
+######################################################################
+
+======================================================================
+Training GNN Routing Agent (α=1.0)
+======================================================================
+[STARTUP] Using CPU (GNN + PPO optimized for CPU)
+
+[SETUP] Creating environment for α=1.0
+  Traffic file: /home/uceedv1/thesis/results/traffic_abilene_α1.0_min50.json
+[GNNRoutingAgentEnv] Computing 2-shortest paths for 62 flows...
+  Flow 0 (0→2): 2 paths computed (lengths: [3, 4])
+  Flow 1 (0→3): 2 paths computed (lengths: [2, 3])
+  Flow 2 (0→6): 2 paths computed (lengths: [4, 5])
+[GNNRoutingAgentEnv] Setup complete. 62 flows, 12 nodes, 2-shortest paths
+  Flows: 62
+  Nodes: 12
+  Action space: MultiDiscrete([2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+ 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2])
+  Observation space: (174,)
+
+[AGENT] Creating PPO with GNN extractor (device=cpu)...
+Using cpu device
+Wrapping the env with a `Monitor` wrapper
+Wrapping the env in a DummyVecEnv.
+[SimpleGNNExtractor] 12 nodes, 30 links, output_dim=64
+
+[TRAINING] Learning for 5000 timesteps...
+[GNNRoutingAgentEnv] Episode 1 reset. 62 flows
+[DEBUG ns3-step] Return code: 124
+[DEBUG ns3-step] stderr: 
+[DEBUG ns3-step] Return code: 124
+[DEBUG ns3-step] stderr: 
+[GNNRoutingAgentEnv] Episode 2 reset. 62 flows
+[DEBUG ns3-step] Return code: 124
+[DEBUG ns3-step] stderr: 
+[DEBUG ns3-step] Return code: 124
+[DEBUG ns3-step] stderr: 
+---------------------------------
+| rollout/           |          |
+|    ep_len_mean     | 60       |
+|    ep_rew_mean     | 0        |
+| time/              |          |
+|    fps             | 0        |
+|    iterations      | 1        |
+|    time_elapsed    | 1923     |
+|    total_timesteps | 64       |
+---------------------------------
+[GNNRoutingAgentEnv] Episode 3 reset. 62 flows
+[DEBUG ns3-step] Return code: 124
+[DEBUG ns3-step] stderr: 
+[DEBUG ns3-step] Return code: 124
+[DEBUG ns3-step] stderr: 
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 60         |
+|    ep_rew_mean          | 0          |
+| time/                   |            |
+|    fps                  | 0          |
+|    iterations           | 2          |
+|    time_elapsed         | 3846       |
+|    total_timesteps      | 128        |
+| train/                  |            |
+|    approx_kl            | 0.21891353 |
+|    clip_fraction        | 0.673      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -42.9      |
+|    explained_variance   | -1.19e-07  |
+|    learning_rate        | 0.0003     |
+|    loss                 | -0.124     |
+|    n_updates            | 10         |
+|    policy_gradient_loss | -0.121     |
+|    value_loss           | 0.0991     |
+----------------------------------------

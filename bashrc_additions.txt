@@ -1,0 +1,18 @@
+#
+# include system wide bashrc if we are not running under TMUX
+#
+
+if [[ -z $TMUX ]]; then
+
+  # include system wide bashrc
+  . /usr/local/etc/skel/bashrc-system
+
+fi
+
+# Add customisation after this line
+
+
+export PATH=/usr/local/cuda/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+source ~/thesis/ns3ai-venv/bin/activate
+export PYTHONPATH=~/thesis/ns-3-dev/contrib/ai/model/gym-interface/py:$PYTHONPATH

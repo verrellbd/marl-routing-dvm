@@ -1,0 +1,36 @@
+{
+  "topology": "abilene",
+  "n_episodes": 3,
+  "episodes": [
+    {
+      "episode": 1,
+      "max_util_final": 14.596826974277693,
+      "max_util_mean": 14.596826974277715,
+      "max_util_peak": 14.596826974277693,
+      "episode_reward": -60.0,
+      "steps": 60
+    },
+    {
+      "episode": 2,
+      "max_util_final": 14.596826974277693,
+      "max_util_mean": 14.596826974277715,
+      "max_util_peak": 14.596826974277693,
+      "episode_reward": -60.0,
+      "steps": 60
+    },
+    {
+      "episode": 3,
+      "max_util_final": 14.596826974277693,
+      "max_util_mean": 14.596826974277715,
+      "max_util_peak": 14.596826974277693,
+      "episode_reward": -60.0,
+      "steps": 60
+    }
+  ],
+  "aggregate": {
+    "final_util_mean": 14.596826974277695,
+    "final_util_std": 1.7763568394002505e-15,
+    "mean_util_mean": 14.596826974277713,
+    "peak_util_mean": 14.596826974277695
+  }
+}

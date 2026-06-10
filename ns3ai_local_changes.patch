@@ -1,0 +1,12 @@
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index c121b2b..eb78541 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ add_subdirectory(a-plus-b)
+-add_subdirectory(rate-control)
++# add_subdirectory(rate-control)  # disabled: API mismatch with ns-3.42
+ add_subdirectory(rl-tcp)
+ add_subdirectory(lte-cqi)
+-add_subdirectory(multi-bss)
++# add_subdirectory(multi-bss)  # disabled: API mismatch with ns-3.42
