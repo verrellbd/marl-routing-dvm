@@ -1,0 +1,45 @@
+{
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "by_regime": {
+    "overload": {
+      "ospf_loss": {
+        "mean": 7.41,
+        "std": 0.0
+      },
+      "gnn_loss": {
+        "mean": 1.98,
+        "std": 1.389
+      },
+      "ospf_delay_ms": {
+        "mean": 98.93,
+        "std": 0.0
+      },
+      "gnn_delay_ms": {
+        "mean": 46.98,
+        "std": 10.78
+      }
+    },
+    "feasible": {
+      "ospf_loss": {
+        "mean": 0.29,
+        "std": 0.0
+      },
+      "gnn_loss": {
+        "mean": 0.317,
+        "std": 0.017
+      },
+      "ospf_delay_ms": {
+        "mean": 19.99,
+        "std": 0.0
+      },
+      "gnn_delay_ms": {
+        "mean": 21.95,
+        "std": 1.271
+      }
+    }
+  }
+}

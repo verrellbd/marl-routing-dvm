@@ -8,9 +8,11 @@ dominance over OSPF (big loss/delay cuts under overload, no penalty when feasibl
 Heavier run than the first generalist: more timesteps. Trains on a distribution of
 gravity matrices (seeds 0-29), saves to results/generalization_qos/.
 """
+import argparse
 import json
 from pathlib import Path
 
+import torch
 import numpy as np
 from stable_baselines3 import PPO
 
@@ -25,7 +27,14 @@ K_PATHS = 3
 DELAY_PENALTY = 0.5
 TIMESTEPS = 250_000
 TRAIN_SEEDS = list(range(0, 30))
-RESULTS = Path("results/generalization_qos"); RESULTS.mkdir(parents=True, exist_ok=True)
+
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--seed", type=int, default=0, help="PPO/env seed (multi-seed runs)")
+_ap.add_argument("--threads", type=int, default=8, help="torch CPU threads (parallel-friendly)")
+_ap.add_argument("--timesteps", type=int, default=TIMESTEPS)
+_ARGS, _ = _ap.parse_known_args()
+torch.set_num_threads(_ARGS.threads)
+RESULTS = Path(f"results/generalization_qos_seed{_ARGS.seed}"); RESULTS.mkdir(parents=True, exist_ok=True)
 
 
 def main():
@@ -34,10 +43,10 @@ def main():
     train_mats = [np.array([generate_matrix(TOPO, LOAD_FACTOR, seed=s)[a, b] for a, b in pairs])
                   for s in TRAIN_SEEDS]
 
-    env = MultiTrafficSequentialEnv(TOPO, pairs, train_mats, k_paths=K_PATHS, seed=0,
-                                    delay_penalty=DELAY_PENALTY)
-    print(f"[train] QoS reward (delay_penalty={DELAY_PENALTY}), {TIMESTEPS} steps, "
-          f"{len(train_mats)} train matrices")
+    env = MultiTrafficSequentialEnv(TOPO, pairs, train_mats, k_paths=K_PATHS,
+                                    seed=_ARGS.seed, delay_penalty=DELAY_PENALTY)
+    print(f"[train] seed={_ARGS.seed} QoS reward (delay_penalty={DELAY_PENALTY}), "
+          f"{_ARGS.timesteps} steps, {len(train_mats)} train matrices")
 
     policy_kwargs = {
         "features_extractor_class": SeqGNNExtractor,
@@ -46,8 +55,8 @@ def main():
     }
     model = PPO("MlpPolicy", env, learning_rate=3e-4, n_steps=2048, batch_size=256,
                 n_epochs=10, gamma=0.995, gae_lambda=0.95, ent_coef=0.01,
-                device="cpu", policy_kwargs=policy_kwargs, verbose=0)
-    model.learn(total_timesteps=TIMESTEPS, progress_bar=True)
+                seed=_ARGS.seed, device="cpu", policy_kwargs=policy_kwargs, verbose=0)
+    model.learn(total_timesteps=_ARGS.timesteps, progress_bar=False)
     model.save(RESULTS / "gnn_generalist_qos")
     print(f"\n[saved] {RESULTS/'gnn_generalist_qos'}.zip")
 

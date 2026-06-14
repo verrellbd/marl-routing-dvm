@@ -32,6 +32,8 @@ TEST_SEEDS = OVERLOAD_SEEDS + FEASIBLE_SEEDS
 _ap = argparse.ArgumentParser()
 _ap.add_argument("--model", default="results/generalization/gnn_generalist")
 _ap.add_argument("--tag", default="", help="suffix for output dir (e.g. _qos)")
+_ap.add_argument("--export-only", action="store_true",
+                 help="write routing JSONs then exit (run ns-3 separately via run_ns3_phase2.py)")
 _ARGS, _ = _ap.parse_known_args()
 
 MODEL = _ARGS.model
@@ -99,6 +101,11 @@ def main():
         meta[seed] = {"routing_file": str(rf), "ospf_util": round(env.ospf_max_util(rates), 1)}
     # free PyTorch before forking ns-3 (avoids fork OOM on the shared machine)
     del model; gc.collect()
+
+    if _ARGS.export_only:
+        print(f"[export-only] wrote {len(TEST_SEEDS)} routing JSONs to {OUT}")
+        print(f"  now run: python run_ns3_phase2.py --dir {OUT}")
+        return
 
     # ---- Phase 2: run ns-3 for both routings (no torch in memory) ----
     rows = []
