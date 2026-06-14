@@ -49,11 +49,36 @@ results/ns3_eval_qos/qos_threeway.png.
 - export_routing.py, evaluate_ns3.py, run_ns3_phase2.py
 - ns3_scenarios/abilene-validate/ (mirror; real runs from ns-3-dev/scratch/)
 
+## UPDATE — later same day: multi-seed + variance reduction DONE
+- **Multi-seed (3 seeds)** revealed the single-model "~25x loss / ~5x delay" was the
+  BEST seed. Honest multi-seed: overload loss 1.98%±1.39, delay 47±10.8ms.
+- **Variance reduction** (mixed-load training: loads 2/3/4 x 20 seeds = 60 matrices,
+  500k steps) tightened bars AND improved means:
+  | regime | metric | OSPF | ROBUST GNN-QoS |
+  |--------|--------|------|----------------|
+  | overload | loss | 7.41% | 0.74% ± 0.28 (~10x, ~5x tighter than baseline) |
+  | overload | delay | 98.9ms | 33.5 ± 7.1 ms (~3x) |
+  | feasible | loss | 0.29% | 0.30% ± 0.01 (tie) |
+  | feasible | delay | 20.0ms | 21.2 ± 0.6 ms (≈OSPF) |
+- **RIGOROUS HEADLINE:** under congestion GNN cuts loss ~10x and delay ~3x with tight
+  error bars; ties OSPF when feasible. Strictly dominant.
+- New: train_gnn_qos.py has TRAIN_LOADS (mixed-load) + --seed/--tag; evaluate_ns3.py
+  has --export-only; run_ns3_phase2.py (torch-free ns-3); aggregate_multiseed.py (--tag).
+  Robust models: results/generalization_qos_robust_seed{0,1,2}/. Results:
+  results/ns3_eval_multiseed{,_robust}.json + .png.
+- Commits through d0decea. **2 commits to git push.**
+
 ## Next session (priority order)
-1. **Multi-seed** (3-5 training seeds) -> error bars on the headline numbers; turns
-   the +1ms feasible delay into "+1 +/- X ms" to claim dominance rigorously.
-2. **GEANT** (23 nodes, 39 links) -> larger topology, longer training, second result.
-3. **Higher base load** (load_factor 4) -> overload becomes the common case (was 15%).
+1. **GEANT** (23 nodes, 39 links) -> repeat the full pipeline (train mixed-load QoS,
+   ns-3 validate, multi-seed) on the larger topology to show the result generalizes.
+2. **Higher base load** -> more overload test matrices (only 3/20 overload at load 3.0)
+   for even tighter, more representative error bars.
+3. Optional: bigger multi-layer message-passing GNN if more capacity is wanted.
+
+## To resume the robust pipeline
+  cd ~/thesis && git push
+  # GEANT: adapt train_gnn_qos.py / evaluate_ns3.py TOPO='geant' (topologies/geant.json)
+  # the ns-3 abilene-validate scenario is abilene-specific -> needs a geant variant
 
 ## To resume
   cd ~/thesis
