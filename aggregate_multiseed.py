@@ -4,6 +4,7 @@ Aggregate ns-3 QoS results across multiple training seeds -> mean +/- std per
 regime/metric. Reads results/ns3_eval_qos_seed{S}/summary.json for each seed.
 Gives error bars on the headline numbers so dominance can be stated rigorously.
 """
+import argparse
 import json
 from pathlib import Path
 
@@ -12,11 +13,15 @@ import numpy as np
 SEEDS = [0, 1, 2]
 METRICS = ["ospf_loss", "gnn_loss", "ospf_delay_ms", "gnn_delay_ms"]
 
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--tag", default="", help="eval dir tag, e.g. _robust -> results/ns3_eval_qos_robust_seed{S}")
+_ARGS, _ = _ap.parse_known_args()
+
 
 def main():
     per_seed = {}
     for s in SEEDS:
-        f = Path(f"results/ns3_eval_qos_seed{s}/summary.json")
+        f = Path(f"results/ns3_eval_qos{_ARGS.tag}_seed{s}/summary.json")
         if f.exists():
             per_seed[s] = json.loads(f.read_text())["by_regime"]
     if not per_seed:
@@ -42,8 +47,9 @@ def main():
         print(f"    delay: OSPF {b['ospf_delay_ms']['mean']:.1f} ms    "
               f"GNN-QoS {b['gnn_delay_ms']['mean']:.1f} +/- {b['gnn_delay_ms']['std']:.1f} ms")
 
-    Path("results/ns3_eval_multiseed.json").write_text(json.dumps(out, indent=2))
-    print(f"\n  -> results/ns3_eval_multiseed.json")
+    outpath = f"results/ns3_eval_multiseed{_ARGS.tag}.json"
+    Path(outpath).write_text(json.dumps(out, indent=2))
+    print(f"\n  -> {outpath}")
 
 
 if __name__ == "__main__":

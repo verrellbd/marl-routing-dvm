@@ -22,26 +22,30 @@ from marl_routing.sequential_routing_env import MultiTrafficSequentialEnv
 from marl_routing.gnn_extractor import SeqGNNExtractor
 
 TOPO = "abilene"
-LOAD_FACTOR = 3.0
+LOAD_FACTOR = 3.0          # test/reference load
 K_PATHS = 3
 DELAY_PENALTY = 0.5
-TIMESTEPS = 250_000
-TRAIN_SEEDS = list(range(0, 30))
+TIMESTEPS = 500_000
+# Domain-randomize over load so the policy PRACTISES congestion relief (not just the
+# ~15% overloaded matrices at load 3.0). Spans feasible -> heavily overloaded.
+TRAIN_LOADS = [2.0, 3.0, 4.0]
+TRAIN_SEEDS = list(range(0, 20))
 
 _ap = argparse.ArgumentParser()
 _ap.add_argument("--seed", type=int, default=0, help="PPO/env seed (multi-seed runs)")
 _ap.add_argument("--threads", type=int, default=8, help="torch CPU threads (parallel-friendly)")
 _ap.add_argument("--timesteps", type=int, default=TIMESTEPS)
+_ap.add_argument("--tag", default="", help="output dir suffix (e.g. _robust)")
 _ARGS, _ = _ap.parse_known_args()
 torch.set_num_threads(_ARGS.threads)
-RESULTS = Path(f"results/generalization_qos_seed{_ARGS.seed}"); RESULTS.mkdir(parents=True, exist_ok=True)
+RESULTS = Path(f"results/generalization_qos{_ARGS.tag}_seed{_ARGS.seed}"); RESULTS.mkdir(parents=True, exist_ok=True)
 
 
 def main():
     topo = load_topology(TOPO); n = topo.n_nodes
     pairs = [(i, j) for i in range(n) for j in range(n) if i != j]
-    train_mats = [np.array([generate_matrix(TOPO, LOAD_FACTOR, seed=s)[a, b] for a, b in pairs])
-                  for s in TRAIN_SEEDS]
+    train_mats = [np.array([generate_matrix(TOPO, lf, seed=s)[a, b] for a, b in pairs])
+                  for lf in TRAIN_LOADS for s in TRAIN_SEEDS]
 
     env = MultiTrafficSequentialEnv(TOPO, pairs, train_mats, k_paths=K_PATHS,
                                     seed=_ARGS.seed, delay_penalty=DELAY_PENALTY)
