@@ -12,17 +12,14 @@ from pathlib import Path
 
 import numpy as np
 
-OVERLOAD_SEEDS = {1009, 1013, 1018}
-FEASIBLE_SEEDS = {1004, 1011, 1008}
 NS3_DIR = Path("~/thesis/ns-3-dev").expanduser()
-TOPO = Path("~/thesis/topologies/abilene.json").expanduser().resolve()
 RATESCALE, SIMTIME = 20, 8
 
 
-def run_ns3(routing_file, routing, state_file):
+def run_ns3(topo_json, routing_file, routing, state_file):
     routing_file, state_file = Path(routing_file).resolve(), Path(state_file).resolve()
     cmd = ["./ns3", "run",
-           f"scratch/abilene-validate/abilene-validate --topo={TOPO} "
+           f"scratch/abilene-validate/abilene-validate --topo={topo_json} "
            f"--routing_file={routing_file} --routing={routing} "
            f"--state={state_file} --simTime={SIMTIME} --rateScale={RATESCALE}"]
     r = subprocess.run(cmd, cwd=NS3_DIR, capture_output=True, text=True, timeout=400)
@@ -34,15 +31,17 @@ def run_ns3(routing_file, routing, state_file):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dir", required=True, help="dir with routing_seed*.json")
+    ap.add_argument("--topo", default="abilene", help="abilene | geant")
     args = ap.parse_args()
     d = Path(args.dir).expanduser().resolve()
+    topo_json = Path(f"~/thesis/topologies/{args.topo}.json").expanduser().resolve()
 
     rows = []
     for rf in sorted(d.glob("routing_seed*.json")):
         seed = int(rf.stem.replace("routing_seed", ""))
-        regime = "overload" if seed in OVERLOAD_SEEDS else "feasible"
-        o = run_ns3(rf, "ospf", d / f"ns3_ospf_{seed}.json")
-        g = run_ns3(rf, "gnn",  d / f"ns3_gnn_{seed}.json")
+        regime = json.loads(rf.read_text()).get("regime", "feasible")
+        o = run_ns3(topo_json, rf, "ospf", d / f"ns3_ospf_{seed}.json")
+        g = run_ns3(topo_json, rf, "gnn",  d / f"ns3_gnn_{seed}.json")
         rows.append({"seed": seed, "regime": regime,
                      "ospf_loss": round(o["loss_pct"], 2), "gnn_loss": round(g["loss_pct"], 2),
                      "ospf_delay_ms": round(o["mean_delay_ms"], 2), "gnn_delay_ms": round(g["mean_delay_ms"], 2),

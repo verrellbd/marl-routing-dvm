@@ -21,24 +21,24 @@ from marl_routing.topology import load as load_topology
 from marl_routing.sequential_routing_env import MultiTrafficSequentialEnv
 from marl_routing.gnn_extractor import SeqGNNExtractor
 
-TOPO = "abilene"
-LOAD_FACTOR = 3.0          # test/reference load
 K_PATHS = 3
 DELAY_PENALTY = 0.5
-TIMESTEPS = 500_000
-# Domain-randomize over load so the policy PRACTISES congestion relief (not just the
-# ~15% overloaded matrices at load 3.0). Spans feasible -> heavily overloaded.
-TRAIN_LOADS = [2.0, 3.0, 4.0]
-TRAIN_SEEDS = list(range(0, 20))
 
 _ap = argparse.ArgumentParser()
+_ap.add_argument("--topo", default="abilene", help="abilene | geant")
+_ap.add_argument("--loads", default="2,3,4", help="comma-list of training load factors")
 _ap.add_argument("--seed", type=int, default=0, help="PPO/env seed (multi-seed runs)")
 _ap.add_argument("--threads", type=int, default=8, help="torch CPU threads (parallel-friendly)")
-_ap.add_argument("--timesteps", type=int, default=TIMESTEPS)
+_ap.add_argument("--timesteps", type=int, default=500_000)
 _ap.add_argument("--tag", default="", help="output dir suffix (e.g. _robust)")
 _ARGS, _ = _ap.parse_known_args()
 torch.set_num_threads(_ARGS.threads)
-RESULTS = Path(f"results/generalization_qos{_ARGS.tag}_seed{_ARGS.seed}"); RESULTS.mkdir(parents=True, exist_ok=True)
+
+TOPO = _ARGS.topo
+# Domain-randomize over load so the policy PRACTISES congestion relief across regimes.
+TRAIN_LOADS = [float(x) for x in _ARGS.loads.split(",")]
+TRAIN_SEEDS = list(range(0, 20))
+RESULTS = Path(f"results/{TOPO}_qos{_ARGS.tag}_seed{_ARGS.seed}"); RESULTS.mkdir(parents=True, exist_ok=True)
 
 
 def main():
@@ -66,8 +66,9 @@ def main():
 
     # quick analytical check on a few held-out matrices vs OSPF
     print("\n[analytical check on held-out seeds]")
+    check_load = TRAIN_LOADS[-1]  # heaviest trained load (most congested held-out check)
     for seed in [1009, 1018, 1004, 1011]:
-        T = generate_matrix(TOPO, LOAD_FACTOR, seed=seed)
+        T = generate_matrix(TOPO, check_load, seed=seed)
         rates = np.array([T[a, b] for a, b in pairs])
         ospf = env.ospf_max_util(rates)
         env.set_matrix(rates); obs, _ = env.reset(); done = False

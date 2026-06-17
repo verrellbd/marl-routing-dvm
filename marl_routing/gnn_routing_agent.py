@@ -41,7 +41,11 @@ def compute_ksp(graph: nx.Graph, src: int, dst: int, k: int = 3) -> List[List[in
         return [[src]]
 
     try:
-        paths = list(nx.shortest_simple_paths(graph, src, dst, weight=None))[:k]
+        # islice takes only the first k paths LAZILY from Yen's generator.
+        # (Materializing the full generator enumerates every simple path in the
+        # graph -> combinatorial blowup, ~0.8s/pair on dense topologies.)
+        from itertools import islice
+        paths = list(islice(nx.shortest_simple_paths(graph, src, dst, weight=None), k))
         return paths if paths else [[src, dst]]
     except nx.NetworkXNoPath:
         return [[src, dst]]

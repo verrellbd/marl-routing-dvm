@@ -21,23 +21,27 @@ from marl_routing.topology import load as load_topology
 from marl_routing.sequential_routing_env import MultiTrafficSequentialEnv
 from marl_routing.gnn_routing_agent import compute_ksp
 
-TOPO = "abilene"
-LOAD_FACTOR = 3.0
 K_PATHS = 3
-# Stratified held-out seeds: 3 OVERLOADED (OSPF>100%) + 3 FEASIBLE spanning 55-97%,
-# so we see where the GNN helps (congestion) vs is neutral (uncongested).
-OVERLOAD_SEEDS = [1009, 1013, 1018]
-FEASIBLE_SEEDS = [1004, 1011, 1008]
-TEST_SEEDS = OVERLOAD_SEEDS + FEASIBLE_SEEDS
 _ap = argparse.ArgumentParser()
+_ap.add_argument("--topo", default="abilene", help="abilene | geant")
+_ap.add_argument("--load", type=float, default=3.0, help="test load factor")
 _ap.add_argument("--model", default="results/generalization/gnn_generalist")
 _ap.add_argument("--tag", default="", help="suffix for output dir (e.g. _qos)")
+_ap.add_argument("--candidate-seeds", default="1000-1019",
+                 help="seed pool to stratify, e.g. 1000-1019")
+_ap.add_argument("--n-overload", type=int, default=3)
+_ap.add_argument("--n-feasible", type=int, default=3)
 _ap.add_argument("--export-only", action="store_true",
                  help="write routing JSONs then exit (run ns-3 separately via run_ns3_phase2.py)")
 _ARGS, _ = _ap.parse_known_args()
 
+TOPO = _ARGS.topo
+LOAD_FACTOR = _ARGS.load
 MODEL = _ARGS.model
+_lo, _hi = (int(x) for x in _ARGS.candidate_seeds.split("-"))
+CANDIDATE_SEEDS = list(range(_lo, _hi + 1))
 NS3_DIR = Path("~/thesis/ns-3-dev").expanduser()
+TOPO_JSON = Path(f"~/thesis/topologies/{TOPO}.json").expanduser().resolve()
 RATESCALE, SIMTIME = 20, 8
 OUT = Path(f"~/thesis/results/ns3_eval{_ARGS.tag}").expanduser().resolve(); OUT.mkdir(parents=True, exist_ok=True)
 
@@ -60,7 +64,9 @@ def gnn_paths_for(model, env, pairs, pair_paths, rates):
         flows.append({
             "src": int(s), "dst": int(d), "rate_mbps": float(rates[pi]),
             "start": 2.0, "stop": 18.0,
-            "gnn_path": [int(x) for x in pair_paths[pi][chosen.get(pi, 0)]],
+            # clamp: a few node-pairs have <K simple paths (the env pads by
+            # repeating the last; mirror that here so the index never overruns).
+            "gnn_path": [int(x) for x in pair_paths[pi][min(chosen.get(pi, 0), len(pair_paths[pi]) - 1)]],
             "ospf_path": [int(x) for x in nx.shortest_path(env.topo.graph, s, d)],
         })
     return flows
@@ -69,10 +75,9 @@ def gnn_paths_for(model, env, pairs, pair_paths, rates):
 def run_ns3(routing_file, routing, state_file):
     routing_file = Path(routing_file).resolve()
     state_file = Path(state_file).resolve()
-    topo = Path("~/thesis/topologies/abilene.json").expanduser().resolve()
     cmd = ["./ns3", "run",
            f"scratch/abilene-validate/abilene-validate "
-           f"--topo={topo} "
+           f"--topo={TOPO_JSON} "
            f"--routing_file={routing_file} --routing={routing} "
            f"--state={state_file} --simTime={SIMTIME} --rateScale={RATESCALE}"]
     r = subprocess.run(cmd, cwd=NS3_DIR, capture_output=True, text=True, timeout=400)
@@ -89,27 +94,43 @@ def main():
     pair_paths = [compute_ksp(topo.graph, s, d, k=K_PATHS) for (s, d) in pairs]
     env = MultiTrafficSequentialEnv(TOPO, pairs, [np.zeros(len(pairs))], k_paths=K_PATHS)
 
+    # ---- stratify candidate seeds by congestion (topo/load-agnostic) ----
+    util = {s: round(env.ospf_max_util(
+                np.array([generate_matrix(TOPO, LOAD_FACTOR, seed=s)[a, b] for a, b in pairs])), 1)
+            for s in CANDIDATE_SEEDS}
+    by_util = sorted(util, key=lambda s: -util[s])
+    overload = [s for s in by_util if util[s] >= 100][:_ARGS.n_overload]
+    # feasible = the MOST-STRESSED feasible seeds (highest util < 100): this is
+    # where rerouting can still lower peak util/delay. Picking the lightest
+    # feasible seeds hides any routing benefit (everything fits trivially).
+    feasible = [s for s in by_util if util[s] < 100][:_ARGS.n_feasible]
+    test_seeds = overload + feasible
+    print(f"[stratify] overload {[(s, util[s]) for s in overload]}  "
+          f"feasible {[(s, util[s]) for s in feasible]}")
+
     # ---- Phase 1: with model loaded, extract routing JSONs for every seed ----
     model = PPO.load(MODEL, device="cpu")
     meta = {}
-    for seed in TEST_SEEDS:
+    for seed in test_seeds:
         T = generate_matrix(TOPO, LOAD_FACTOR, seed=seed)
         rates = np.array([T[s, d] for (s, d) in pairs])
         flows = gnn_paths_for(model, env, pairs, pair_paths, rates)
+        regime = "overload" if util[seed] >= 100 else "feasible"
         rf = OUT / f"routing_seed{seed}.json"
-        rf.write_text(json.dumps({"seed": seed, "flows": flows}, indent=2))
-        meta[seed] = {"routing_file": str(rf), "ospf_util": round(env.ospf_max_util(rates), 1)}
+        rf.write_text(json.dumps({"seed": seed, "regime": regime,
+                                  "ospf_util": util[seed], "flows": flows}, indent=2))
+        meta[seed] = {"routing_file": str(rf), "ospf_util": util[seed]}
     # free PyTorch before forking ns-3 (avoids fork OOM on the shared machine)
     del model; gc.collect()
 
     if _ARGS.export_only:
-        print(f"[export-only] wrote {len(TEST_SEEDS)} routing JSONs to {OUT}")
+        print(f"[export-only] wrote {len(test_seeds)} routing JSONs to {OUT}")
         print(f"  now run: python run_ns3_phase2.py --dir {OUT}")
         return
 
     # ---- Phase 2: run ns-3 for both routings (no torch in memory) ----
     rows = []
-    for seed in TEST_SEEDS:
+    for seed in test_seeds:
         rf = meta[seed]["routing_file"]
         o = run_ns3(rf, "ospf", OUT / f"ns3_ospf_{seed}.json")
         g = run_ns3(rf, "gnn",  OUT / f"ns3_gnn_{seed}.json")

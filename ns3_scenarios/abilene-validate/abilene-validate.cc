@@ -134,10 +134,10 @@ main(int argc, char* argv[])
         std::vector<uint32_t> path = fl[pathKey].get<std::vector<uint32_t>>();
         if (path.size() < 2) { flowIdx++; continue; }
 
-        // unique /32 destination address for this flow, attached to dst node
-        std::ostringstream a;
-        a << "10.200." << ((flowIdx >> 8) & 0xFF) << "." << ((flowIdx & 0xFF) + 1);
-        Ipv4Address flowAddr(a.str().c_str());
+        // unique /32 destination address for this flow (integer-based, safe for
+        // >255 flows: 10.200.0.1, 10.200.0.2, ... 10.200.1.0, ...).
+        uint32_t flowAddrInt = ((10u << 24) | (200u << 16)) + flowIdx + 1;
+        Ipv4Address flowAddr(flowAddrInt);
         Ptr<Ipv4> idst = nodes.Get(dst)->GetObject<Ipv4>();
         idst->AddAddress(nodeIface[dst],
                          Ipv4InterfaceAddress(flowAddr, Ipv4Mask("255.255.255.255")));
