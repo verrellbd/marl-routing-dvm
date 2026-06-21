@@ -33,7 +33,21 @@ _ap.add_argument("--n-overload", type=int, default=3)
 _ap.add_argument("--n-feasible", type=int, default=3)
 _ap.add_argument("--export-only", action="store_true",
                  help="write routing JSONs then exit (run ns-3 separately via run_ns3_phase2.py)")
+_ap.add_argument("--max-flows", type=int, default=0,
+                 help="keep only the top-N flows by rate (0=all). Needed on big topologies "
+                      "(e.g. germany50, 2450 pairs) to keep ns-3 tractable; gravity demand is "
+                      "concentrated so the top flows carry most of the load.")
 _ARGS, _ = _ap.parse_known_args()
+
+
+def filt_rates(r, k):
+    """Keep only the top-k flows by rate (zero the rest). Applied identically to OSPF
+    and every learned policy so the ns-3 comparison is on the same flow set."""
+    r = np.asarray(r, dtype=float)
+    if k and (r > 0).sum() > k:
+        thr = np.sort(r)[::-1][k - 1]
+        r = np.where(r >= thr, r, 0.0)
+    return r
 
 TOPO = _ARGS.topo
 LOAD_FACTOR = _ARGS.load
@@ -96,7 +110,8 @@ def main():
 
     # ---- stratify candidate seeds by congestion (topo/load-agnostic) ----
     util = {s: round(env.ospf_max_util(
-                np.array([generate_matrix(TOPO, LOAD_FACTOR, seed=s)[a, b] for a, b in pairs])), 1)
+                filt_rates(np.array([generate_matrix(TOPO, LOAD_FACTOR, seed=s)[a, b]
+                                     for a, b in pairs]), _ARGS.max_flows)), 1)
             for s in CANDIDATE_SEEDS}
     by_util = sorted(util, key=lambda s: -util[s])
     overload = [s for s in by_util if util[s] >= 100][:_ARGS.n_overload]
@@ -113,7 +128,7 @@ def main():
     meta = {}
     for seed in test_seeds:
         T = generate_matrix(TOPO, LOAD_FACTOR, seed=seed)
-        rates = np.array([T[s, d] for (s, d) in pairs])
+        rates = filt_rates(np.array([T[s, d] for (s, d) in pairs]), _ARGS.max_flows)
         flows = gnn_paths_for(model, env, pairs, pair_paths, rates)
         regime = "overload" if util[seed] >= 100 else "feasible"
         rf = OUT / f"routing_seed{seed}.json"

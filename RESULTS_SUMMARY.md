@@ -24,6 +24,49 @@ This is a stronger scientific result than "the GNN wins everywhere": it gives a
 **positive case + a boundary case**, both validated in ns-3, and explains the
 mechanism.
 
+## 2b. Multi-agent RL (the novel system) vs the single-agent baseline
+The thesis system is a **genuine multi-agent RL router**: each node is an agent that
+chooses the next hop from **only local observations** (no central controller), trained
+cooperatively with **MAPPO** (centralized critic, decentralized execution). The earlier
+single-agent GNN (a centralized brain that sees the whole network) is kept as a baseline.
+
+**3-way ns-3 comparison on IDENTICAL held-out traffic:**
+
+Abilene (load 4.0):
+| Regime | Metric | OSPF | single-agent GNN (central) | **MARL (decentralized)** |
+|--------|--------|------|----------------------------|--------------------------|
+| Overload | loss  | 21.2% | 12.0% | **13.0%** |
+| Overload | delay | 115 ms | 87.9 ms | **87.3 ms** |
+| Feasible | loss  | 0.23% | 0.28% | 0.46% |
+| Feasible | delay | 16.1 ms | 19.5 ms | 23.3 ms |
+
+GÉANT (load 1.4):
+| Regime | Metric | OSPF | single-agent GNN | **MARL** |
+|--------|--------|------|------------------|----------|
+| Overload | loss  | 5.95% | 5.42% | 6.37% |
+| Overload | delay | 90.9 ms | 83.0 ms | 89.5 ms |
+| Feasible | loss  | 0.28% | 0.28% | 0.39% |
+
+Germany50 (load 1.0, top-600 flows — 50 nodes, diameter 10):
+| Regime | Metric | OSPF | single-agent GNN | **MARL** |
+|--------|--------|------|------------------|----------|
+| Overload | loss  | 10.88% | 6.27% | **4.42%** |
+| Overload | delay | 56.4 ms | 49.1 ms | 53.1 ms |
+| Feasible | loss  | 0.09% | 0.00% | 0.10% |
+
+**Finding:** on Abilene the decentralized MARL **beats OSPF under congestion using only
+local information** (loss 21%→13%, delay 115→87 ms) and lands **within ~1 point of the
+centralized GNN** — a small "coordination cost" for dropping the central controller. On
+GÉANT (capacity-limited) MARL ties OSPF like everything else, doing no harm. On the
+larger **Germany50** (50 nodes) both learned methods again beat OSPF under congestion
+(loss 10.9%→6.3%/4.4%) — BUT MARL is **high-variance at this scale**: strong on the
+overloaded test seeds, yet capable of catastrophic *miscoordination* on others (e.g. a
+feasible matrix pushed 96%→141% analytically, where independent agents detour onto the
+same alternate link). **Honest scale finding: decentralized coordination is near-free on
+small networks (Abilene ~12 nodes) but gets harder as the network grows (Germany50 ~50
+nodes), where the centralized GNN is more reliable.** Figures: results/fig_3way_{abilene,
+geant,germany50}.png.
+
 ## 3. The numbers (ns-3, held-out traffic, stratified by congestion regime)
 
 ### Abilene — multi-seed (3 seeds, mean ± std)

@@ -1,0 +1,82 @@
+{
+  "by_regime": {
+    "overload": {
+      "ospf_loss": 10.88,
+      "gnn_loss": 4.42,
+      "ospf_delay_ms": 56.44,
+      "gnn_delay_ms": 53.15,
+      "ospf_tput": 1238.0,
+      "gnn_tput": 1327.67
+    },
+    "feasible": {
+      "ospf_loss": 0.09,
+      "gnn_loss": 0.1,
+      "ospf_delay_ms": 1.56,
+      "gnn_delay_ms": 2.43,
+      "ospf_tput": 1427.33,
+      "gnn_tput": 1427.0
+    }
+  },
+  "per_matrix": [
+    {
+      "seed": 1001,
+      "regime": "overload",
+      "ospf_loss": 10.07,
+      "gnn_loss": 4.22,
+      "ospf_delay_ms": 56.47,
+      "gnn_delay_ms": 51.63,
+      "ospf_tput": 1233.0,
+      "gnn_tput": 1313.0
+    },
+    {
+      "seed": 1002,
+      "regime": "overload",
+      "ospf_loss": 11.54,
+      "gnn_loss": 3.21,
+      "ospf_delay_ms": 45.77,
+      "gnn_delay_ms": 43.99,
+      "ospf_tput": 1260.0,
+      "gnn_tput": 1378.0
+    },
+    {
+      "seed": 1005,
+      "regime": "feasible",
+      "ospf_loss": 0.09,
+      "gnn_loss": 0.0,
+      "ospf_delay_ms": 1.75,
+      "gnn_delay_ms": 0.25,
+      "ospf_tput": 1335.0,
+      "gnn_tput": 1336.0
+    },
+    {
+      "seed": 1010,
+      "regime": "feasible",
+      "ospf_loss": 0.0,
+      "gnn_loss": 0.0,
+      "ospf_delay_ms": 0.19,
+      "gnn_delay_ms": 0.21,
+      "ospf_tput": 1474.0,
+      "gnn_tput": 1474.0
+    },
+    {
+      "seed": 1012,
+      "regime": "overload",
+      "ospf_loss": 11.03,
+      "gnn_loss": 5.84,
+      "ospf_delay_ms": 67.07,
+      "gnn_delay_ms": 63.83,
+      "ospf_tput": 1221.0,
+      "gnn_tput": 1292.0
+    },
+    {
+      "seed": 1018,
+      "regime": "feasible",
+      "ospf_loss": 0.18,
+      "gnn_loss": 0.3,
+      "ospf_delay_ms": 2.73,
+      "gnn_delay_ms": 6.83,
+      "ospf_tput": 1473.0,
+      "gnn_tput": 1471.0
+    }
+  ]
+}

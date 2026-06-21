@@ -1,0 +1,864 @@
+{
+  "name": "Germany50",
+  "description": "German research backbone (Germany50 city set). Nodes = real 50 German cities w/ accurate lat/lon. Links = geographically reconstructed German backbone (~SNDlib germany50 structure). Capacities = hub(40G)/edge(10G)/peripheral(2.5G) hierarchy (modelled, not SNDlib modules). Delays from great-circle distance.",
+  "capacity_unit": "Mbps",
+  "delay_unit": "ms",
+  "nodes": [
+    {
+      "id": 0,
+      "name": "Aachen",
+      "city": "Aachen",
+      "lat": 50.7753,
+      "lon": 6.0839
+    },
+    {
+      "id": 1,
+      "name": "Augsburg",
+      "city": "Augsburg",
+      "lat": 48.3705,
+      "lon": 10.8978
+    },
+    {
+      "id": 2,
+      "name": "Bayreuth",
+      "city": "Bayreuth",
+      "lat": 49.9456,
+      "lon": 11.5713
+    },
+    {
+      "id": 3,
+      "name": "Berlin",
+      "city": "Berlin",
+      "lat": 52.52,
+      "lon": 13.405
+    },
+    {
+      "id": 4,
+      "name": "Bielefeld",
+      "city": "Bielefeld",
+      "lat": 52.0302,
+      "lon": 8.5325
+    },
+    {
+      "id": 5,
+      "name": "Braunschweig",
+      "city": "Braunschweig",
+      "lat": 52.2689,
+      "lon": 10.5268
+    },
+    {
+      "id": 6,
+      "name": "Bremen",
+      "city": "Bremen",
+      "lat": 53.0793,
+      "lon": 8.8017
+    },
+    {
+      "id": 7,
+      "name": "Bremerhaven",
+      "city": "Bremerhaven",
+      "lat": 53.5396,
+      "lon": 8.5809
+    },
+    {
+      "id": 8,
+      "name": "Chemnitz",
+      "city": "Chemnitz",
+      "lat": 50.8278,
+      "lon": 12.9214
+    },
+    {
+      "id": 9,
+      "name": "Darmstadt",
+      "city": "Darmstadt",
+      "lat": 49.8728,
+      "lon": 8.6512
+    },
+    {
+      "id": 10,
+      "name": "Dortmund",
+      "city": "Dortmund",
+      "lat": 51.5136,
+      "lon": 7.4653
+    },
+    {
+      "id": 11,
+      "name": "Dresden",
+      "city": "Dresden",
+      "lat": 51.0504,
+      "lon": 13.7373
+    },
+    {
+      "id": 12,
+      "name": "Duesseldorf",
+      "city": "Duesseldorf",
+      "lat": 51.2277,
+      "lon": 6.7735
+    },
+    {
+      "id": 13,
+      "name": "Erfurt",
+      "city": "Erfurt",
+      "lat": 50.9848,
+      "lon": 11.0299
+    },
+    {
+      "id": 14,
+      "name": "Essen",
+      "city": "Essen",
+      "lat": 51.4556,
+      "lon": 7.0116
+    },
+    {
+      "id": 15,
+      "name": "Flensburg",
+      "city": "Flensburg",
+      "lat": 54.7937,
+      "lon": 9.446
+    },
+    {
+      "id": 16,
+      "name": "Frankfurt",
+      "city": "Frankfurt",
+      "lat": 50.1109,
+      "lon": 8.6821
+    },
+    {
+      "id": 17,
+      "name": "Freiburg",
+      "city": "Freiburg",
+      "lat": 47.999,
+      "lon": 7.8421
+    },
+    {
+      "id": 18,
+      "name": "Fulda",
+      "city": "Fulda",
+      "lat": 50.5558,
+      "lon": 9.6808
+    },
+    {
+      "id": 19,
+      "name": "Giessen",
+      "city": "Giessen",
+      "lat": 50.5841,
+      "lon": 8.6784
+    },
+    {
+      "id": 20,
+      "name": "Greifswald",
+      "city": "Greifswald",
+      "lat": 54.0865,
+      "lon": 13.3923
+    },
+    {
+      "id": 21,
+      "name": "Hamburg",
+      "city": "Hamburg",
+      "lat": 53.5511,
+      "lon": 9.9937
+    },
+    {
+      "id": 22,
+      "name": "Hannover",
+      "city": "Hannover",
+      "lat": 52.3759,
+      "lon": 9.732
+    },
+    {
+      "id": 23,
+      "name": "Karlsruhe",
+      "city": "Karlsruhe",
+      "lat": 49.0069,
+      "lon": 8.4037
+    },
+    {
+      "id": 24,
+      "name": "Kassel",
+      "city": "Kassel",
+      "lat": 51.3127,
+      "lon": 9.4797
+    },
+    {
+      "id": 25,
+      "name": "Kempten",
+      "city": "Kempten",
+      "lat": 47.7267,
+      "lon": 10.3168
+    },
+    {
+      "id": 26,
+      "name": "Kiel",
+      "city": "Kiel",
+      "lat": 54.3233,
+      "lon": 10.1228
+    },
+    {
+      "id": 27,
+      "name": "Koblenz",
+      "city": "Koblenz",
+      "lat": 50.3569,
+      "lon": 7.589
+    },
+    {
+      "id": 28,
+      "name": "Koeln",
+      "city": "Koeln",
+      "lat": 50.9375,
+      "lon": 6.9603
+    },
+    {
+      "id": 29,
+      "name": "Konstanz",
+      "city": "Konstanz",
+      "lat": 47.6603,
+      "lon": 9.1758
+    },
+    {
+      "id": 30,
+      "name": "Leipzig",
+      "city": "Leipzig",
+      "lat": 51.3397,
+      "lon": 12.3731
+    },
+    {
+      "id": 31,
+      "name": "Magdeburg",
+      "city": "Magdeburg",
+      "lat": 52.1205,
+      "lon": 11.6276
+    },
+    {
+      "id": 32,
+      "name": "Mannheim",
+      "city": "Mannheim",
+      "lat": 49.4875,
+      "lon": 8.466
+    },
+    {
+      "id": 33,
+      "name": "Muenchen",
+      "city": "Muenchen",
+      "lat": 48.1351,
+      "lon": 11.582
+    },
+    {
+      "id": 34,
+      "name": "Muenster",
+      "city": "Muenster",
+      "lat": 51.9607,
+      "lon": 7.6261
+    },
+    {
+      "id": 35,
+      "name": "Norden",
+      "city": "Norden",
+      "lat": 53.5972,
+      "lon": 7.2061
+    },
+    {
+      "id": 36,
+      "name": "Nuernberg",
+      "city": "Nuernberg",
+      "lat": 49.4521,
+      "lon": 11.0767
+    },
+    {
+      "id": 37,
+      "name": "Oldenburg",
+      "city": "Oldenburg",
+      "lat": 53.1435,
+      "lon": 8.2146
+    },
+    {
+      "id": 38,
+      "name": "Osnabrueck",
+      "city": "Osnabrueck",
+      "lat": 52.2799,
+      "lon": 8.0472
+    },
+    {
+      "id": 39,
+      "name": "Passau",
+      "city": "Passau",
+      "lat": 48.5667,
+      "lon": 13.4319
+    },
+    {
+      "id": 40,
+      "name": "Regensburg",
+      "city": "Regensburg",
+      "lat": 49.0134,
+      "lon": 12.1016
+    },
+    {
+      "id": 41,
+      "name": "Saarbruecken",
+      "city": "Saarbruecken",
+      "lat": 49.2402,
+      "lon": 6.9969
+    },
+    {
+      "id": 42,
+      "name": "Schwerin",
+      "city": "Schwerin",
+      "lat": 53.6355,
+      "lon": 11.4012
+    },
+    {
+      "id": 43,
+      "name": "Siegen",
+      "city": "Siegen",
+      "lat": 50.8748,
+      "lon": 8.0243
+    },
+    {
+      "id": 44,
+      "name": "Stuttgart",
+      "city": "Stuttgart",
+      "lat": 48.7758,
+      "lon": 9.1829
+    },
+    {
+      "id": 45,
+      "name": "Trier",
+      "city": "Trier",
+      "lat": 49.7596,
+      "lon": 6.6441
+    },
+    {
+      "id": 46,
+      "name": "Ulm",
+      "city": "Ulm",
+      "lat": 48.4011,
+      "lon": 9.9876
+    },
+    {
+      "id": 47,
+      "name": "Wesel",
+      "city": "Wesel",
+      "lat": 51.6586,
+      "lon": 6.6176
+    },
+    {
+      "id": 48,
+      "name": "Wilhelmshaven",
+      "city": "Wilhelmshaven",
+      "lat": 53.5293,
+      "lon": 8.1075
+    },
+    {
+      "id": 49,
+      "name": "Wuerzburg",
+      "city": "Wuerzburg",
+      "lat": 49.7913,
+      "lon": 9.9534
+    }
+  ],
+  "links": [
+    {
+      "src": 0,
+      "dst": 12,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 0,
+      "dst": 28,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 1,
+      "dst": 33,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 1,
+      "dst": 36,
+      "capacity": 10000,
+      "delay": 0.6
+    },
+    {
+      "src": 1,
+      "dst": 46,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 2,
+      "dst": 8,
+      "capacity": 10000,
+      "delay": 0.69
+    },
+    {
+      "src": 2,
+      "dst": 36,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 2,
+      "dst": 40,
+      "capacity": 10000,
+      "delay": 0.55
+    },
+    {
+      "src": 3,
+      "dst": 11,
+      "capacity": 10000,
+      "delay": 0.83
+    },
+    {
+      "src": 3,
+      "dst": 20,
+      "capacity": 2500,
+      "delay": 0.87
+    },
+    {
+      "src": 3,
+      "dst": 30,
+      "capacity": 40000,
+      "delay": 0.75
+    },
+    {
+      "src": 3,
+      "dst": 31,
+      "capacity": 10000,
+      "delay": 0.64
+    },
+    {
+      "src": 3,
+      "dst": 42,
+      "capacity": 10000,
+      "delay": 0.91
+    },
+    {
+      "src": 4,
+      "dst": 10,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 4,
+      "dst": 22,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 4,
+      "dst": 24,
+      "capacity": 10000,
+      "delay": 0.52
+    },
+    {
+      "src": 4,
+      "dst": 38,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 5,
+      "dst": 22,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 5,
+      "dst": 31,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 6,
+      "dst": 7,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 6,
+      "dst": 21,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 6,
+      "dst": 22,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 6,
+      "dst": 37,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 6,
+      "dst": 38,
+      "capacity": 10000,
+      "delay": 0.51
+    },
+    {
+      "src": 7,
+      "dst": 48,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 8,
+      "dst": 11,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 8,
+      "dst": 30,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 9,
+      "dst": 16,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 9,
+      "dst": 32,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 10,
+      "dst": 14,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 10,
+      "dst": 34,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 10,
+      "dst": 43,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 11,
+      "dst": 30,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 12,
+      "dst": 14,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 12,
+      "dst": 28,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 13,
+      "dst": 18,
+      "capacity": 10000,
+      "delay": 0.53
+    },
+    {
+      "src": 13,
+      "dst": 24,
+      "capacity": 10000,
+      "delay": 0.57
+    },
+    {
+      "src": 13,
+      "dst": 30,
+      "capacity": 10000,
+      "delay": 0.51
+    },
+    {
+      "src": 13,
+      "dst": 36,
+      "capacity": 10000,
+      "delay": 0.85
+    },
+    {
+      "src": 14,
+      "dst": 47,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 15,
+      "dst": 26,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 16,
+      "dst": 18,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 16,
+      "dst": 19,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 16,
+      "dst": 27,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 16,
+      "dst": 43,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 16,
+      "dst": 49,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 17,
+      "dst": 23,
+      "capacity": 2500,
+      "delay": 0.6
+    },
+    {
+      "src": 17,
+      "dst": 29,
+      "capacity": 2500,
+      "delay": 0.53
+    },
+    {
+      "src": 18,
+      "dst": 19,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 18,
+      "dst": 24,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 18,
+      "dst": 49,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 19,
+      "dst": 24,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 19,
+      "dst": 43,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 20,
+      "dst": 42,
+      "capacity": 2500,
+      "delay": 0.7
+    },
+    {
+      "src": 21,
+      "dst": 22,
+      "capacity": 10000,
+      "delay": 0.66
+    },
+    {
+      "src": 21,
+      "dst": 26,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 21,
+      "dst": 42,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 22,
+      "dst": 24,
+      "capacity": 10000,
+      "delay": 0.6
+    },
+    {
+      "src": 22,
+      "dst": 31,
+      "capacity": 10000,
+      "delay": 0.66
+    },
+    {
+      "src": 23,
+      "dst": 32,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 23,
+      "dst": 44,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 25,
+      "dst": 29,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 25,
+      "dst": 33,
+      "capacity": 10000,
+      "delay": 0.52
+    },
+    {
+      "src": 25,
+      "dst": 46,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 26,
+      "dst": 42,
+      "capacity": 10000,
+      "delay": 0.57
+    },
+    {
+      "src": 27,
+      "dst": 28,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 27,
+      "dst": 45,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 28,
+      "dst": 43,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 30,
+      "dst": 31,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 32,
+      "dst": 41,
+      "capacity": 2500,
+      "delay": 0.55
+    },
+    {
+      "src": 33,
+      "dst": 39,
+      "capacity": 2500,
+      "delay": 0.72
+    },
+    {
+      "src": 33,
+      "dst": 40,
+      "capacity": 10000,
+      "delay": 0.52
+    },
+    {
+      "src": 33,
+      "dst": 46,
+      "capacity": 10000,
+      "delay": 0.61
+    },
+    {
+      "src": 34,
+      "dst": 38,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 34,
+      "dst": 47,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 35,
+      "dst": 37,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 35,
+      "dst": 38,
+      "capacity": 2500,
+      "delay": 0.78
+    },
+    {
+      "src": 36,
+      "dst": 40,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 36,
+      "dst": 49,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 37,
+      "dst": 48,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 39,
+      "dst": 40,
+      "capacity": 2500,
+      "delay": 0.55
+    },
+    {
+      "src": 41,
+      "dst": 45,
+      "capacity": 2500,
+      "delay": 0.5
+    },
+    {
+      "src": 44,
+      "dst": 46,
+      "capacity": 10000,
+      "delay": 0.5
+    },
+    {
+      "src": 44,
+      "dst": 49,
+      "capacity": 10000,
+      "delay": 0.63
+    }
+  ]
+}

@@ -22,7 +22,6 @@ from marl_routing.sequential_routing_env import MultiTrafficSequentialEnv
 from marl_routing.gnn_extractor import SeqGNNExtractor
 
 K_PATHS = 3
-DELAY_PENALTY = 0.5
 
 _ap = argparse.ArgumentParser()
 _ap.add_argument("--topo", default="abilene", help="abilene | geant")
@@ -30,9 +29,13 @@ _ap.add_argument("--loads", default="2,3,4", help="comma-list of training load f
 _ap.add_argument("--seed", type=int, default=0, help="PPO/env seed (multi-seed runs)")
 _ap.add_argument("--threads", type=int, default=8, help="torch CPU threads (parallel-friendly)")
 _ap.add_argument("--timesteps", type=int, default=500_000)
+_ap.add_argument("--delay-penalty", type=float, default=0.5,
+                 help="penalty per extra hop over shortest. Lower on large/long-diameter "
+                      "topologies (e.g. 0.1 on germany50) so useful detours aren't over-penalised.")
 _ap.add_argument("--tag", default="", help="output dir suffix (e.g. _robust)")
 _ARGS, _ = _ap.parse_known_args()
 torch.set_num_threads(_ARGS.threads)
+DELAY_PENALTY = _ARGS.delay_penalty
 
 TOPO = _ARGS.topo
 # Domain-randomize over load so the policy PRACTISES congestion relief across regimes.
