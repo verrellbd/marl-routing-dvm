@@ -1,0 +1,888 @@
+{
+  "name": "germany50 (SNDlib)",
+  "description": "SNDlib native instance 'germany50' (sndlib.zib.de) \u2014 REAL data. Capacity = pre-installed else installable module; unit UNSPECIFIED x1000.0. Delays from great-circle distance. Nodes/links/demands are ground-truth.",
+  "capacity_unit": "Mbps",
+  "delay_unit": "ms",
+  "nodes": [
+    {
+      "id": 0,
+      "name": "Aachen",
+      "city": "Aachen",
+      "lat": 50.76,
+      "lon": 6.04
+    },
+    {
+      "id": 1,
+      "name": "Augsburg",
+      "city": "Augsburg",
+      "lat": 48.33,
+      "lon": 10.9
+    },
+    {
+      "id": 2,
+      "name": "Bayreuth",
+      "city": "Bayreuth",
+      "lat": 49.93,
+      "lon": 11.59
+    },
+    {
+      "id": 3,
+      "name": "Berlin",
+      "city": "Berlin",
+      "lat": 52.52,
+      "lon": 13.39
+    },
+    {
+      "id": 4,
+      "name": "Bielefeld",
+      "city": "Bielefeld",
+      "lat": 52.04,
+      "lon": 8.5
+    },
+    {
+      "id": 5,
+      "name": "Braunschweig",
+      "city": "Braunschweig",
+      "lat": 52.28,
+      "lon": 10.55
+    },
+    {
+      "id": 6,
+      "name": "Bremen",
+      "city": "Bremen",
+      "lat": 53.11,
+      "lon": 8.85
+    },
+    {
+      "id": 7,
+      "name": "Bremerhaven",
+      "city": "Bremerhaven",
+      "lat": 53.54,
+      "lon": 8.58
+    },
+    {
+      "id": 8,
+      "name": "Chemnitz",
+      "city": "Chemnitz",
+      "lat": 50.84,
+      "lon": 12.93
+    },
+    {
+      "id": 9,
+      "name": "Darmstadt",
+      "city": "Darmstadt",
+      "lat": 49.89,
+      "lon": 8.65
+    },
+    {
+      "id": 10,
+      "name": "Dortmund",
+      "city": "Dortmund",
+      "lat": 51.51,
+      "lon": 7.45
+    },
+    {
+      "id": 11,
+      "name": "Dresden",
+      "city": "Dresden",
+      "lat": 51.03,
+      "lon": 13.73
+    },
+    {
+      "id": 12,
+      "name": "Duesseldorf",
+      "city": "Duesseldorf",
+      "lat": 51.25,
+      "lon": 6.77
+    },
+    {
+      "id": 13,
+      "name": "Erfurt",
+      "city": "Erfurt",
+      "lat": 50.98,
+      "lon": 11.04
+    },
+    {
+      "id": 14,
+      "name": "Essen",
+      "city": "Essen",
+      "lat": 51.46,
+      "lon": 7.02
+    },
+    {
+      "id": 15,
+      "name": "Flensburg",
+      "city": "Flensburg",
+      "lat": 54.77,
+      "lon": 9.45
+    },
+    {
+      "id": 16,
+      "name": "Frankfurt",
+      "city": "Frankfurt",
+      "lat": 50.12,
+      "lon": 8.71
+    },
+    {
+      "id": 17,
+      "name": "Freiburg",
+      "city": "Freiburg",
+      "lat": 47.98,
+      "lon": 7.8
+    },
+    {
+      "id": 18,
+      "name": "Fulda",
+      "city": "Fulda",
+      "lat": 50.56,
+      "lon": 9.69
+    },
+    {
+      "id": 19,
+      "name": "Giessen",
+      "city": "Giessen",
+      "lat": 50.57,
+      "lon": 8.67
+    },
+    {
+      "id": 20,
+      "name": "Greifswald",
+      "city": "Greifswald",
+      "lat": 54.09,
+      "lon": 13.4
+    },
+    {
+      "id": 21,
+      "name": "Hamburg",
+      "city": "Hamburg",
+      "lat": 53.57,
+      "lon": 9.99
+    },
+    {
+      "id": 22,
+      "name": "Hannover",
+      "city": "Hannover",
+      "lat": 52.38,
+      "lon": 9.72
+    },
+    {
+      "id": 23,
+      "name": "Kaiserslautern",
+      "city": "Kaiserslautern",
+      "lat": 49.43,
+      "lon": 7.75
+    },
+    {
+      "id": 24,
+      "name": "Karlsruhe",
+      "city": "Karlsruhe",
+      "lat": 49.01,
+      "lon": 8.41
+    },
+    {
+      "id": 25,
+      "name": "Kassel",
+      "city": "Kassel",
+      "lat": 51.32,
+      "lon": 9.51
+    },
+    {
+      "id": 26,
+      "name": "Kempten",
+      "city": "Kempten",
+      "lat": 47.72,
+      "lon": 10.32
+    },
+    {
+      "id": 27,
+      "name": "Kiel",
+      "city": "Kiel",
+      "lat": 54.34,
+      "lon": 10.12
+    },
+    {
+      "id": 28,
+      "name": "Koblenz",
+      "city": "Koblenz",
+      "lat": 50.4,
+      "lon": 7.52
+    },
+    {
+      "id": 29,
+      "name": "Koeln",
+      "city": "Koeln",
+      "lat": 50.94,
+      "lon": 6.87
+    },
+    {
+      "id": 30,
+      "name": "Konstanz",
+      "city": "Konstanz",
+      "lat": 47.66,
+      "lon": 9.18
+    },
+    {
+      "id": 31,
+      "name": "Leipzig",
+      "city": "Leipzig",
+      "lat": 51.34,
+      "lon": 12.38
+    },
+    {
+      "id": 32,
+      "name": "Magdeburg",
+      "city": "Magdeburg",
+      "lat": 52.14,
+      "lon": 11.64
+    },
+    {
+      "id": 33,
+      "name": "Mannheim",
+      "city": "Mannheim",
+      "lat": 49.49,
+      "lon": 8.49
+    },
+    {
+      "id": 34,
+      "name": "Muenchen",
+      "city": "Muenchen",
+      "lat": 48.15,
+      "lon": 11.57
+    },
+    {
+      "id": 35,
+      "name": "Muenster",
+      "city": "Muenster",
+      "lat": 51.97,
+      "lon": 7.6
+    },
+    {
+      "id": 36,
+      "name": "Norden",
+      "city": "Norden",
+      "lat": 53.6,
+      "lon": 7.21
+    },
+    {
+      "id": 37,
+      "name": "Nuernberg",
+      "city": "Nuernberg",
+      "lat": 49.57,
+      "lon": 11.03
+    },
+    {
+      "id": 38,
+      "name": "Oldenburg",
+      "city": "Oldenburg",
+      "lat": 53.11,
+      "lon": 8.21
+    },
+    {
+      "id": 39,
+      "name": "Osnabrueck",
+      "city": "Osnabrueck",
+      "lat": 52.28,
+      "lon": 8.03
+    },
+    {
+      "id": 40,
+      "name": "Passau",
+      "city": "Passau",
+      "lat": 48.57,
+      "lon": 13.46
+    },
+    {
+      "id": 41,
+      "name": "Regensburg",
+      "city": "Regensburg",
+      "lat": 49.0,
+      "lon": 12.09
+    },
+    {
+      "id": 42,
+      "name": "Saarbruecken",
+      "city": "Saarbruecken",
+      "lat": 49.23,
+      "lon": 7.03
+    },
+    {
+      "id": 43,
+      "name": "Schwerin",
+      "city": "Schwerin",
+      "lat": 53.55,
+      "lon": 11.45
+    },
+    {
+      "id": 44,
+      "name": "Siegen",
+      "city": "Siegen",
+      "lat": 50.91,
+      "lon": 8.03
+    },
+    {
+      "id": 45,
+      "name": "Stuttgart",
+      "city": "Stuttgart",
+      "lat": 48.74,
+      "lon": 9.1
+    },
+    {
+      "id": 46,
+      "name": "Trier",
+      "city": "Trier",
+      "lat": 49.75,
+      "lon": 6.68
+    },
+    {
+      "id": 47,
+      "name": "Ulm",
+      "city": "Ulm",
+      "lat": 48.4,
+      "lon": 9.99
+    },
+    {
+      "id": 48,
+      "name": "Wesel",
+      "city": "Wesel",
+      "lat": 51.39,
+      "lon": 6.37
+    },
+    {
+      "id": 49,
+      "name": "Wuerzburg",
+      "city": "Wuerzburg",
+      "lat": 49.78,
+      "lon": 9.97
+    }
+  ],
+  "links": [
+    {
+      "src": 12,
+      "dst": 14,
+      "capacity": 40000.0,
+      "delay": 0.15
+    },
+    {
+      "src": 10,
+      "dst": 14,
+      "capacity": 40000.0,
+      "delay": 0.15
+    },
+    {
+      "src": 48,
+      "dst": 14,
+      "capacity": 40000.0,
+      "delay": 0.23
+    },
+    {
+      "src": 29,
+      "dst": 12,
+      "capacity": 40000.0,
+      "delay": 0.18
+    },
+    {
+      "src": 0,
+      "dst": 29,
+      "capacity": 40000.0,
+      "delay": 0.31
+    },
+    {
+      "src": 28,
+      "dst": 29,
+      "capacity": 40000.0,
+      "delay": 0.38
+    },
+    {
+      "src": 35,
+      "dst": 10,
+      "capacity": 40000.0,
+      "delay": 0.26
+    },
+    {
+      "src": 44,
+      "dst": 10,
+      "capacity": 40000.0,
+      "delay": 0.39
+    },
+    {
+      "src": 25,
+      "dst": 10,
+      "capacity": 40000.0,
+      "delay": 0.72
+    },
+    {
+      "src": 48,
+      "dst": 0,
+      "capacity": 40000.0,
+      "delay": 0.37
+    },
+    {
+      "src": 46,
+      "dst": 0,
+      "capacity": 40000.0,
+      "delay": 0.61
+    },
+    {
+      "src": 4,
+      "dst": 35,
+      "capacity": 40000.0,
+      "delay": 0.31
+    },
+    {
+      "src": 39,
+      "dst": 35,
+      "capacity": 40000.0,
+      "delay": 0.23
+    },
+    {
+      "src": 44,
+      "dst": 28,
+      "capacity": 40000.0,
+      "delay": 0.34
+    },
+    {
+      "src": 16,
+      "dst": 28,
+      "capacity": 40000.0,
+      "delay": 0.45
+    },
+    {
+      "src": 23,
+      "dst": 28,
+      "capacity": 40000.0,
+      "delay": 0.55
+    },
+    {
+      "src": 46,
+      "dst": 28,
+      "capacity": 40000.0,
+      "delay": 0.47
+    },
+    {
+      "src": 4,
+      "dst": 44,
+      "capacity": 40000.0,
+      "delay": 0.65
+    },
+    {
+      "src": 19,
+      "dst": 44,
+      "capacity": 40000.0,
+      "delay": 0.29
+    },
+    {
+      "src": 38,
+      "dst": 48,
+      "capacity": 40000.0,
+      "delay": 1.14
+    },
+    {
+      "src": 36,
+      "dst": 48,
+      "capacity": 40000.0,
+      "delay": 1.26
+    },
+    {
+      "src": 31,
+      "dst": 3,
+      "capacity": 40000.0,
+      "delay": 0.74
+    },
+    {
+      "src": 11,
+      "dst": 3,
+      "capacity": 40000.0,
+      "delay": 0.84
+    },
+    {
+      "src": 43,
+      "dst": 3,
+      "capacity": 40000.0,
+      "delay": 0.87
+    },
+    {
+      "src": 32,
+      "dst": 3,
+      "capacity": 40000.0,
+      "delay": 0.63
+    },
+    {
+      "src": 20,
+      "dst": 3,
+      "capacity": 40000.0,
+      "delay": 0.87
+    },
+    {
+      "src": 11,
+      "dst": 31,
+      "capacity": 40000.0,
+      "delay": 0.5
+    },
+    {
+      "src": 13,
+      "dst": 31,
+      "capacity": 40000.0,
+      "delay": 0.51
+    },
+    {
+      "src": 32,
+      "dst": 31,
+      "capacity": 40000.0,
+      "delay": 0.51
+    },
+    {
+      "src": 2,
+      "dst": 31,
+      "capacity": 40000.0,
+      "delay": 0.83
+    },
+    {
+      "src": 13,
+      "dst": 11,
+      "capacity": 40000.0,
+      "delay": 0.94
+    },
+    {
+      "src": 8,
+      "dst": 11,
+      "capacity": 40000.0,
+      "delay": 0.3
+    },
+    {
+      "src": 8,
+      "dst": 13,
+      "capacity": 40000.0,
+      "delay": 0.67
+    },
+    {
+      "src": 25,
+      "dst": 13,
+      "capacity": 40000.0,
+      "delay": 0.57
+    },
+    {
+      "src": 49,
+      "dst": 13,
+      "capacity": 40000.0,
+      "delay": 0.77
+    },
+    {
+      "src": 2,
+      "dst": 8,
+      "capacity": 40000.0,
+      "delay": 0.69
+    },
+    {
+      "src": 32,
+      "dst": 43,
+      "capacity": 40000.0,
+      "delay": 0.79
+    },
+    {
+      "src": 20,
+      "dst": 43,
+      "capacity": 40000.0,
+      "delay": 0.71
+    },
+    {
+      "src": 21,
+      "dst": 43,
+      "capacity": 40000.0,
+      "delay": 0.48
+    },
+    {
+      "src": 27,
+      "dst": 43,
+      "capacity": 40000.0,
+      "delay": 0.62
+    },
+    {
+      "src": 5,
+      "dst": 32,
+      "capacity": 40000.0,
+      "delay": 0.38
+    },
+    {
+      "src": 27,
+      "dst": 21,
+      "capacity": 40000.0,
+      "delay": 0.43
+    },
+    {
+      "src": 22,
+      "dst": 21,
+      "capacity": 40000.0,
+      "delay": 0.67
+    },
+    {
+      "src": 5,
+      "dst": 21,
+      "capacity": 40000.0,
+      "delay": 0.74
+    },
+    {
+      "src": 38,
+      "dst": 6,
+      "capacity": 40000.0,
+      "delay": 0.21
+    },
+    {
+      "src": 7,
+      "dst": 6,
+      "capacity": 40000.0,
+      "delay": 0.26
+    },
+    {
+      "src": 22,
+      "dst": 6,
+      "capacity": 40000.0,
+      "delay": 0.5
+    },
+    {
+      "src": 15,
+      "dst": 27,
+      "capacity": 40000.0,
+      "delay": 0.32
+    },
+    {
+      "src": 36,
+      "dst": 38,
+      "capacity": 40000.0,
+      "delay": 0.43
+    },
+    {
+      "src": 39,
+      "dst": 38,
+      "capacity": 40000.0,
+      "delay": 0.47
+    },
+    {
+      "src": 7,
+      "dst": 15,
+      "capacity": 40000.0,
+      "delay": 0.74
+    },
+    {
+      "src": 4,
+      "dst": 22,
+      "capacity": 40000.0,
+      "delay": 0.46
+    },
+    {
+      "src": 5,
+      "dst": 22,
+      "capacity": 40000.0,
+      "delay": 0.29
+    },
+    {
+      "src": 39,
+      "dst": 22,
+      "capacity": 40000.0,
+      "delay": 0.58
+    },
+    {
+      "src": 5,
+      "dst": 4,
+      "capacity": 40000.0,
+      "delay": 0.71
+    },
+    {
+      "src": 25,
+      "dst": 5,
+      "capacity": 40000.0,
+      "delay": 0.64
+    },
+    {
+      "src": 19,
+      "dst": 25,
+      "capacity": 40000.0,
+      "delay": 0.51
+    },
+    {
+      "src": 18,
+      "dst": 25,
+      "capacity": 40000.0,
+      "delay": 0.43
+    },
+    {
+      "src": 9,
+      "dst": 16,
+      "capacity": 40000.0,
+      "delay": 0.13
+    },
+    {
+      "src": 19,
+      "dst": 16,
+      "capacity": 40000.0,
+      "delay": 0.25
+    },
+    {
+      "src": 18,
+      "dst": 16,
+      "capacity": 40000.0,
+      "delay": 0.43
+    },
+    {
+      "src": 33,
+      "dst": 9,
+      "capacity": 40000.0,
+      "delay": 0.23
+    },
+    {
+      "src": 23,
+      "dst": 9,
+      "capacity": 40000.0,
+      "delay": 0.41
+    },
+    {
+      "src": 24,
+      "dst": 33,
+      "capacity": 40000.0,
+      "delay": 0.27
+    },
+    {
+      "src": 42,
+      "dst": 23,
+      "capacity": 40000.0,
+      "delay": 0.28
+    },
+    {
+      "src": 24,
+      "dst": 23,
+      "capacity": 40000.0,
+      "delay": 0.33
+    },
+    {
+      "src": 18,
+      "dst": 19,
+      "capacity": 40000.0,
+      "delay": 0.36
+    },
+    {
+      "src": 42,
+      "dst": 46,
+      "capacity": 40000.0,
+      "delay": 0.32
+    },
+    {
+      "src": 49,
+      "dst": 18,
+      "capacity": 40000.0,
+      "delay": 0.44
+    },
+    {
+      "src": 24,
+      "dst": 42,
+      "capacity": 40000.0,
+      "delay": 0.52
+    },
+    {
+      "src": 24,
+      "dst": 45,
+      "capacity": 40000.0,
+      "delay": 0.29
+    },
+    {
+      "src": 47,
+      "dst": 45,
+      "capacity": 40000.0,
+      "delay": 0.38
+    },
+    {
+      "src": 30,
+      "dst": 45,
+      "capacity": 40000.0,
+      "delay": 0.6
+    },
+    {
+      "src": 49,
+      "dst": 45,
+      "capacity": 40000.0,
+      "delay": 0.66
+    },
+    {
+      "src": 17,
+      "dst": 24,
+      "capacity": 40000.0,
+      "delay": 0.62
+    },
+    {
+      "src": 1,
+      "dst": 47,
+      "capacity": 40000.0,
+      "delay": 0.34
+    },
+    {
+      "src": 17,
+      "dst": 30,
+      "capacity": 40000.0,
+      "delay": 0.55
+    },
+    {
+      "src": 26,
+      "dst": 30,
+      "capacity": 40000.0,
+      "delay": 0.43
+    },
+    {
+      "src": 1,
+      "dst": 34,
+      "capacity": 40000.0,
+      "delay": 0.27
+    },
+    {
+      "src": 26,
+      "dst": 34,
+      "capacity": 40000.0,
+      "delay": 0.52
+    },
+    {
+      "src": 40,
+      "dst": 34,
+      "capacity": 40000.0,
+      "delay": 0.74
+    },
+    {
+      "src": 37,
+      "dst": 34,
+      "capacity": 40000.0,
+      "delay": 0.81
+    },
+    {
+      "src": 41,
+      "dst": 34,
+      "capacity": 40000.0,
+      "delay": 0.51
+    },
+    {
+      "src": 49,
+      "dst": 1,
+      "capacity": 40000.0,
+      "delay": 0.87
+    },
+    {
+      "src": 41,
+      "dst": 40,
+      "capacity": 40000.0,
+      "delay": 0.56
+    },
+    {
+      "src": 2,
+      "dst": 37,
+      "capacity": 40000.0,
+      "delay": 0.28
+    },
+    {
+      "src": 49,
+      "dst": 37,
+      "capacity": 40000.0,
+      "delay": 0.4
+    },
+    {
+      "src": 41,
+      "dst": 37,
+      "capacity": 40000.0,
+      "delay": 0.5
+    }
+  ]
+}

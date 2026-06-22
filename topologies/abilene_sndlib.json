@@ -1,0 +1,184 @@
+{
+  "name": "abilene (SNDlib)",
+  "description": "SNDlib native instance 'abilene' (sndlib.zib.de) \u2014 REAL data. Capacity = pre-installed else installable module; unit MBITPERSEC. Delays from great-circle distance. Nodes/links/demands are ground-truth.",
+  "capacity_unit": "Mbps",
+  "delay_unit": "ms",
+  "nodes": [
+    {
+      "id": 0,
+      "name": "ATLAM5",
+      "city": "ATLAM5",
+      "lat": 33.75,
+      "lon": -84.3833
+    },
+    {
+      "id": 1,
+      "name": "ATLAng",
+      "city": "ATLAng",
+      "lat": 34.5,
+      "lon": -85.5
+    },
+    {
+      "id": 2,
+      "name": "CHINng",
+      "city": "CHINng",
+      "lat": 41.8333,
+      "lon": -87.6167
+    },
+    {
+      "id": 3,
+      "name": "DNVRng",
+      "city": "DNVRng",
+      "lat": 40.75,
+      "lon": -105.0
+    },
+    {
+      "id": 4,
+      "name": "HSTNng",
+      "city": "HSTNng",
+      "lat": 29.770031,
+      "lon": -95.517364
+    },
+    {
+      "id": 5,
+      "name": "IPLSng",
+      "city": "IPLSng",
+      "lat": 39.780622,
+      "lon": -86.159535
+    },
+    {
+      "id": 6,
+      "name": "KSCYng",
+      "city": "KSCYng",
+      "lat": 38.961694,
+      "lon": -96.596704
+    },
+    {
+      "id": 7,
+      "name": "LOSAng",
+      "city": "LOSAng",
+      "lat": 34.05,
+      "lon": -118.25
+    },
+    {
+      "id": 8,
+      "name": "NYCMng",
+      "city": "NYCMng",
+      "lat": 40.7833,
+      "lon": -73.9667
+    },
+    {
+      "id": 9,
+      "name": "SNVAng",
+      "city": "SNVAng",
+      "lat": 37.38575,
+      "lon": -122.02553
+    },
+    {
+      "id": 10,
+      "name": "STTLng",
+      "city": "STTLng",
+      "lat": 47.6,
+      "lon": -122.3
+    },
+    {
+      "id": 11,
+      "name": "WASHng",
+      "city": "WASHng",
+      "lat": 38.897303,
+      "lon": -77.026842
+    }
+  ],
+  "links": [
+    {
+      "src": 1,
+      "dst": 0,
+      "capacity": 9920.0,
+      "delay": 0.66
+    },
+    {
+      "src": 4,
+      "dst": 1,
+      "capacity": 9920.0,
+      "delay": 5.4
+    },
+    {
+      "src": 5,
+      "dst": 1,
+      "capacity": 2480.0,
+      "delay": 2.95
+    },
+    {
+      "src": 11,
+      "dst": 1,
+      "capacity": 9920.0,
+      "delay": 4.5
+    },
+    {
+      "src": 5,
+      "dst": 2,
+      "capacity": 9920.0,
+      "delay": 1.3
+    },
+    {
+      "src": 8,
+      "dst": 2,
+      "capacity": 9920.0,
+      "delay": 5.72
+    },
+    {
+      "src": 6,
+      "dst": 3,
+      "capacity": 9920.0,
+      "delay": 3.72
+    },
+    {
+      "src": 9,
+      "dst": 3,
+      "capacity": 9920.0,
+      "delay": 7.57
+    },
+    {
+      "src": 10,
+      "dst": 3,
+      "capacity": 9920.0,
+      "delay": 7.85
+    },
+    {
+      "src": 6,
+      "dst": 4,
+      "capacity": 9920.0,
+      "delay": 5.13
+    },
+    {
+      "src": 7,
+      "dst": 4,
+      "capacity": 9920.0,
+      "delay": 10.96
+    },
+    {
+      "src": 6,
+      "dst": 5,
+      "capacity": 9920.0,
+      "delay": 4.51
+    },
+    {
+      "src": 9,
+      "dst": 7,
+      "capacity": 9920.0,
+      "delay": 2.52
+    },
+    {
+      "src": 11,
+      "dst": 8,
+      "capacity": 9920.0,
+      "delay": 1.67
+    },
+    {
+      "src": 10,
+      "dst": 9,
+      "capacity": 9920.0,
+      "delay": 5.68
+    }
+  ]
+}

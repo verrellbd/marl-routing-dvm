@@ -32,6 +32,8 @@ _ap.add_argument("--timesteps", type=int, default=500_000)
 _ap.add_argument("--delay-penalty", type=float, default=0.5,
                  help="penalty per extra hop over shortest. Lower on large/long-diameter "
                       "topologies (e.g. 0.1 on germany50) so useful detours aren't over-penalised.")
+_ap.add_argument("--traffic", default="gravity", choices=["gravity", "real"],
+                 help="gravity = synthetic; real = measured SNDlib/Abilene-Zhang matrices")
 _ap.add_argument("--tag", default="", help="output dir suffix (e.g. _robust)")
 _ARGS, _ = _ap.parse_known_args()
 torch.set_num_threads(_ARGS.threads)
@@ -47,8 +49,13 @@ RESULTS = Path(f"results/{TOPO}_qos{_ARGS.tag}_seed{_ARGS.seed}"); RESULTS.mkdir
 def main():
     topo = load_topology(TOPO); n = topo.n_nodes
     pairs = [(i, j) for i in range(n) for j in range(n) if i != j]
-    train_mats = [np.array([generate_matrix(TOPO, lf, seed=s)[a, b] for a, b in pairs])
-                  for lf in TRAIN_LOADS for s in TRAIN_SEEDS]
+    if _ARGS.traffic == "real":
+        from marl_routing.real_traffic import real_matrices
+        train_mats = real_matrices(TOPO, pairs, TRAIN_LOADS, n_per_scale=20,
+                                   seed=_ARGS.seed, split="train")
+    else:
+        train_mats = [np.array([generate_matrix(TOPO, lf, seed=s)[a, b] for a, b in pairs])
+                      for lf in TRAIN_LOADS for s in TRAIN_SEEDS]
 
     env = MultiTrafficSequentialEnv(TOPO, pairs, train_mats, k_paths=K_PATHS,
                                     seed=_ARGS.seed, delay_penalty=DELAY_PENALTY)
@@ -67,12 +74,17 @@ def main():
     model.save(RESULTS / "gnn_generalist_qos")
     print(f"\n[saved] {RESULTS/'gnn_generalist_qos'}.zip")
 
-    # quick analytical check on a few held-out matrices vs OSPF
-    print("\n[analytical check on held-out seeds]")
+    # quick analytical check on a few held-out matrices vs OSPF (real: unseen later period)
+    print("\n[analytical check on held-out traffic]")
     check_load = TRAIN_LOADS[-1]  # heaviest trained load (most congested held-out check)
-    for seed in [1009, 1018, 1004, 1011]:
-        T = generate_matrix(TOPO, check_load, seed=seed)
-        rates = np.array([T[a, b] for a, b in pairs])
+    if _ARGS.traffic == "real":
+        from marl_routing.real_traffic import real_matrices
+        check_rates = real_matrices(TOPO, pairs, [check_load], n_per_scale=4,
+                                    seed=777, split="test")
+    else:
+        check_rates = [np.array([generate_matrix(TOPO, check_load, seed=s)[a, b]
+                                 for a, b in pairs]) for s in [1009, 1018, 1004, 1011]]
+    for seed, rates in enumerate(check_rates):
         ospf = env.ospf_max_util(rates)
         env.set_matrix(rates); obs, _ = env.reset(); done = False
         while not done:

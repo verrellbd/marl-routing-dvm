@@ -28,6 +28,9 @@ _ap.add_argument("--delay-penalty", type=float, default=0.5,
                  help="penalty per DETOUR hop (non-progress); keeps short paths when "
                       "uncongested, detours only to relieve congestion. 0.5 = best on Abilene.")
 _ap.add_argument("--stretch", type=int, default=1)
+_ap.add_argument("--traffic", default="gravity", choices=["gravity", "real"],
+                 help="gravity = synthetic model; real = measured SNDlib/Abilene-Zhang "
+                      "matrices (load factors become magnitude SCALES on real demand).")
 _ap.add_argument("--tag", default="")
 _ARGS = _ap.parse_args()
 
@@ -41,8 +44,13 @@ RESULTS.mkdir(parents=True, exist_ok=True)
 def main():
     topo = load_topology(TOPO); n = topo.n_nodes
     pairs = [(i, j) for i in range(n) for j in range(n) if i != j]
-    train_mats = [np.array([generate_matrix(TOPO, lf, seed=s)[a, b] for a, b in pairs])
-                  for lf in TRAIN_LOADS for s in TRAIN_SEEDS]
+    if _ARGS.traffic == "real":
+        from marl_routing.real_traffic import real_matrices
+        train_mats = real_matrices(TOPO, pairs, TRAIN_LOADS, n_per_scale=20,
+                                   seed=_ARGS.seed, split="train")
+    else:
+        train_mats = [np.array([generate_matrix(TOPO, lf, seed=s)[a, b] for a, b in pairs])
+                      for lf in TRAIN_LOADS for s in TRAIN_SEEDS]
 
     env = MultiAgentRoutingEnv(TOPO, pairs, train_mats, seed=_ARGS.seed,
                                delay_penalty=_ARGS.delay_penalty, stretch=_ARGS.stretch)
@@ -55,10 +63,16 @@ def main():
     mappo = MAPPO(env, hidden=128, rollout_steps=4096, n_epochs=8, minibatch=512,
                   gamma=0.99, ent_coef=0.01, seed=_ARGS.seed)
 
-    # held-out analytical check seeds (unseen during training)
-    held = [1000, 1005, 1009, 1013, 1018]
-    held_rates = {s: np.array([generate_matrix(TOPO, TRAIN_LOADS[-1], seed=s)[a, b]
-                               for a, b in pairs]) for s in held}
+    # held-out check on UNSEEN traffic (real: later-period 5-min matrices; gravity: unseen seeds)
+    if _ARGS.traffic == "real":
+        from marl_routing.real_traffic import real_matrices
+        held_list = real_matrices(TOPO, pairs, [TRAIN_LOADS[-1]], n_per_scale=5,
+                                  seed=777, split="test")
+        held_rates = {i: r for i, r in enumerate(held_list)}
+    else:
+        held = [1000, 1005, 1009, 1013, 1018]
+        held_rates = {s: np.array([generate_matrix(TOPO, TRAIN_LOADS[-1], seed=s)[a, b]
+                                   for a, b in pairs]) for s in held}
 
     def ev():
         wins = 0; deltas = []
@@ -68,7 +82,7 @@ def main():
             marl = eval_env.cur_max
             deltas.append(ospf - marl)
             wins += marl < ospf - 0.5
-        return f"held-out: MARL beats OSPF {wins}/{len(held)}, mean Δ {np.mean(deltas):+.1f}pt"
+        return f"held-out: MARL beats OSPF {wins}/{len(held_rates)}, mean Δ {np.mean(deltas):+.1f}pt"
 
     mappo.learn(total_steps=_ARGS.timesteps, log_every=5, eval_fn=ev)
     mappo.save(RESULTS / "mappo_actor_critic.pt")
