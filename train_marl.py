@@ -46,8 +46,7 @@ def main():
     pairs = [(i, j) for i in range(n) for j in range(n) if i != j]
     if _ARGS.traffic == "real":
         from marl_routing.real_traffic import real_matrices
-        train_mats = real_matrices(TOPO, pairs, TRAIN_LOADS, n_per_scale=20,
-                                   seed=_ARGS.seed, split="train")
+        train_mats = real_matrices(TOPO, pairs, TRAIN_LOADS, n_per_scale=20, split="train")
     else:
         train_mats = [np.array([generate_matrix(TOPO, lf, seed=s)[a, b] for a, b in pairs])
                       for lf in TRAIN_LOADS for s in TRAIN_SEEDS]
@@ -66,8 +65,7 @@ def main():
     # held-out check on UNSEEN traffic (real: later-period 5-min matrices; gravity: unseen seeds)
     if _ARGS.traffic == "real":
         from marl_routing.real_traffic import real_matrices
-        held_list = real_matrices(TOPO, pairs, [TRAIN_LOADS[-1]], n_per_scale=5,
-                                  seed=777, split="test")
+        held_list = real_matrices(TOPO, pairs, [TRAIN_LOADS[-1]], n_per_scale=5, split="test")
         held_rates = {i: r for i, r in enumerate(held_list)}
     else:
         held = [1000, 1005, 1009, 1013, 1018]

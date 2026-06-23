@@ -35,6 +35,8 @@ _ap.add_argument("--n-feasible", type=int, default=3)
 _ap.add_argument("--stretch", type=int, default=1)
 _ap.add_argument("--max-flows", type=int, default=0,
                  help="keep only top-N flows by rate (0=all); for big topologies (germany50)")
+_ap.add_argument("--traffic", default="gravity", choices=["gravity", "real"],
+                 help="gravity = synthetic; real = measured SNDlib test-split matrices")
 _ARGS = _ap.parse_args()
 
 
@@ -59,12 +61,17 @@ def main():
     mappo = MAPPO(env); mappo.load(_ARGS.model)
     act = mappo.act_fn(True)
 
-    # rate vector per seed (top-N filtered) + OSPF util (for stratification)
-    rates = {s: filt_rates(np.array([generate_matrix(TOPO, _ARGS.load, seed=s)[a, b]
-                                     for a, b in pairs]), _ARGS.max_flows)
-             for s in CAND}
-    util = {s: round(env.ospf_max_util(rates[s]), 1) for s in CAND}
-    by = sorted(CAND, key=lambda s: -util[s])
+    # candidate matrices: gravity (per seed) or REAL test-split matrices (top-N filtered)
+    if _ARGS.traffic == "real":
+        from marl_routing.real_traffic import real_matrices
+        rmats = real_matrices(TOPO, pairs, [_ARGS.load], n_per_scale=len(CAND), split="test")
+        rates = {i: filt_rates(rmats[i], _ARGS.max_flows) for i in range(len(rmats))}
+    else:
+        rates = {s: filt_rates(np.array([generate_matrix(TOPO, _ARGS.load, seed=s)[a, b]
+                                         for a, b in pairs]), _ARGS.max_flows)
+                 for s in CAND}
+    util = {s: round(env.ospf_max_util(rates[s]), 1) for s in rates}
+    by = sorted(rates, key=lambda s: -util[s])
     overload = [s for s in by if util[s] >= 100][:_ARGS.n_overload]
     feasible = [s for s in by if util[s] < 100][:_ARGS.n_feasible]  # most-stressed feasible
     test_seeds = overload + feasible

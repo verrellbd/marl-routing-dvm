@@ -81,11 +81,13 @@ def sample_abilene_dynamic(k: int = 60, seed: int = 0, load_scale: float = 1.0,
 
 
 def real_matrices(topo_name: str, pairs, load_scales, n_per_scale: int = 20,
-                  seed: int = 0, split: str = "train"):
-    """Return a list of flattened pair-rate vectors from REAL traffic, scaled by each
-    load factor. Abilene uses the dynamic 5-min archive with a TEMPORAL split (train =
-    first 70% of the 6-month timeline, test = last 30% -> generalization to unseen real
-    traffic). GEANT/Germany50 (one real matrix each) use that matrix at each load scale.
+                  split: str = "train", **_ignore):
+    """Return a list of flattened pair-rate vectors from REAL measured traffic, scaled by
+    each load factor. DETERMINISTIC temporal selection (no RNG/seed): the demand-matrix
+    archive is split TEMPORALLY (train = first 70% of the timeline, test = last 30% ->
+    generalization to unseen real traffic), and within a split we take EVENLY-SPACED
+    timestamps. Reproducible from the data alone — selection is a function of time, not a
+    seed. (**_ignore swallows a legacy `seed=` kwarg so old callers don't break.)
     """
     name2id, n = _name2id(topo_name)
     tgz = _tgz_for(topo_name)
@@ -94,12 +96,13 @@ def real_matrices(topo_name: str, pairs, load_scales, n_per_scale: int = 20,
                          key=lambda m: m.name)
         cut = int(0.7 * len(members))            # temporal split: first 70% train, last 30% test
         pool = members[:cut] if split == "train" else members[cut:]
-        rng = np.random.RandomState(seed)
+        # evenly-spaced candidate timestamps across the split (oversample 4x to skip empties)
+        cand = sorted(set(np.linspace(0, len(pool) - 1,
+                                      min(4 * n_per_scale, len(pool))).astype(int)))
         out = []
         for sc in load_scales:
-            picks = list(rng.permutation(len(pool)))   # draw until we have enough non-empty
             got = 0
-            for i in picks:
+            for i in cand:
                 if got >= n_per_scale:
                     break
                 text = tar.extractfile(pool[i]).read().decode()

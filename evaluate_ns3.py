@@ -37,6 +37,9 @@ _ap.add_argument("--max-flows", type=int, default=0,
                  help="keep only the top-N flows by rate (0=all). Needed on big topologies "
                       "(e.g. germany50, 2450 pairs) to keep ns-3 tractable; gravity demand is "
                       "concentrated so the top flows carry most of the load.")
+_ap.add_argument("--traffic", default="gravity", choices=["gravity", "real"],
+                 help="gravity = synthetic; real = measured SNDlib test-split matrices "
+                      "(--load is the magnitude scale on real demand).")
 _ARGS, _ = _ap.parse_known_args()
 
 
@@ -108,27 +111,31 @@ def main():
     pair_paths = [compute_ksp(topo.graph, s, d, k=K_PATHS) for (s, d) in pairs]
     env = MultiTrafficSequentialEnv(TOPO, pairs, [np.zeros(len(pairs))], k_paths=K_PATHS)
 
-    # ---- stratify candidate seeds by congestion (topo/load-agnostic) ----
-    util = {s: round(env.ospf_max_util(
-                filt_rates(np.array([generate_matrix(TOPO, LOAD_FACTOR, seed=s)[a, b]
-                                     for a, b in pairs]), _ARGS.max_flows)), 1)
-            for s in CANDIDATE_SEEDS}
+    # ---- candidate traffic matrices: gravity (per seed) or REAL test-split matrices ----
+    if _ARGS.traffic == "real":
+        from marl_routing.real_traffic import real_matrices
+        rmats = real_matrices(TOPO, pairs, [LOAD_FACTOR], n_per_scale=len(CANDIDATE_SEEDS), split="test")
+        cand_rates = {i: filt_rates(rmats[i], _ARGS.max_flows) for i in range(len(rmats))}
+    else:
+        cand_rates = {s: filt_rates(np.array([generate_matrix(TOPO, LOAD_FACTOR, seed=s)[a, b]
+                                              for a, b in pairs]), _ARGS.max_flows)
+                      for s in CANDIDATE_SEEDS}
+
+    # ---- stratify by congestion ----
+    util = {s: round(env.ospf_max_util(r), 1) for s, r in cand_rates.items()}
     by_util = sorted(util, key=lambda s: -util[s])
     overload = [s for s in by_util if util[s] >= 100][:_ARGS.n_overload]
-    # feasible = the MOST-STRESSED feasible seeds (highest util < 100): this is
-    # where rerouting can still lower peak util/delay. Picking the lightest
-    # feasible seeds hides any routing benefit (everything fits trivially).
+    # feasible = the MOST-STRESSED feasible matrices (highest util < 100)
     feasible = [s for s in by_util if util[s] < 100][:_ARGS.n_feasible]
     test_seeds = overload + feasible
     print(f"[stratify] overload {[(s, util[s]) for s in overload]}  "
           f"feasible {[(s, util[s]) for s in feasible]}")
 
-    # ---- Phase 1: with model loaded, extract routing JSONs for every seed ----
+    # ---- Phase 1: with model loaded, extract routing JSONs for every matrix ----
     model = PPO.load(MODEL, device="cpu")
     meta = {}
     for seed in test_seeds:
-        T = generate_matrix(TOPO, LOAD_FACTOR, seed=seed)
-        rates = filt_rates(np.array([T[s, d] for (s, d) in pairs]), _ARGS.max_flows)
+        rates = cand_rates[seed]
         flows = gnn_paths_for(model, env, pairs, pair_paths, rates)
         regime = "overload" if util[seed] >= 100 else "feasible"
         rf = OUT / f"routing_seed{seed}.json"

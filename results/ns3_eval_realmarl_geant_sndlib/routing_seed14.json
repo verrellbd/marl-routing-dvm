@@ -1,0 +1,8103 @@
+{
+  "seed": 14,
+  "regime": "feasible",
+  "ospf_util": 84.0,
+  "marl_util": 73.5,
+  "flows": [
+    {
+      "src": 0,
+      "dst": 1,
+      "rate_mbps": 115.28169,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        2,
+        6,
+        1
+      ],
+      "ospf_path": [
+        0,
+        2,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 2,
+      "rate_mbps": 485.867675,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        2
+      ],
+      "ospf_path": [
+        0,
+        2
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 4,
+      "rate_mbps": 848.92514,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        4
+      ],
+      "ospf_path": [
+        0,
+        4
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 5,
+      "rate_mbps": 0.793705,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        2,
+        12,
+        5
+      ],
+      "ospf_path": [
+        0,
+        2,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 6,
+      "rate_mbps": 1.5708199999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        2,
+        6
+      ],
+      "ospf_path": [
+        0,
+        2,
+        6
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 7,
+      "rate_mbps": 1090.654925,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        2,
+        6,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        0,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 8,
+      "rate_mbps": 3234.8468000000003,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        9,
+        8
+      ],
+      "ospf_path": [
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 9,
+      "rate_mbps": 10427.38322,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        9
+      ],
+      "ospf_path": [
+        0,
+        9
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 10,
+      "rate_mbps": 0.886765,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        4,
+        10
+      ],
+      "ospf_path": [
+        0,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 11,
+      "rate_mbps": 2918.703645,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        2,
+        12,
+        11
+      ],
+      "ospf_path": [
+        0,
+        2,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 12,
+      "rate_mbps": 340.900935,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        2,
+        12
+      ],
+      "ospf_path": [
+        0,
+        2,
+        12
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 13,
+      "rate_mbps": 0.499335,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        2,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        0,
+        2,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 14,
+      "rate_mbps": 70.454125,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        4,
+        14
+      ],
+      "ospf_path": [
+        0,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 15,
+      "rate_mbps": 17.77105,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        15
+      ],
+      "ospf_path": [
+        0,
+        15
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 17,
+      "rate_mbps": 16.204165,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        2,
+        12,
+        5,
+        17
+      ],
+      "ospf_path": [
+        0,
+        15,
+        21,
+        17
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 18,
+      "rate_mbps": 5516.609875,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        4,
+        18
+      ],
+      "ospf_path": [
+        0,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 19,
+      "rate_mbps": 10033.817765,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        19
+      ],
+      "ospf_path": [
+        0,
+        19
+      ]
+    },
+    {
+      "src": 0,
+      "dst": 21,
+      "rate_mbps": 14.256875,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        0,
+        2,
+        6,
+        21
+      ],
+      "ospf_path": [
+        0,
+        15,
+        21
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 0,
+      "rate_mbps": 19.17205,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4,
+        0
+      ],
+      "ospf_path": [
+        1,
+        6,
+        2,
+        0
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 2,
+      "rate_mbps": 26.970485000000004,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        2
+      ],
+      "ospf_path": [
+        1,
+        6,
+        2
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 3,
+      "rate_mbps": 0.487525,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4,
+        3
+      ],
+      "ospf_path": [
+        1,
+        6,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 4,
+      "rate_mbps": 148.731705,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4
+      ],
+      "ospf_path": [
+        1,
+        6,
+        4
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 5,
+      "rate_mbps": 70.992255,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        5
+      ],
+      "ospf_path": [
+        1,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 6,
+      "rate_mbps": 67.68164,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6
+      ],
+      "ospf_path": [
+        1,
+        6
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 7,
+      "rate_mbps": 0.499335,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        1,
+        6,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 8,
+      "rate_mbps": 0.028115,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        1,
+        6,
+        2,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 9,
+      "rate_mbps": 1.8919,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        1,
+        6,
+        2,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 10,
+      "rate_mbps": 6.665655,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4,
+        10
+      ],
+      "ospf_path": [
+        1,
+        6,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 11,
+      "rate_mbps": 0.5069250000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        14,
+        11
+      ],
+      "ospf_path": [
+        1,
+        14,
+        11
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 12,
+      "rate_mbps": 0.881425,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4,
+        12
+      ],
+      "ospf_path": [
+        1,
+        6,
+        2,
+        12
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 13,
+      "rate_mbps": 100.178815,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        13
+      ],
+      "ospf_path": [
+        1,
+        13
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 14,
+      "rate_mbps": 169.68207,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        14
+      ],
+      "ospf_path": [
+        1,
+        14
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 15,
+      "rate_mbps": 7.650544999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        1,
+        6,
+        21,
+        15
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 16,
+      "rate_mbps": 3.013995,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        1,
+        6,
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 17,
+      "rate_mbps": 0.457725,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        5,
+        17
+      ],
+      "ospf_path": [
+        1,
+        6,
+        5,
+        17
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 18,
+      "rate_mbps": 750.7684,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4,
+        18
+      ],
+      "ospf_path": [
+        1,
+        6,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 19,
+      "rate_mbps": 1.812895,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        1,
+        6,
+        2,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 1,
+      "dst": 21,
+      "rate_mbps": 61.412414999999996,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        1,
+        6,
+        21
+      ],
+      "ospf_path": [
+        1,
+        6,
+        21
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 0,
+      "rate_mbps": 752.5118500000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0
+      ],
+      "ospf_path": [
+        2,
+        0
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 1,
+      "rate_mbps": 37.146095,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        6,
+        1
+      ],
+      "ospf_path": [
+        2,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 3,
+      "rate_mbps": 10.636144999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        4,
+        3
+      ],
+      "ospf_path": [
+        2,
+        0,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 4,
+      "rate_mbps": 11168.43036,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        12,
+        7,
+        4
+      ],
+      "ospf_path": [
+        2,
+        0,
+        4
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 5,
+      "rate_mbps": 98.73761,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        12,
+        5
+      ],
+      "ospf_path": [
+        2,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 6,
+      "rate_mbps": 962.1855949999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        6
+      ],
+      "ospf_path": [
+        2,
+        6
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 7,
+      "rate_mbps": 1.9368850000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        2,
+        12,
+        7
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 8,
+      "rate_mbps": 6.301839999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        2,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 9,
+      "rate_mbps": 364.60719500000005,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        9
+      ],
+      "ospf_path": [
+        2,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 10,
+      "rate_mbps": 58.048665,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        4,
+        10
+      ],
+      "ospf_path": [
+        2,
+        0,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 11,
+      "rate_mbps": 11.28196,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        12,
+        11
+      ],
+      "ospf_path": [
+        2,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 12,
+      "rate_mbps": 42.341865,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        12
+      ],
+      "ospf_path": [
+        2,
+        12
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 13,
+      "rate_mbps": 7.793934999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        2,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 14,
+      "rate_mbps": 302.50623,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        4,
+        14
+      ],
+      "ospf_path": [
+        2,
+        0,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 15,
+      "rate_mbps": 74.62592,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        15
+      ],
+      "ospf_path": [
+        2,
+        0,
+        15
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 16,
+      "rate_mbps": 15.289,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        2,
+        0,
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 17,
+      "rate_mbps": 642.571005,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        4,
+        12,
+        5,
+        17
+      ],
+      "ospf_path": [
+        2,
+        6,
+        5,
+        17
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 18,
+      "rate_mbps": 1172.789125,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        4,
+        18
+      ],
+      "ospf_path": [
+        2,
+        0,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 19,
+      "rate_mbps": 29.05301,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        19
+      ],
+      "ospf_path": [
+        2,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 20,
+      "rate_mbps": 16.878095,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        4,
+        3,
+        20
+      ],
+      "ospf_path": [
+        2,
+        0,
+        9,
+        20
+      ]
+    },
+    {
+      "src": 2,
+      "dst": 21,
+      "rate_mbps": 486.086415,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        2,
+        0,
+        4,
+        6,
+        21
+      ],
+      "ospf_path": [
+        2,
+        6,
+        21
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 0,
+      "rate_mbps": 121.46656999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        0
+      ],
+      "ospf_path": [
+        3,
+        4,
+        0
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 1,
+      "rate_mbps": 27.59662,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        6,
+        1
+      ],
+      "ospf_path": [
+        3,
+        4,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 2,
+      "rate_mbps": 136.261295,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        12,
+        2
+      ],
+      "ospf_path": [
+        3,
+        4,
+        0,
+        2
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 4,
+      "rate_mbps": 400.29409,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4
+      ],
+      "ospf_path": [
+        3,
+        4
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 5,
+      "rate_mbps": 14.390704999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        12,
+        5
+      ],
+      "ospf_path": [
+        3,
+        4,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 6,
+      "rate_mbps": 79.32376500000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        6
+      ],
+      "ospf_path": [
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 7,
+      "rate_mbps": 0.03374,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        3,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 8,
+      "rate_mbps": 0.316865,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        3,
+        20,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 9,
+      "rate_mbps": 422.33281,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        3,
+        20,
+        9
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 10,
+      "rate_mbps": 0.7987650000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        10
+      ],
+      "ospf_path": [
+        3,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 11,
+      "rate_mbps": 0.09081499999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        12,
+        11
+      ],
+      "ospf_path": [
+        3,
+        4,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 12,
+      "rate_mbps": 1.26633,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        12
+      ],
+      "ospf_path": [
+        3,
+        4,
+        12
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 13,
+      "rate_mbps": 0.027555000000000003,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        3,
+        4,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 14,
+      "rate_mbps": 470.86460999999997,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        14
+      ],
+      "ospf_path": [
+        3,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 15,
+      "rate_mbps": 14.33082,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        3,
+        4,
+        0,
+        15
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 16,
+      "rate_mbps": 1.5064350000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        16
+      ],
+      "ospf_path": [
+        3,
+        16
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 17,
+      "rate_mbps": 6.69883,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        12,
+        5,
+        17
+      ],
+      "ospf_path": [
+        3,
+        4,
+        6,
+        5,
+        17
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 18,
+      "rate_mbps": 497.49068,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        18
+      ],
+      "ospf_path": [
+        3,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 19,
+      "rate_mbps": 118.30552499999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        3,
+        4,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 3,
+      "dst": 21,
+      "rate_mbps": 16.517655,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        3,
+        4,
+        6,
+        21
+      ],
+      "ospf_path": [
+        3,
+        4,
+        6,
+        21
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 0,
+      "rate_mbps": 3967.305455,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        0
+      ],
+      "ospf_path": [
+        4,
+        0
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 1,
+      "rate_mbps": 210.495565,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        6,
+        1
+      ],
+      "ospf_path": [
+        4,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 2,
+      "rate_mbps": 435.68127,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        12,
+        2
+      ],
+      "ospf_path": [
+        4,
+        0,
+        2
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 3,
+      "rate_mbps": 554.494565,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        3
+      ],
+      "ospf_path": [
+        4,
+        3
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 5,
+      "rate_mbps": 688.262565,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        12,
+        5
+      ],
+      "ospf_path": [
+        4,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 6,
+      "rate_mbps": 204.97618500000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        6
+      ],
+      "ospf_path": [
+        4,
+        6
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 7,
+      "rate_mbps": 698.056085,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        4,
+        7
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 8,
+      "rate_mbps": 81.38745,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        4,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 9,
+      "rate_mbps": 1263.2247499999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        4,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 10,
+      "rate_mbps": 214.45256,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        10
+      ],
+      "ospf_path": [
+        4,
+        10
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 11,
+      "rate_mbps": 1133.141305,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        12,
+        11
+      ],
+      "ospf_path": [
+        4,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 12,
+      "rate_mbps": 268.689305,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        12
+      ],
+      "ospf_path": [
+        4,
+        12
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 13,
+      "rate_mbps": 3.83975,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        4,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 14,
+      "rate_mbps": 2757.4737,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        14
+      ],
+      "ospf_path": [
+        4,
+        14
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 15,
+      "rate_mbps": 221.75391000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        4,
+        0,
+        15
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 16,
+      "rate_mbps": 14.606634999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 17,
+      "rate_mbps": 269.883095,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        12,
+        5,
+        17
+      ],
+      "ospf_path": [
+        4,
+        6,
+        5,
+        17
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 18,
+      "rate_mbps": 4346.3174149999995,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        18
+      ],
+      "ospf_path": [
+        4,
+        18
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 19,
+      "rate_mbps": 5714.93418,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        4,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 20,
+      "rate_mbps": 56.13736,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        0,
+        9,
+        20
+      ],
+      "ospf_path": [
+        4,
+        3,
+        20
+      ]
+    },
+    {
+      "src": 4,
+      "dst": 21,
+      "rate_mbps": 1254.5806,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        4,
+        6,
+        21
+      ],
+      "ospf_path": [
+        4,
+        6,
+        21
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 0,
+      "rate_mbps": 232.458375,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        0
+      ],
+      "ospf_path": [
+        5,
+        6,
+        2,
+        0
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 1,
+      "rate_mbps": 18.51724,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        1
+      ],
+      "ospf_path": [
+        5,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 2,
+      "rate_mbps": 167.972075,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        2
+      ],
+      "ospf_path": [
+        5,
+        6,
+        2
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 3,
+      "rate_mbps": 5.25706,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        3
+      ],
+      "ospf_path": [
+        5,
+        6,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 4,
+      "rate_mbps": 1107.79253,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        12,
+        4
+      ],
+      "ospf_path": [
+        5,
+        6,
+        4
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 6,
+      "rate_mbps": 64.7638,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6
+      ],
+      "ospf_path": [
+        5,
+        6
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 7,
+      "rate_mbps": 25.986720000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        5,
+        12,
+        7
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 8,
+      "rate_mbps": 62.168165,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        5,
+        6,
+        2,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 9,
+      "rate_mbps": 37.348245000000006,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        5,
+        6,
+        2,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 10,
+      "rate_mbps": 4.07733,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        10
+      ],
+      "ospf_path": [
+        5,
+        6,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 11,
+      "rate_mbps": 10.731175,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        12,
+        11
+      ],
+      "ospf_path": [
+        5,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 12,
+      "rate_mbps": 91.75762,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        12
+      ],
+      "ospf_path": [
+        5,
+        12
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 13,
+      "rate_mbps": 2.6681749999999997,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        5,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 14,
+      "rate_mbps": 185.62419500000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        14
+      ],
+      "ospf_path": [
+        5,
+        6,
+        1,
+        14
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 15,
+      "rate_mbps": 16.510065,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        5,
+        6,
+        21,
+        15
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 16,
+      "rate_mbps": 0.141705,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        5,
+        6,
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 17,
+      "rate_mbps": 59.59699,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        17
+      ],
+      "ospf_path": [
+        5,
+        17
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 18,
+      "rate_mbps": 67.103585,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        18
+      ],
+      "ospf_path": [
+        5,
+        6,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 19,
+      "rate_mbps": 28.075145,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        5,
+        6,
+        2,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 20,
+      "rate_mbps": 2.1140149999999998,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        4,
+        0,
+        9,
+        20
+      ],
+      "ospf_path": [
+        5,
+        6,
+        4,
+        3,
+        20
+      ]
+    },
+    {
+      "src": 5,
+      "dst": 21,
+      "rate_mbps": 243.73752499999998,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        5,
+        6,
+        21
+      ],
+      "ospf_path": [
+        5,
+        6,
+        21
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 0,
+      "rate_mbps": 35.85362,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        0
+      ],
+      "ospf_path": [
+        6,
+        2,
+        0
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 1,
+      "rate_mbps": 183.38366000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        1
+      ],
+      "ospf_path": [
+        6,
+        1
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 2,
+      "rate_mbps": 150.53785,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        2
+      ],
+      "ospf_path": [
+        6,
+        2
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 3,
+      "rate_mbps": 3.470875,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        3
+      ],
+      "ospf_path": [
+        6,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 4,
+      "rate_mbps": 320.54606,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4
+      ],
+      "ospf_path": [
+        6,
+        4
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 5,
+      "rate_mbps": 97.925065,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        5
+      ],
+      "ospf_path": [
+        6,
+        5
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 7,
+      "rate_mbps": 1.526115,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        6,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 8,
+      "rate_mbps": 0.551065,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        6,
+        2,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 9,
+      "rate_mbps": 4.919955,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        6,
+        2,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 10,
+      "rate_mbps": 2.4356549999999997,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        10
+      ],
+      "ospf_path": [
+        6,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 11,
+      "rate_mbps": 7.791405,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        12,
+        11
+      ],
+      "ospf_path": [
+        6,
+        2,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 12,
+      "rate_mbps": 15.914855000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        12
+      ],
+      "ospf_path": [
+        6,
+        2,
+        12
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 13,
+      "rate_mbps": 3.940125,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        6,
+        13
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 14,
+      "rate_mbps": 802.27371,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        14
+      ],
+      "ospf_path": [
+        6,
+        1,
+        14
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 15,
+      "rate_mbps": 38.47484,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        6,
+        21,
+        15
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 16,
+      "rate_mbps": 31.208075,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        6,
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 17,
+      "rate_mbps": 34.2097,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        5,
+        17
+      ],
+      "ospf_path": [
+        6,
+        5,
+        17
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 18,
+      "rate_mbps": 410.26558,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        18
+      ],
+      "ospf_path": [
+        6,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 19,
+      "rate_mbps": 8.352030000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        6,
+        2,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 20,
+      "rate_mbps": 5.72828,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        4,
+        0,
+        9,
+        20
+      ],
+      "ospf_path": [
+        6,
+        4,
+        3,
+        20
+      ]
+    },
+    {
+      "src": 6,
+      "dst": 21,
+      "rate_mbps": 322.66289,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        6,
+        21
+      ],
+      "ospf_path": [
+        6,
+        21
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 0,
+      "rate_mbps": 356.84531499999997,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        2,
+        0
+      ],
+      "ospf_path": [
+        7,
+        4,
+        0
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 1,
+      "rate_mbps": 5.37121,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        5,
+        6,
+        1
+      ],
+      "ospf_path": [
+        7,
+        4,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 2,
+      "rate_mbps": 137.35612,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        2
+      ],
+      "ospf_path": [
+        7,
+        12,
+        2
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 3,
+      "rate_mbps": 81.72568,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        4,
+        3
+      ],
+      "ospf_path": [
+        7,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 4,
+      "rate_mbps": 18213.71087,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        4
+      ],
+      "ospf_path": [
+        7,
+        4
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 5,
+      "rate_mbps": 23.994725,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        5
+      ],
+      "ospf_path": [
+        7,
+        12,
+        5
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 6,
+      "rate_mbps": 1.5255550000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        5,
+        6
+      ],
+      "ospf_path": [
+        7,
+        4,
+        6
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 8,
+      "rate_mbps": 9.861275000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        2,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        7,
+        4,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 9,
+      "rate_mbps": 167.164875,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        2,
+        0,
+        9
+      ],
+      "ospf_path": [
+        7,
+        4,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 10,
+      "rate_mbps": 0.55247,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        4,
+        10
+      ],
+      "ospf_path": [
+        7,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 11,
+      "rate_mbps": 3.41577,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        11
+      ],
+      "ospf_path": [
+        7,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 12,
+      "rate_mbps": 12.311835,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12
+      ],
+      "ospf_path": [
+        7,
+        12
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 13,
+      "rate_mbps": 8.528595,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        5,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        7,
+        4,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 14,
+      "rate_mbps": 282.72463,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        11,
+        14
+      ],
+      "ospf_path": [
+        7,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 15,
+      "rate_mbps": 16.07708,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        5,
+        6,
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        7,
+        4,
+        0,
+        15
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 16,
+      "rate_mbps": 1.034375,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        7,
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 17,
+      "rate_mbps": 2.57708,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        5,
+        17
+      ],
+      "ospf_path": [
+        7,
+        12,
+        5,
+        17
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 18,
+      "rate_mbps": 1059.02315,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        4,
+        18
+      ],
+      "ospf_path": [
+        7,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 19,
+      "rate_mbps": 26.69495,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        2,
+        0,
+        19
+      ],
+      "ospf_path": [
+        7,
+        4,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 20,
+      "rate_mbps": 108.95539,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        2,
+        0,
+        4,
+        3,
+        20
+      ],
+      "ospf_path": [
+        7,
+        4,
+        3,
+        20
+      ]
+    },
+    {
+      "src": 7,
+      "dst": 21,
+      "rate_mbps": 2411.39161,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        7,
+        12,
+        5,
+        17,
+        21
+      ],
+      "ospf_path": [
+        7,
+        4,
+        6,
+        21
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 0,
+      "rate_mbps": 6148.537985000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        0
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 1,
+      "rate_mbps": 0.88536,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        20,
+        3,
+        4,
+        6,
+        1
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        2,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 2,
+      "rate_mbps": 62.868245,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        0,
+        2
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        2
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 4,
+      "rate_mbps": 530.69721,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        20,
+        3,
+        4
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        4
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 5,
+      "rate_mbps": 1.389195,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        20,
+        3,
+        4,
+        12,
+        5
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        2,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 6,
+      "rate_mbps": 1.279825,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        20,
+        3,
+        4,
+        6
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        2,
+        6
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 9,
+      "rate_mbps": 1667.3431299999997,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9
+      ],
+      "ospf_path": [
+        8,
+        9
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 10,
+      "rate_mbps": 0.017995,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        20,
+        3,
+        4,
+        10
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 11,
+      "rate_mbps": 0.798485,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        20,
+        3,
+        4,
+        12,
+        11
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        2,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 13,
+      "rate_mbps": 0.76587,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        20,
+        3,
+        4,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        2,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 14,
+      "rate_mbps": 6.403335,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        20,
+        3,
+        4,
+        14
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 15,
+      "rate_mbps": 15.14055,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        0,
+        15
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        15
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 16,
+      "rate_mbps": 0.04667,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        20,
+        3,
+        16
+      ],
+      "ospf_path": [
+        8,
+        9,
+        20,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 17,
+      "rate_mbps": 0.46194,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        0,
+        2,
+        12,
+        5,
+        17
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        15,
+        21,
+        17
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 18,
+      "rate_mbps": 222.75426499999998,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        20,
+        3,
+        4,
+        18
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 19,
+      "rate_mbps": 10.143839999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        19
+      ],
+      "ospf_path": [
+        8,
+        19
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 20,
+      "rate_mbps": 8.96242,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        20
+      ],
+      "ospf_path": [
+        8,
+        9,
+        20
+      ]
+    },
+    {
+      "src": 8,
+      "dst": 21,
+      "rate_mbps": 4.051745,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        8,
+        9,
+        0,
+        2,
+        6,
+        21
+      ],
+      "ospf_path": [
+        8,
+        9,
+        0,
+        15,
+        21
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 0,
+      "rate_mbps": 15618.243110000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        0
+      ],
+      "ospf_path": [
+        9,
+        0
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 1,
+      "rate_mbps": 5.866325,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20,
+        3,
+        4,
+        6,
+        1
+      ],
+      "ospf_path": [
+        9,
+        0,
+        2,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 2,
+      "rate_mbps": 237.05247,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        0,
+        2
+      ],
+      "ospf_path": [
+        9,
+        0,
+        2
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 4,
+      "rate_mbps": 1678.49098,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20,
+        3,
+        4
+      ],
+      "ospf_path": [
+        9,
+        0,
+        4
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 5,
+      "rate_mbps": 6.974645000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20,
+        3,
+        4,
+        12,
+        5
+      ],
+      "ospf_path": [
+        9,
+        0,
+        2,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 6,
+      "rate_mbps": 3.44023,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20,
+        3,
+        4,
+        6
+      ],
+      "ospf_path": [
+        9,
+        0,
+        2,
+        6
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 7,
+      "rate_mbps": 2.305765,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20,
+        3,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        9,
+        0,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 8,
+      "rate_mbps": 2797.91129,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        8
+      ],
+      "ospf_path": [
+        9,
+        8
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 11,
+      "rate_mbps": 1.3079399999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20,
+        3,
+        4,
+        12,
+        11
+      ],
+      "ospf_path": [
+        9,
+        0,
+        2,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 12,
+      "rate_mbps": 1.2652050000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20,
+        3,
+        4,
+        12
+      ],
+      "ospf_path": [
+        9,
+        0,
+        2,
+        12
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 13,
+      "rate_mbps": 0.039925,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20,
+        3,
+        4,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        9,
+        0,
+        2,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 14,
+      "rate_mbps": 124.57194,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20,
+        3,
+        4,
+        14
+      ],
+      "ospf_path": [
+        9,
+        0,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 15,
+      "rate_mbps": 113.53964500000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        0,
+        15
+      ],
+      "ospf_path": [
+        9,
+        0,
+        15
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 16,
+      "rate_mbps": 24.926195,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20,
+        3,
+        16
+      ],
+      "ospf_path": [
+        9,
+        20,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 17,
+      "rate_mbps": 22.86082,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        0,
+        2,
+        12,
+        5,
+        17
+      ],
+      "ospf_path": [
+        9,
+        0,
+        15,
+        21,
+        17
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 18,
+      "rate_mbps": 918.94853,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20,
+        3,
+        16,
+        18
+      ],
+      "ospf_path": [
+        9,
+        0,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 19,
+      "rate_mbps": 228.63071000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        0,
+        19
+      ],
+      "ospf_path": [
+        9,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 20,
+      "rate_mbps": 11.65899,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        20
+      ],
+      "ospf_path": [
+        9,
+        20
+      ]
+    },
+    {
+      "src": 9,
+      "dst": 21,
+      "rate_mbps": 78.59163,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        9,
+        0,
+        2,
+        6,
+        21
+      ],
+      "ospf_path": [
+        9,
+        0,
+        15,
+        21
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 1,
+      "rate_mbps": 5.3717749999999995,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        6,
+        1
+      ],
+      "ospf_path": [
+        10,
+        4,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 2,
+      "rate_mbps": 7.295724999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        12,
+        2
+      ],
+      "ospf_path": [
+        10,
+        4,
+        0,
+        2
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 3,
+      "rate_mbps": 5.4600550000000005,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        3
+      ],
+      "ospf_path": [
+        10,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 4,
+      "rate_mbps": 61.24344,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4
+      ],
+      "ospf_path": [
+        10,
+        4
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 5,
+      "rate_mbps": 5.3894850000000005,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        21,
+        6,
+        5
+      ],
+      "ospf_path": [
+        10,
+        4,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 6,
+      "rate_mbps": 8.287925000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        6
+      ],
+      "ospf_path": [
+        10,
+        4,
+        6
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 7,
+      "rate_mbps": 2.488235,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        10,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 9,
+      "rate_mbps": 1.30541,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        10,
+        4,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 11,
+      "rate_mbps": 0.436355,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        21,
+        14,
+        11
+      ],
+      "ospf_path": [
+        10,
+        4,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 12,
+      "rate_mbps": 2.81269,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        12
+      ],
+      "ospf_path": [
+        10,
+        4,
+        12
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 13,
+      "rate_mbps": 0.060730000000000006,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        10,
+        4,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 14,
+      "rate_mbps": 19.94467,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        14
+      ],
+      "ospf_path": [
+        10,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 15,
+      "rate_mbps": 3.29656,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        21,
+        15
+      ],
+      "ospf_path": [
+        10,
+        21,
+        15
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 16,
+      "rate_mbps": 6.138205,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        21,
+        18,
+        16
+      ],
+      "ospf_path": [
+        10,
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 17,
+      "rate_mbps": 5.913279999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        21,
+        17
+      ],
+      "ospf_path": [
+        10,
+        21,
+        17
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 18,
+      "rate_mbps": 117.88688499999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        18
+      ],
+      "ospf_path": [
+        10,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 19,
+      "rate_mbps": 0.421735,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        10,
+        4,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 20,
+      "rate_mbps": 0.458285,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        4,
+        0,
+        9,
+        20
+      ],
+      "ospf_path": [
+        10,
+        4,
+        3,
+        20
+      ]
+    },
+    {
+      "src": 10,
+      "dst": 21,
+      "rate_mbps": 5.702414999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        10,
+        21
+      ],
+      "ospf_path": [
+        10,
+        21
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 0,
+      "rate_mbps": 285.65428,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        4,
+        0
+      ],
+      "ospf_path": [
+        11,
+        12,
+        2,
+        0
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 1,
+      "rate_mbps": 0.946935,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        1
+      ],
+      "ospf_path": [
+        11,
+        14,
+        1
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 2,
+      "rate_mbps": 29.489645000000003,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        12,
+        2
+      ],
+      "ospf_path": [
+        11,
+        12,
+        2
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 3,
+      "rate_mbps": 1.228935,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        4,
+        3
+      ],
+      "ospf_path": [
+        11,
+        12,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 4,
+      "rate_mbps": 1192.31459,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        4
+      ],
+      "ospf_path": [
+        11,
+        12,
+        4
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 5,
+      "rate_mbps": 3.4711550000000004,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        12,
+        5
+      ],
+      "ospf_path": [
+        11,
+        12,
+        5
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 6,
+      "rate_mbps": 3.4183000000000003,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        1,
+        6
+      ],
+      "ospf_path": [
+        11,
+        12,
+        2,
+        6
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 7,
+      "rate_mbps": 0.5131100000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        11,
+        12,
+        7
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 8,
+      "rate_mbps": 0.01462,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        11,
+        12,
+        2,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 9,
+      "rate_mbps": 11.315980000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        11,
+        12,
+        2,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 10,
+      "rate_mbps": 0.060730000000000006,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        4,
+        10
+      ],
+      "ospf_path": [
+        11,
+        12,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 12,
+      "rate_mbps": 28.583195,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        12
+      ],
+      "ospf_path": [
+        11,
+        12
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 13,
+      "rate_mbps": 0.03121,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        1,
+        6,
+        13
+      ],
+      "ospf_path": [
+        11,
+        14,
+        1,
+        13
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 14,
+      "rate_mbps": 18.117715,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14
+      ],
+      "ospf_path": [
+        11,
+        14
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 15,
+      "rate_mbps": 5.921995,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        11,
+        14,
+        21,
+        15
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 16,
+      "rate_mbps": 0.08997,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        11,
+        12,
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 17,
+      "rate_mbps": 0.02924,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        21,
+        17
+      ],
+      "ospf_path": [
+        11,
+        12,
+        5,
+        17
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 18,
+      "rate_mbps": 22.511905,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        4,
+        18
+      ],
+      "ospf_path": [
+        11,
+        12,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 20,
+      "rate_mbps": 2.814375,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        4,
+        0,
+        9,
+        20
+      ],
+      "ospf_path": [
+        11,
+        12,
+        4,
+        3,
+        20
+      ]
+    },
+    {
+      "src": 11,
+      "dst": 21,
+      "rate_mbps": 72.10198,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        11,
+        14,
+        21
+      ],
+      "ospf_path": [
+        11,
+        14,
+        21
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 0,
+      "rate_mbps": 413.30713000000003,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        2,
+        0
+      ],
+      "ospf_path": [
+        12,
+        2,
+        0
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 1,
+      "rate_mbps": 57.348299999999995,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        5,
+        6,
+        1
+      ],
+      "ospf_path": [
+        12,
+        2,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 2,
+      "rate_mbps": 408.81003499999997,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        2
+      ],
+      "ospf_path": [
+        12,
+        2
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 3,
+      "rate_mbps": 48.37322999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        4,
+        3
+      ],
+      "ospf_path": [
+        12,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 4,
+      "rate_mbps": 1649.50882,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        4
+      ],
+      "ospf_path": [
+        12,
+        4
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 5,
+      "rate_mbps": 119.3295,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        5
+      ],
+      "ospf_path": [
+        12,
+        5
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 6,
+      "rate_mbps": 36.433645,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        5,
+        6
+      ],
+      "ospf_path": [
+        12,
+        2,
+        6
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 7,
+      "rate_mbps": 7.377825,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        4,
+        7
+      ],
+      "ospf_path": [
+        12,
+        7
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 8,
+      "rate_mbps": 41.343759999999996,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        2,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        12,
+        2,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 9,
+      "rate_mbps": 51.833985,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        2,
+        0,
+        9
+      ],
+      "ospf_path": [
+        12,
+        2,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 10,
+      "rate_mbps": 1.34899,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        4,
+        10
+      ],
+      "ospf_path": [
+        12,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 11,
+      "rate_mbps": 9.972335,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        11
+      ],
+      "ospf_path": [
+        12,
+        11
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 13,
+      "rate_mbps": 28.216005000000003,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        5,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        12,
+        2,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 14,
+      "rate_mbps": 1234.170615,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        11,
+        14
+      ],
+      "ospf_path": [
+        12,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 15,
+      "rate_mbps": 34.11298,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        5,
+        6,
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        12,
+        2,
+        0,
+        15
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 16,
+      "rate_mbps": 13.874785000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        12,
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 17,
+      "rate_mbps": 3.0865350000000005,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        5,
+        17
+      ],
+      "ospf_path": [
+        12,
+        5,
+        17
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 18,
+      "rate_mbps": 152.33641,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        4,
+        18
+      ],
+      "ospf_path": [
+        12,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 19,
+      "rate_mbps": 4.59072,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        2,
+        0,
+        19
+      ],
+      "ospf_path": [
+        12,
+        2,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 20,
+      "rate_mbps": 1.9034300000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        2,
+        0,
+        4,
+        3,
+        20
+      ],
+      "ospf_path": [
+        12,
+        4,
+        3,
+        20
+      ]
+    },
+    {
+      "src": 12,
+      "dst": 21,
+      "rate_mbps": 195.96906,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        12,
+        5,
+        6,
+        21
+      ],
+      "ospf_path": [
+        12,
+        2,
+        6,
+        21
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 0,
+      "rate_mbps": 2.570895,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        0
+      ],
+      "ospf_path": [
+        13,
+        6,
+        2,
+        0
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 1,
+      "rate_mbps": 3.0184949999999997,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        1
+      ],
+      "ospf_path": [
+        13,
+        1
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 2,
+      "rate_mbps": 5.30795,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        2
+      ],
+      "ospf_path": [
+        13,
+        6,
+        2
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 3,
+      "rate_mbps": 0.23307999999999998,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        3
+      ],
+      "ospf_path": [
+        13,
+        6,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 4,
+      "rate_mbps": 1033.902955,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4
+      ],
+      "ospf_path": [
+        13,
+        6,
+        4
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 5,
+      "rate_mbps": 0.66915,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        5
+      ],
+      "ospf_path": [
+        13,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 6,
+      "rate_mbps": 4.64189,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6
+      ],
+      "ospf_path": [
+        13,
+        6
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 8,
+      "rate_mbps": 0.36269,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        13,
+        6,
+        2,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 9,
+      "rate_mbps": 2.36874,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        13,
+        6,
+        2,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 10,
+      "rate_mbps": 0.776275,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        10
+      ],
+      "ospf_path": [
+        13,
+        6,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 11,
+      "rate_mbps": 0.7253850000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        12,
+        11
+      ],
+      "ospf_path": [
+        13,
+        1,
+        14,
+        11
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 12,
+      "rate_mbps": 1.29163,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        12
+      ],
+      "ospf_path": [
+        13,
+        6,
+        2,
+        12
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 14,
+      "rate_mbps": 2.3951700000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        14
+      ],
+      "ospf_path": [
+        13,
+        1,
+        14
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 15,
+      "rate_mbps": 0.12652,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        13,
+        6,
+        21,
+        15
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 16,
+      "rate_mbps": 0.58593,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        13,
+        6,
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 17,
+      "rate_mbps": 0.24404499999999998,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        5,
+        17
+      ],
+      "ospf_path": [
+        13,
+        6,
+        5,
+        17
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 18,
+      "rate_mbps": 13.480605,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        18
+      ],
+      "ospf_path": [
+        13,
+        6,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 19,
+      "rate_mbps": 7.316815,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        13,
+        6,
+        2,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 20,
+      "rate_mbps": 0.134955,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        4,
+        0,
+        9,
+        20
+      ],
+      "ospf_path": [
+        13,
+        6,
+        4,
+        3,
+        20
+      ]
+    },
+    {
+      "src": 13,
+      "dst": 21,
+      "rate_mbps": 72.032815,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        13,
+        6,
+        21
+      ],
+      "ospf_path": [
+        13,
+        6,
+        21
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 0,
+      "rate_mbps": 75.78513,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        4,
+        0
+      ],
+      "ospf_path": [
+        14,
+        4,
+        0
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 1,
+      "rate_mbps": 133.202875,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        1
+      ],
+      "ospf_path": [
+        14,
+        1
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 2,
+      "rate_mbps": 62.140895,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        1,
+        6,
+        2
+      ],
+      "ospf_path": [
+        14,
+        4,
+        0,
+        2
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 3,
+      "rate_mbps": 236.97346499999998,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        4,
+        3
+      ],
+      "ospf_path": [
+        14,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 4,
+      "rate_mbps": 1402.7752950000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        4
+      ],
+      "ospf_path": [
+        14,
+        4
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 5,
+      "rate_mbps": 55.668955000000004,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        1,
+        6,
+        5
+      ],
+      "ospf_path": [
+        14,
+        1,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 6,
+      "rate_mbps": 192.09501,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        1,
+        6
+      ],
+      "ospf_path": [
+        14,
+        1,
+        6
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 7,
+      "rate_mbps": 7.434055000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        11,
+        12,
+        4,
+        7
+      ],
+      "ospf_path": [
+        14,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 8,
+      "rate_mbps": 12.685495,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        14,
+        4,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 9,
+      "rate_mbps": 59.439545,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        14,
+        4,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 10,
+      "rate_mbps": 120.54353,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        4,
+        10
+      ],
+      "ospf_path": [
+        14,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 11,
+      "rate_mbps": 15.377285,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        11
+      ],
+      "ospf_path": [
+        14,
+        11
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 12,
+      "rate_mbps": 4.010695,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        11,
+        12
+      ],
+      "ospf_path": [
+        14,
+        4,
+        12
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 13,
+      "rate_mbps": 9.306555,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        1,
+        6,
+        13
+      ],
+      "ospf_path": [
+        14,
+        1,
+        13
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 15,
+      "rate_mbps": 0.6944549999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        14,
+        21,
+        15
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 16,
+      "rate_mbps": 180.522615,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        14,
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 17,
+      "rate_mbps": 27.17629,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        21,
+        17
+      ],
+      "ospf_path": [
+        14,
+        21,
+        17
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 18,
+      "rate_mbps": 998.8680650000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        4,
+        18
+      ],
+      "ospf_path": [
+        14,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 19,
+      "rate_mbps": 43.09705,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        14,
+        4,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 20,
+      "rate_mbps": 6.1078399999999995,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        4,
+        0,
+        9,
+        20
+      ],
+      "ospf_path": [
+        14,
+        4,
+        3,
+        20
+      ]
+    },
+    {
+      "src": 14,
+      "dst": 21,
+      "rate_mbps": 203.578275,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        14,
+        21
+      ],
+      "ospf_path": [
+        14,
+        21
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 0,
+      "rate_mbps": 5023.155755,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0
+      ],
+      "ospf_path": [
+        15,
+        0
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 1,
+      "rate_mbps": 266.427685,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        2,
+        6,
+        1
+      ],
+      "ospf_path": [
+        15,
+        21,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 2,
+      "rate_mbps": 4723.94721,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        2
+      ],
+      "ospf_path": [
+        15,
+        0,
+        2
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 4,
+      "rate_mbps": 8463.121005,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        21,
+        14,
+        4
+      ],
+      "ospf_path": [
+        15,
+        0,
+        4
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 5,
+      "rate_mbps": 332.808415,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        2,
+        12,
+        5
+      ],
+      "ospf_path": [
+        15,
+        21,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 6,
+      "rate_mbps": 84.96657,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        2,
+        6
+      ],
+      "ospf_path": [
+        15,
+        21,
+        6
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 7,
+      "rate_mbps": 37.48039,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        2,
+        12,
+        4,
+        7
+      ],
+      "ospf_path": [
+        15,
+        0,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 8,
+      "rate_mbps": 55.63381,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        15,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 9,
+      "rate_mbps": 1112.28794,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        9
+      ],
+      "ospf_path": [
+        15,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 10,
+      "rate_mbps": 63.529245,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        4,
+        10
+      ],
+      "ospf_path": [
+        15,
+        21,
+        10
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 11,
+      "rate_mbps": 243.60004,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        2,
+        12,
+        11
+      ],
+      "ospf_path": [
+        15,
+        21,
+        14,
+        11
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 12,
+      "rate_mbps": 12.78699,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        2,
+        12
+      ],
+      "ospf_path": [
+        15,
+        0,
+        2,
+        12
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 13,
+      "rate_mbps": 8.041635,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        2,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        15,
+        21,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 14,
+      "rate_mbps": 0.27441,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        4,
+        14
+      ],
+      "ospf_path": [
+        15,
+        21,
+        14
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 16,
+      "rate_mbps": 51.09173,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        15,
+        21,
+        18,
+        16
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 17,
+      "rate_mbps": 138.78158000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        21,
+        17
+      ],
+      "ospf_path": [
+        15,
+        21,
+        17
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 18,
+      "rate_mbps": 1559.547505,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        4,
+        18
+      ],
+      "ospf_path": [
+        15,
+        21,
+        18
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 19,
+      "rate_mbps": 208.30283000000003,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        19
+      ],
+      "ospf_path": [
+        15,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 20,
+      "rate_mbps": 83.62854499999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        0,
+        4,
+        3,
+        20
+      ],
+      "ospf_path": [
+        15,
+        0,
+        9,
+        20
+      ]
+    },
+    {
+      "src": 15,
+      "dst": 21,
+      "rate_mbps": 2644.0378,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        15,
+        21
+      ],
+      "ospf_path": [
+        15,
+        21
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 0,
+      "rate_mbps": 38.400615,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        0
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        0
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 1,
+      "rate_mbps": 23.820125,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        6,
+        1
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 2,
+      "rate_mbps": 44.35185,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        12,
+        2
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        0,
+        2
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 4,
+      "rate_mbps": 386.687245,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 5,
+      "rate_mbps": 26.917624999999997,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        12,
+        5
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 6,
+      "rate_mbps": 5.80194,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        6
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 7,
+      "rate_mbps": 0.75575,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 8,
+      "rate_mbps": 1.10832,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        16,
+        3,
+        20,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 9,
+      "rate_mbps": 25.185705,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        16,
+        3,
+        20,
+        9
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 10,
+      "rate_mbps": 25.903215,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        10
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 11,
+      "rate_mbps": 5.34394,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        12,
+        11
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 12,
+      "rate_mbps": 4.2634549999999996,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        12
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        12
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 13,
+      "rate_mbps": 0.169255,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 14,
+      "rate_mbps": 226.12589,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        14
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 15,
+      "rate_mbps": 39.140055000000004,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        16,
+        18,
+        21,
+        15
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 17,
+      "rate_mbps": 8.8553,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        21,
+        17
+      ],
+      "ospf_path": [
+        16,
+        18,
+        21,
+        17
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 18,
+      "rate_mbps": 314.060065,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18
+      ],
+      "ospf_path": [
+        16,
+        18
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 19,
+      "rate_mbps": 161.584205,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        16,
+        3,
+        4,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 16,
+      "dst": 21,
+      "rate_mbps": 53.051950000000005,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        16,
+        18,
+        21
+      ],
+      "ospf_path": [
+        16,
+        18,
+        21
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 0,
+      "rate_mbps": 8.127105,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6,
+        4,
+        0
+      ],
+      "ospf_path": [
+        17,
+        21,
+        15,
+        0
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 1,
+      "rate_mbps": 0.9314699999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6,
+        1
+      ],
+      "ospf_path": [
+        17,
+        5,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 2,
+      "rate_mbps": 37.292015,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6,
+        2
+      ],
+      "ospf_path": [
+        17,
+        5,
+        6,
+        2
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 3,
+      "rate_mbps": 2.773045,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6,
+        4,
+        3
+      ],
+      "ospf_path": [
+        17,
+        5,
+        6,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 4,
+      "rate_mbps": 201.33465,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6,
+        4
+      ],
+      "ospf_path": [
+        17,
+        5,
+        6,
+        4
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 5,
+      "rate_mbps": 29.616729999999997,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        5
+      ],
+      "ospf_path": [
+        17,
+        5
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 6,
+      "rate_mbps": 14.094085,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6
+      ],
+      "ospf_path": [
+        17,
+        5,
+        6
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 7,
+      "rate_mbps": 0.01462,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        17,
+        5,
+        12,
+        7
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 8,
+      "rate_mbps": 0.022495,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6,
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        17,
+        21,
+        15,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 9,
+      "rate_mbps": 30.562255,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        17,
+        21,
+        15,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 10,
+      "rate_mbps": 0.12033500000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        10
+      ],
+      "ospf_path": [
+        17,
+        21,
+        10
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 11,
+      "rate_mbps": 1.4338950000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        14,
+        11
+      ],
+      "ospf_path": [
+        17,
+        5,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 12,
+      "rate_mbps": 78.526965,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        5,
+        12
+      ],
+      "ospf_path": [
+        17,
+        5,
+        12
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 13,
+      "rate_mbps": 0.09672,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        17,
+        5,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 14,
+      "rate_mbps": 11.496485,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        14
+      ],
+      "ospf_path": [
+        17,
+        21,
+        14
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 15,
+      "rate_mbps": 1.087795,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        15
+      ],
+      "ospf_path": [
+        17,
+        21,
+        15
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 16,
+      "rate_mbps": 15.2696,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        18,
+        16
+      ],
+      "ospf_path": [
+        17,
+        21,
+        18,
+        16
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 18,
+      "rate_mbps": 4113.804775,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        18
+      ],
+      "ospf_path": [
+        17,
+        21,
+        18
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 19,
+      "rate_mbps": 4.217345,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        17,
+        21,
+        15,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 20,
+      "rate_mbps": 0.163635,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21,
+        6,
+        4,
+        0,
+        9,
+        20
+      ],
+      "ospf_path": [
+        17,
+        5,
+        6,
+        4,
+        3,
+        20
+      ]
+    },
+    {
+      "src": 17,
+      "dst": 21,
+      "rate_mbps": 584.37108,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        17,
+        21
+      ],
+      "ospf_path": [
+        17,
+        21
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 0,
+      "rate_mbps": 968.36176,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        0
+      ],
+      "ospf_path": [
+        18,
+        4,
+        0
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 1,
+      "rate_mbps": 224.83509999999998,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        6,
+        1
+      ],
+      "ospf_path": [
+        18,
+        4,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 2,
+      "rate_mbps": 499.02945,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        12,
+        2
+      ],
+      "ospf_path": [
+        18,
+        4,
+        0,
+        2
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 3,
+      "rate_mbps": 257.06855,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        3
+      ],
+      "ospf_path": [
+        18,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 4,
+      "rate_mbps": 2195.7188300000003,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4
+      ],
+      "ospf_path": [
+        18,
+        4
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 5,
+      "rate_mbps": 126.617915,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        12,
+        5
+      ],
+      "ospf_path": [
+        18,
+        4,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 6,
+      "rate_mbps": 123.18893,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        6
+      ],
+      "ospf_path": [
+        18,
+        4,
+        6
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 7,
+      "rate_mbps": 35.54716,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        18,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 8,
+      "rate_mbps": 5.742055000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        18,
+        4,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 9,
+      "rate_mbps": 252.38814000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        18,
+        4,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 10,
+      "rate_mbps": 695.5827549999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        10
+      ],
+      "ospf_path": [
+        18,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 11,
+      "rate_mbps": 155.59023,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        12,
+        11
+      ],
+      "ospf_path": [
+        18,
+        4,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 12,
+      "rate_mbps": 57.61709,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        12
+      ],
+      "ospf_path": [
+        18,
+        4,
+        12
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 13,
+      "rate_mbps": 796.7279050000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        18,
+        4,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 14,
+      "rate_mbps": 1075.674635,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        14
+      ],
+      "ospf_path": [
+        18,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 15,
+      "rate_mbps": 166.14006,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        0,
+        15
+      ],
+      "ospf_path": [
+        18,
+        21,
+        15
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 16,
+      "rate_mbps": 449.29233000000005,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        16
+      ],
+      "ospf_path": [
+        18,
+        16
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 17,
+      "rate_mbps": 3151.0998849999996,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        21,
+        17
+      ],
+      "ospf_path": [
+        18,
+        21,
+        17
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 19,
+      "rate_mbps": 79.89957000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        18,
+        4,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 20,
+      "rate_mbps": 20.55562,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        4,
+        0,
+        9,
+        20
+      ],
+      "ospf_path": [
+        18,
+        4,
+        3,
+        20
+      ]
+    },
+    {
+      "src": 18,
+      "dst": 21,
+      "rate_mbps": 1233.89649,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        18,
+        21
+      ],
+      "ospf_path": [
+        18,
+        21
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 0,
+      "rate_mbps": 9214.4624,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0
+      ],
+      "ospf_path": [
+        19,
+        0
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 1,
+      "rate_mbps": 3.34773,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        2,
+        6,
+        1
+      ],
+      "ospf_path": [
+        19,
+        0,
+        2,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 2,
+      "rate_mbps": 76.16047499999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        2
+      ],
+      "ospf_path": [
+        19,
+        0,
+        2
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 4,
+      "rate_mbps": 850.636255,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        4
+      ],
+      "ospf_path": [
+        19,
+        0,
+        4
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 5,
+      "rate_mbps": 1.462015,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        2,
+        12,
+        5
+      ],
+      "ospf_path": [
+        19,
+        0,
+        2,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 6,
+      "rate_mbps": 0.011245000000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        2,
+        6
+      ],
+      "ospf_path": [
+        19,
+        0,
+        2,
+        6
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 7,
+      "rate_mbps": 2.913625,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        2,
+        12,
+        4,
+        7
+      ],
+      "ospf_path": [
+        19,
+        0,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 8,
+      "rate_mbps": 18.154825000000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        8
+      ],
+      "ospf_path": [
+        19,
+        8
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 9,
+      "rate_mbps": 1899.8436749999998,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        9
+      ],
+      "ospf_path": [
+        19,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 10,
+      "rate_mbps": 0.331765,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        4,
+        10
+      ],
+      "ospf_path": [
+        19,
+        0,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 11,
+      "rate_mbps": 0.030365000000000003,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        2,
+        12,
+        11
+      ],
+      "ospf_path": [
+        19,
+        0,
+        2,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 13,
+      "rate_mbps": 1.4203999999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        2,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        19,
+        0,
+        2,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 14,
+      "rate_mbps": 73.608135,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        4,
+        14
+      ],
+      "ospf_path": [
+        19,
+        0,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 15,
+      "rate_mbps": 8.669175,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        15
+      ],
+      "ospf_path": [
+        19,
+        0,
+        15
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 16,
+      "rate_mbps": 5.345905,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        4,
+        3,
+        16
+      ],
+      "ospf_path": [
+        19,
+        0,
+        4,
+        3,
+        16
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 17,
+      "rate_mbps": 3.478465,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        2,
+        12,
+        5,
+        17
+      ],
+      "ospf_path": [
+        19,
+        0,
+        15,
+        21,
+        17
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 18,
+      "rate_mbps": 434.14306500000004,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        4,
+        18
+      ],
+      "ospf_path": [
+        19,
+        0,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 20,
+      "rate_mbps": 5.075995,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        4,
+        3,
+        20
+      ],
+      "ospf_path": [
+        19,
+        0,
+        9,
+        20
+      ]
+    },
+    {
+      "src": 19,
+      "dst": 21,
+      "rate_mbps": 28.561550000000004,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        19,
+        0,
+        2,
+        6,
+        21
+      ],
+      "ospf_path": [
+        19,
+        0,
+        15,
+        21
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 0,
+      "rate_mbps": 110.73173499999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        0
+      ],
+      "ospf_path": [
+        20,
+        9,
+        0
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 2,
+      "rate_mbps": 35.237885000000006,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        12,
+        2
+      ],
+      "ospf_path": [
+        20,
+        9,
+        0,
+        2
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 4,
+      "rate_mbps": 19.91065,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 5,
+      "rate_mbps": 0.073945,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        12,
+        5
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 6,
+      "rate_mbps": 0.039925,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        6
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4,
+        6
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 7,
+      "rate_mbps": 0.20355499999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 8,
+      "rate_mbps": 1.3900350000000001,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        9,
+        8
+      ],
+      "ospf_path": [
+        20,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 9,
+      "rate_mbps": 131.998965,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        9
+      ],
+      "ospf_path": [
+        20,
+        9
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 10,
+      "rate_mbps": 0.038235,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        10
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4,
+        10
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 11,
+      "rate_mbps": 0.944125,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        12,
+        11
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4,
+        12,
+        11
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 12,
+      "rate_mbps": 0.01912,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        12
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4,
+        12
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 13,
+      "rate_mbps": 0.025865,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 14,
+      "rate_mbps": 56.67943,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        14
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4,
+        14
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 15,
+      "rate_mbps": 9.83963,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        9,
+        0,
+        15
+      ],
+      "ospf_path": [
+        20,
+        9,
+        0,
+        15
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 17,
+      "rate_mbps": 1.2536749999999999,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        9,
+        0,
+        2,
+        12,
+        5,
+        17
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4,
+        6,
+        5,
+        17
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 18,
+      "rate_mbps": 508.94246000000004,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        18
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4,
+        18
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 19,
+      "rate_mbps": 6.709795,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        3,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        20,
+        9,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 20,
+      "dst": 21,
+      "rate_mbps": 3.981455,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        20,
+        9,
+        0,
+        2,
+        6,
+        21
+      ],
+      "ospf_path": [
+        20,
+        3,
+        4,
+        6,
+        21
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 0,
+      "rate_mbps": 13.391475,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        4,
+        0
+      ],
+      "ospf_path": [
+        21,
+        15,
+        0
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 1,
+      "rate_mbps": 45.69634,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        1
+      ],
+      "ospf_path": [
+        21,
+        6,
+        1
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 2,
+      "rate_mbps": 634.486635,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        2
+      ],
+      "ospf_path": [
+        21,
+        6,
+        2
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 3,
+      "rate_mbps": 19.34243,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        4,
+        3
+      ],
+      "ospf_path": [
+        21,
+        6,
+        4,
+        3
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 4,
+      "rate_mbps": 1138.903885,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        4
+      ],
+      "ospf_path": [
+        21,
+        6,
+        4
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 5,
+      "rate_mbps": 377.29747000000003,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        5
+      ],
+      "ospf_path": [
+        21,
+        6,
+        5
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 6,
+      "rate_mbps": 252.40922999999998,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6
+      ],
+      "ospf_path": [
+        21,
+        6
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 7,
+      "rate_mbps": 21.746319999999997,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        4,
+        12,
+        7
+      ],
+      "ospf_path": [
+        21,
+        6,
+        4,
+        7
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 8,
+      "rate_mbps": 27.471505,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        4,
+        0,
+        19,
+        8
+      ],
+      "ospf_path": [
+        21,
+        15,
+        0,
+        9,
+        8
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 9,
+      "rate_mbps": 94.92344,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        4,
+        0,
+        9
+      ],
+      "ospf_path": [
+        21,
+        15,
+        0,
+        9
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 10,
+      "rate_mbps": 0.32501500000000005,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        10
+      ],
+      "ospf_path": [
+        21,
+        10
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 11,
+      "rate_mbps": 23.765584999999998,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        14,
+        11
+      ],
+      "ospf_path": [
+        21,
+        14,
+        11
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 12,
+      "rate_mbps": 6.000155,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        4,
+        12
+      ],
+      "ospf_path": [
+        21,
+        6,
+        2,
+        12
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 13,
+      "rate_mbps": 620.19096,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        1,
+        13
+      ],
+      "ospf_path": [
+        21,
+        6,
+        13
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 14,
+      "rate_mbps": 733.0727,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        14
+      ],
+      "ospf_path": [
+        21,
+        14
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 15,
+      "rate_mbps": 135.140605,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        15
+      ],
+      "ospf_path": [
+        21,
+        15
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 16,
+      "rate_mbps": 68.63251,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        18,
+        16
+      ],
+      "ospf_path": [
+        21,
+        18,
+        16
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 17,
+      "rate_mbps": 1993.1687450000002,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        17
+      ],
+      "ospf_path": [
+        21,
+        17
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 18,
+      "rate_mbps": 3868.3932499999996,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        18
+      ],
+      "ospf_path": [
+        21,
+        18
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 19,
+      "rate_mbps": 17.55681,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        4,
+        0,
+        19
+      ],
+      "ospf_path": [
+        21,
+        15,
+        0,
+        19
+      ]
+    },
+    {
+      "src": 21,
+      "dst": 20,
+      "rate_mbps": 3.53723,
+      "start": 2.0,
+      "stop": 18.0,
+      "gnn_path": [
+        21,
+        6,
+        4,
+        0,
+        9,
+        20
+      ],
+      "ospf_path": [
+        21,
+        6,
+        4,
+        3,
+        20
+      ]
+    }
+  ]
+}
