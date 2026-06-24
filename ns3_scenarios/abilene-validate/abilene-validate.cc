@@ -79,7 +79,10 @@ main(int argc, char* argv[])
         PointToPointHelper p2p;
         p2p.SetDeviceAttribute("DataRate",
             DataRateValue(DataRate(uint64_t(link.capacityMbps * 1e6))));
-        p2p.SetChannelAttribute("Delay", TimeValue(MilliSeconds(uint64_t(link.delayMs))));
+        // NanoSeconds (not MilliSeconds(uint64_t ...)) so sub-millisecond link delays
+        // are NOT truncated to 0 — critical on geographically small topologies like
+        // germany50 whose links are 0.13-1.26 ms.
+        p2p.SetChannelAttribute("Delay", TimeValue(NanoSeconds(uint64_t(link.delayMs * 1e6))));
         NetDeviceContainer devs = p2p.Install(nodes.Get(link.src), nodes.Get(link.dst));
         link.dev0 = DynamicCast<PointToPointNetDevice>(devs.Get(0));
         link.dev1 = DynamicCast<PointToPointNetDevice>(devs.Get(1));
