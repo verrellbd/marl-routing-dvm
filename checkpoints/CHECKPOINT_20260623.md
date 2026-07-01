@@ -83,7 +83,30 @@ will be refreshed.
 real_traffic.py (deterministic selection) · evaluate_ns3.py + export_marl_routing.py
 (--traffic real) · run_ns3_phase2.py (--ratescale param, timeout 900s).
 
-## Next session
+## EOD UPDATE (2026-06-24): real-data 3-way COMPLETE
+All 6 dirs re-run through the delay-fixed ns-3. FINAL real-data, seed-free,
+delay-corrected 3-way (overload regime, loss / delay):
+- Abilene:  OSPF 2.32% 37.5ms | SA-GNN 0.17% 11.7ms | MARL 0.18% 12.6ms
+- GÉANT:    OSPF 7.46% 17.9ms | SA-GNN 1.44% 15.5ms | MARL 0.86% 14.9ms  (MARL best)
+- Germany50:OSPF 3.16% 17.4ms | SA-GNN 0.03% 1.9ms  | MARL 0.96% 17.6ms  (SA-GNN best)
+Feasible: all ~tie. Both learned methods beat OSPF on all three. MARL ≈/beats SA on
+small+mid nets; SA clearly best at 50 nodes (decentralization cost shows). Figures
+results/fig_real3way_{abilene,geant,germany50}.png. RESULTS_SUMMARY.md §2 updated to real
+numbers (old §2b/§3 marked SUPERSEDED). Nothing running; state clean.
+
+## Next session (priority order, discussed with user)
+1. **Multi-seed error bars** — currently model seed 0 only. Train seeds 1,2 on real data
+   (train_gnn_qos.py + train_marl.py --traffic real, per-topo loads abilene 8/12/16,
+   geant 3/5/7, germany50 35/50/65), re-eval, report mean±std. Most important rigor step.
+2. **Write-up** — result is complete + defensible. Methodology gold: real SNDlib data,
+   temporal split, the two bugs caught (rateScale delay-dependence, ns-3 ms-truncation).
+3. (optional) Upper-bound baseline (LP-opt / iterated best-response) → "X% of optimal".
+4. (optional) Explain GÉANT-vs-Germany50 flip (MARL beats SA on GÉANT, loses at 50n) —
+   the "when does decentralization pay off" analysis.
+5. (optional, research) inter-agent comms to close MARL's Germany50 delay gap.
+User leaning: lock down (multi-seed) then write. Decide tomorrow.
+
+## OLD next-session notes (superseded by EOD update above)
 1. Settle the rateScale question (run the control test), then finish Germany50 real 3-way.
 2. Regenerate all three real figures from the deterministic dirs (fig_real3way_*).
 3. Update RESULTS_SUMMARY.md to the real-data, seed-free numbers (replace the old

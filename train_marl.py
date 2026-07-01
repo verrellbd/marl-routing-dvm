@@ -10,9 +10,21 @@ trained with a centralized critic (CTDE). Saves the actor-critic for ns-3 evalua
   python train_marl.py --topo abilene --loads 2,3,4 --seed 0 --timesteps 600000 --tag _v1
 """
 import argparse
+import sys
+from datetime import datetime
 from pathlib import Path
 
 import numpy as np
+
+
+class _Tee:
+    """Mirror stdout to a log file so every training run is captured on disk."""
+    def __init__(self, path):
+        self.f = open(path, "a"); self.stdout = sys.stdout
+    def write(self, s):
+        self.stdout.write(s); self.f.write(s); self.f.flush()
+    def flush(self):
+        self.stdout.flush(); self.f.flush()
 
 from marl_routing.traffic import generate_matrix
 from marl_routing.topology import load as load_topology
@@ -32,13 +44,27 @@ _ap.add_argument("--traffic", default="gravity", choices=["gravity", "real"],
                  help="gravity = synthetic model; real = measured SNDlib/Abilene-Zhang "
                       "matrices (load factors become magnitude SCALES on real demand).")
 _ap.add_argument("--tag", default="")
+_ap.add_argument("--max-stretch", type=int, default=None,
+                 help="hop cap: forbid detour hops once a flow has exceeded its "
+                      "shortest-path hop-count + max_stretch. None = uncapped (default). "
+                      "Constrains the AGENT's path choice only; topology is unchanged.")
+_ap.add_argument("--log-dir", default="logs", help="dir for run log files")
+_ap.add_argument("--ckpt-dir", default="checkpoints",
+                 help="parent dir for periodic model checkpoints")
 _ARGS = _ap.parse_args()
 
 TOPO = _ARGS.topo
 TRAIN_LOADS = [float(x) for x in _ARGS.loads.split(",")]
 TRAIN_SEEDS = list(range(0, 20))
-RESULTS = Path(f"results/{TOPO}_marl{_ARGS.tag}_seed{_ARGS.seed}")
+RUN = f"{TOPO}_marl{_ARGS.tag}_seed{_ARGS.seed}"
+RESULTS = Path(f"results/{RUN}")
 RESULTS.mkdir(parents=True, exist_ok=True)
+CKPT = Path(_ARGS.ckpt_dir) / RUN
+CKPT.mkdir(parents=True, exist_ok=True)
+Path(_ARGS.log_dir).mkdir(parents=True, exist_ok=True)
+_LOG = Path(_ARGS.log_dir) / f"{RUN}_{datetime.now():%Y%m%d_%H%M%S}.log"
+sys.stdout = _Tee(_LOG)
+print(f"[log] {_LOG}\n[ckpt] {CKPT}")
 
 
 def main():
@@ -52,9 +78,11 @@ def main():
                       for lf in TRAIN_LOADS for s in TRAIN_SEEDS]
 
     env = MultiAgentRoutingEnv(TOPO, pairs, train_mats, seed=_ARGS.seed,
-                               delay_penalty=_ARGS.delay_penalty, stretch=_ARGS.stretch)
+                               delay_penalty=_ARGS.delay_penalty, stretch=_ARGS.stretch,
+                               max_stretch=_ARGS.max_stretch)
     eval_env = MultiAgentRoutingEnv(TOPO, pairs, train_mats, seed=_ARGS.seed + 999,
-                                    delay_penalty=_ARGS.delay_penalty, stretch=_ARGS.stretch)
+                                    delay_penalty=_ARGS.delay_penalty, stretch=_ARGS.stretch,
+                               max_stretch=_ARGS.max_stretch)
     print(f"[train-marl] topo={TOPO} seed={_ARGS.seed} loads={TRAIN_LOADS} "
           f"delay_penalty={_ARGS.delay_penalty} {len(train_mats)} matrices, "
           f"{n} node-agents, {_ARGS.timesteps} steps")
@@ -82,7 +110,8 @@ def main():
             wins += marl < ospf - 0.5
         return f"held-out: MARL beats OSPF {wins}/{len(held_rates)}, mean Δ {np.mean(deltas):+.1f}pt"
 
-    mappo.learn(total_steps=_ARGS.timesteps, log_every=5, eval_fn=ev)
+    mappo.learn(total_steps=_ARGS.timesteps, log_every=5, eval_fn=ev,
+                ckpt_dir=CKPT, ckpt_every=10)
     mappo.save(RESULTS / "mappo_actor_critic.pt")
     print(f"\n[saved] {RESULTS/'mappo_actor_critic.pt'}")
 

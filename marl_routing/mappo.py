@@ -133,8 +133,12 @@ class MAPPO:
                 self.opt.step()
         return float(pl.item()), float(vl.item()), float(ent.mean().item())
 
-    def learn(self, total_steps, log_every=1, eval_fn: Callable = None):
+    def learn(self, total_steps, log_every=1, eval_fn: Callable = None,
+              ckpt_dir=None, ckpt_every=None):
         updates = max(1, total_steps // self.rollout_steps)
+        if ckpt_dir is not None:
+            from pathlib import Path
+            ckpt_dir = Path(ckpt_dir); ckpt_dir.mkdir(parents=True, exist_ok=True)
         for u in range(updates):
             b = self.collect()
             pl, vl, ent = self.update(b)
@@ -142,6 +146,10 @@ class MAPPO:
                 extra = f"  {eval_fn():s}" if eval_fn else ""
                 print(f"  upd {u+1:3}/{updates}  ep_ret~{b['R'].sum()/max(1,b['D'].sum()):6.2f}"
                       f"  pl {pl:+.3f}  vl {vl:.3f}  ent {ent:.3f}{extra}", flush=True)
+            if ckpt_dir is not None and ckpt_every and ((u + 1) % ckpt_every == 0 or u == updates - 1):
+                p = ckpt_dir / f"ckpt_upd{u+1:04d}.pt"
+                self.save(p)
+                print(f"  [ckpt] {p}", flush=True)
 
     # ---------------------------------------------------------- policy export
     def act_fn(self, deterministic=True):

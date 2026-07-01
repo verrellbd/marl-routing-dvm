@@ -64,6 +64,21 @@ congestion) and max-flows (Germany50 only, 2450→top-200 for ns-3 tractability)
 principled reasons. ns-3 link delays use nanosecond resolution (fixed a ms-truncation bug
 that had zeroed Germany50's sub-ms link delays).
 
+## 2a. Multi-seed robustness (model seeds 0/1/2)
+The result is not a lucky single run. Re-training each policy with 3 model seeds and
+evaluating on the deterministic real test matrices, max link-utilisation in the overload
+regime (mean ± std over seeds):
+| Topology | OSPF | single-agent GNN | MARL |
+|----------|------|------------------|------|
+| Abilene | 122% | **67 ± 2%** | **64 ± 2%** |
+| GÉANT | 126% | 92 ± 2% | 97 ± 7% |
+| Germany50 | 109% | **86 ± 2%** | 99 ± 7% |
+Both methods beat OSPF across all seeds. SA-GNN bars are tight (±2) everywhere; MARL is
+tight on Abilene but higher-variance on the larger nets (±7) — the coordination-cost-at-
+scale finding is robust, not a single-seed artifact. Figure: fig_multiseed_overload.png.
+(ns-3 packet-level numbers in §2 are the seed-0 high-fidelity anchor; these analytical
+error bars establish seed-robustness cheaply.)
+
 > NOTE: sections 2b/3 below are the EARLIER synthetic-gravity + reconstructed-topology
 > runs. They are SUPERSEDED by the real-data result above and kept only for history.
 

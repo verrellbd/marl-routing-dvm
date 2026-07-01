@@ -40,7 +40,7 @@ from marl_routing.topology import load as load_topology
 
 class MultiAgentRoutingEnv:
     def __init__(self, topo_name: str, pairs, matrices, seed: int = 0,
-                 delay_penalty: float = 0.0, stretch: int = 1):
+                 delay_penalty: float = 0.0, stretch: int = 1, max_stretch=None):
         self.topo_name = topo_name
         self.topo = load_topology(topo_name)
         self.G = self.topo.graph
@@ -49,6 +49,9 @@ class MultiAgentRoutingEnv:
         self.matrices = [np.asarray(m, dtype=np.float64) for m in matrices]
         self.delay_penalty = delay_penalty
         self.stretch = stretch
+        # hard hop cap: final path length may not exceed shortest-path hops + max_stretch.
+        # Constrains the AGENT's forwarding choice only; the topology is unchanged.
+        self.max_stretch = max_stretch
         self._rng = np.random.RandomState(seed)
         self._forced = None
 
@@ -125,6 +128,7 @@ class MultiAgentRoutingEnv:
         self.cur_pi = pi
         self.visited = {s}
         self.cur_path[pi] = [s]
+        self.cur_shortest = self.dist_to[d].get(s, 10 ** 9)  # OSPF hop-count for this flow
 
     def _valid(self) -> List[bool]:
         """Per-neighbour validity at the current (node, dst, visited)."""
@@ -132,11 +136,17 @@ class MultiAgentRoutingEnv:
         if n == d:
             return [False] * self.max_deg
         dn = self.dist_to[d].get(n, 10 ** 9)
+        hops_so_far = len(self.cur_path[self.cur_pi]) - 1
         v = [False] * self.max_deg
         for i, m in enumerate(self.nbrs[n]):
             dm = self.dist_to[d].get(m, 10 ** 9)
             # progress within stretch, not revisiting
             if m not in self.visited and dm < dn + self.stretch and dm < 10 ** 9:
+                # hard hop cap: reject if taking m then going shortest would exceed
+                # shortest-path hops + max_stretch (guarantees bounded final path length)
+                if (self.max_stretch is not None
+                        and hops_so_far + 1 + dm > self.cur_shortest + self.max_stretch):
+                    continue
                 v[i] = True
         if not any(v):  # dead-end safety: force the shortest-distance unvisited hop
             best, bi = 10 ** 9, None
