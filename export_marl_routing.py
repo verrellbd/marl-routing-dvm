@@ -33,6 +33,9 @@ _ap.add_argument("--candidate-seeds", default="1000-1019")
 _ap.add_argument("--n-overload", type=int, default=3)
 _ap.add_argument("--n-feasible", type=int, default=3)
 _ap.add_argument("--stretch", type=int, default=1)
+_ap.add_argument("--max-stretch", type=int, default=None,
+                 help="hop cap the model was TRAINED with (must match training); "
+                      "None = uncapped")
 _ap.add_argument("--max-flows", type=int, default=0,
                  help="keep only top-N flows by rate (0=all); for big topologies (germany50)")
 _ap.add_argument("--traffic", default="gravity", choices=["gravity", "real"],
@@ -57,7 +60,8 @@ OUT.mkdir(parents=True, exist_ok=True)
 def main():
     topo = load_topology(TOPO); n = topo.n_nodes
     pairs = [(i, j) for i in range(n) for j in range(n) if i != j]
-    env = MultiAgentRoutingEnv(TOPO, pairs, [np.zeros(len(pairs))], stretch=_ARGS.stretch)
+    env = MultiAgentRoutingEnv(TOPO, pairs, [np.zeros(len(pairs))], stretch=_ARGS.stretch,
+                               max_stretch=_ARGS.max_stretch)
     mappo = MAPPO(env); mappo.load(_ARGS.model)
     act = mappo.act_fn(True)
 

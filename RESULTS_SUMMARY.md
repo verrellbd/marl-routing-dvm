@@ -40,22 +40,42 @@ GÉANT (real Uhlig/TOTEM TM):
 | Overload | delay | 17.9 ms | 15.5 ms | **14.9 ms** |
 | Feasible | loss  | 0.12% | 0.14% | 0.15% |
 
-Germany50 (real DFN TM, 50 nodes, top-200 flows):
-| Regime | Metric | OSPF | single-agent GNN | MARL |
-|--------|--------|------|------------------|------|
-| Overload | loss  | 3.16% | **0.03%** | 0.96% |
-| Overload | delay | 17.4 ms | **1.9 ms** | 17.6 ms |
-| Feasible | loss  | 0.12% | 0.03% | 0.03% |
+Germany50 (real DFN TM, 50 nodes, top-200 flows) — MARL hop-capped, **multi-seed (0/1/2)**:
+| Regime | Metric | OSPF | single-agent GNN | MARL (mean ± std) | MARL best seed |
+|--------|--------|------|------------------|-------------------|----------------|
+| Overload | loss  | 3.16% | **0.03%** | 2.78 ± 2.56% | **0.03%** (seed 0) |
+| Overload | delay | 17.4 ms | **1.9 ms** | **8.2 ± 5.4 ms** | 2.2 ms (seed 0) |
+| Feasible | loss  | 0.12% | 0.03% | ~0.03% | 0.03% |
+
+> **Germany50 hop-cap fix — honest multi-seed result (2026-07-01/02).** The uncapped MARL had
+> a delay/loss gap at 50 nodes (0.96% loss, 17.6 ms) because per-node agents, on local info
+> only, wandered into long detours (up to 12 hops) that concentrated load and left a link
+> saturated (~105%), driving queueing delay. NB: germany50 detour links are short, so the
+> driver was **queueing (utilisation), not propagation**. A **hop cap** on the agents'
+> forwarding (final path ≤ shortest-path hops + 4; **topology untouched, only the action
+> mask**) stops the wandering and improves congestion relief.
+> **What it robustly fixes:** DELAY — every seed beats OSPF (mean 8.2 ± 5.4 ms vs OSPF 17.4,
+> vs uncapped 17.6). **What stays hard:** LOSS is **high-variance across seeds** (seed 0
+> 0.03% matches the centralized GNN; seed 2 6.2% is *worse* than OSPF); mean 2.78% only edges
+> OSPF's 3.16%. So decentralized coordination at 50 nodes is **viable but less reliable than
+> central control** — the coordination cost shows up as VARIANCE, not a mean gap (consistent
+> with the analytical ±7 bars). Per-seed loss/delay: seed0 0.03%/2.2ms · seed1 2.10%/7.1ms ·
+> seed2 6.20%/15.2ms. Models results/germany50_sndlib_marl_opt3b_seed{0,1,2}/ (λ=0.1,
+> max_stretch=4). Do NOT claim "MARL matches central at 50n" in general — only best-seed.
 
 **Findings (real data):**
 - **Both learned methods beat OSPF under congestion on all three real networks** — loss
-  cut ~13x (Abilene), ~5–9x (GÉANT), ~3–100x (Germany50); delay cut too.
-- **Decentralized MARL nearly matches the centralized GNN, and on GÉANT slightly beats
-  it** — strong evidence that local-only routing is competitive with a central controller.
-- **The coordination cost shows on the largest network**: on Germany50 (50 nodes) the
-  centralized GNN keeps the network feasible (loss 0.03%, delay 1.9 ms) while MARL, with
-  only local info, does well on loss (0.96%) but pays more delay (17.6 ms). Honest scale
-  finding: decentralization is near-free on small/mid networks, harder at 50 nodes.
+  cut ~13x (Abilene), ~5–9x (GÉANT); on Germany50 the centralized GNN cuts loss ~100x while
+  the decentralized MARL cuts delay reliably but is loss-variance-limited (see below).
+- **Decentralized MARL matches the centralized GNN on the small/mid networks** (Abilene,
+  GÉANT — on GÉANT it slightly beats it) — local-only routing is competitive with a central
+  controller up to ~22 nodes.
+- **At 50 nodes the coordination cost is real and shows as VARIANCE.** A hop cap (shortest +
+  4 hops; topology unchanged) fixes MARL's DELAY robustly (every seed beats OSPF) and stops
+  the load-concentrating wandering, but LOSS stays high-variance across seeds — the best seed
+  matches the centralized GNN, a bad seed still overloads. Honest scale finding: decentralized
+  coordination is viable but less *reliable* than central control at 50 nodes. The centralized
+  GNN remains the safe choice at scale.
 - All methods ~tie when the network is uncongested (feasible regime).
 
 Figures: results/fig_real3way_{abilene,geant,germany50}.png. Parameter consistency:
