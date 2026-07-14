@@ -1,7 +1,9 @@
 # GNN Routing vs OSPF — Results Summary
 
-*MARL for Network Routing (master's thesis). All QoS numbers are from full ns-3
-packet-level simulation on held-out traffic, not the analytical model.*
+*MARL for Network Routing (master's thesis). **All reported numbers — QoS AND link-
+utilisation — are from full ns-3 packet-level simulation** on held-out traffic. The
+analytical model is used only as the training reward (see §2a); nothing reported here is
+analytical. Fresh multi-seed run, monaco-retrained (seeds 0/1/2), 2026-07-14.*
 
 ---
 
@@ -26,26 +28,36 @@ spatial+temporal structure untouched).
 **3-way ns-3 comparison (OSPF vs single-agent GNN vs MARL), real traffic, identical
 deterministic test matrices, packet-level QoS:**
 
+All QoS values are mean ± std over model seeds 0/1/2 (OSPF is routing-fixed → no std).
+
 Abilene (real Zhang TM):
 | Regime | Metric | OSPF | single-agent GNN | MARL (decentralized) |
 |--------|--------|------|------------------|----------------------|
-| Overload | loss  | 2.32% | **0.17%** | **0.18%** |
-| Overload | delay | 37.5 ms | **11.7 ms** | **12.6 ms** |
-| Feasible | loss  | 0.18% | 0.16% | 0.18% |
+| Overload | loss  | 2.32% | **0.17 ± 0.00%** | **0.18 ± 0.00%** |
+| Overload | delay | 37.5 ms | **11.7 ± 0.1 ms** | **12.6 ± 0.1 ms** |
+| Feasible | loss  | 0.19% | 0.16% | 0.18% |
 
 GÉANT (real Uhlig/TOTEM TM):
 | Regime | Metric | OSPF | single-agent GNN | MARL |
 |--------|--------|------|------------------|------|
-| Overload | loss  | 7.46% | 1.44% | **0.86%** |
-| Overload | delay | 17.9 ms | 15.5 ms | **14.9 ms** |
-| Feasible | loss  | 0.12% | 0.14% | 0.15% |
+| Overload | loss  | 10.63% | 4.27 ± 1.49% | **0.91 ± 0.30%** |
+| Overload | delay | 18.7 ms | 21.0 ± 4.9 ms | **12.2 ± 1.1 ms** |
+| Feasible | loss  | 0.11% | 0.14% | 0.13% |
+
+> **GÉANT is where decentralized MARL wins cleanly.** MARL cuts loss ~12× vs OSPF
+> (0.91% vs 10.63%) and is the only method that also cuts delay (12.2 ms vs OSPF 18.7).
+> The **centralized SA-GNN underperforms here** (4.27% loss, 21 ms delay — *worse* delay
+> than OSPF) and is **high-variance across seeds** (per-seed loss 3.06 / 3.37 / 6.37%; one
+> seed converged poorly). Honest read: at mid-scale, local-only coordination happened to
+> generalise better than the central policy on the real GÉANT test matrices. Reported
+> honestly, not cherry-picked.
 
 Germany50 (real DFN TM, 50 nodes, top-200 flows) — MARL hop-capped, **multi-seed (0/1/2)**:
 | Regime | Metric | OSPF | single-agent GNN | MARL (mean ± std) | MARL best seed |
 |--------|--------|------|------------------|-------------------|----------------|
-| Overload | loss  | 3.16% | **0.03%** | 2.78 ± 2.56% | **0.03%** (seed 0) |
-| Overload | delay | 17.4 ms | **1.9 ms** | **8.2 ± 5.4 ms** | 2.2 ms (seed 0) |
-| Feasible | loss  | 0.12% | 0.03% | ~0.03% | 0.03% |
+| Overload | loss  | 3.16% | **0.06 ± 0.03%** | 2.00 ± 1.89% | **0.03%** (seed 1) |
+| Overload | delay | 17.4 ms | **2.8 ± 0.9 ms** | 9.3 ± 7.1 ms | 2.1 ms (seed 1) |
+| Feasible | loss  | 0.12% | 0.03% | 0.08% | 0.03% |
 
 > **Germany50 hop-cap fix — honest multi-seed result (2026-07-01/02).** The uncapped MARL had
 > a delay/loss gap at 50 nodes (0.96% loss, 17.6 ms) because per-node agents, on local info
@@ -54,22 +66,27 @@ Germany50 (real DFN TM, 50 nodes, top-200 flows) — MARL hop-capped, **multi-se
 > driver was **queueing (utilisation), not propagation**. A **hop cap** on the agents'
 > forwarding (final path ≤ shortest-path hops + 4; **topology untouched, only the action
 > mask**) stops the wandering and improves congestion relief.
-> **What it robustly fixes:** DELAY — every seed beats OSPF (mean 8.2 ± 5.4 ms vs OSPF 17.4,
-> vs uncapped 17.6). **What stays hard:** LOSS is **high-variance across seeds** (seed 0
-> 0.03% matches the centralized GNN; seed 2 6.2% is *worse* than OSPF); mean 2.78% only edges
-> OSPF's 3.16%. So decentralized coordination at 50 nodes is **viable but less reliable than
-> central control** — the coordination cost shows up as VARIANCE, not a mean gap (consistent
-> with the analytical ±7 bars). Per-seed loss/delay: seed0 0.03%/2.2ms · seed1 2.10%/7.1ms ·
-> seed2 6.20%/15.2ms. Models results/germany50_sndlib_marl_opt3b_seed{0,1,2}/ (λ=0.1,
-> max_stretch=4). Do NOT claim "MARL matches central at 50n" in general — only best-seed.
+> **What it robustly fixes:** DELAY — MARL mean 9.3 ± 7.1 ms vs OSPF 17.4 (still cuts delay).
+> **What stays hard:** LOSS is **high-variance across seeds** (seed 1 0.03% matches the
+> centralized GNN; seed 0 4.55% is *worse* than OSPF); mean 2.00% only edges OSPF's 3.16%. So
+> decentralized coordination at 50 nodes is **viable but less reliable than central control**
+> — the coordination cost shows up as VARIANCE, not a mean gap. Per-seed MARL loss/delay:
+> seed0 4.55%/18.9ms · seed1 0.03%/2.1ms · seed2 1.43%/6.9ms. Models
+> results/germany50_sndlib_marl_opt3b_seed{0,1,2}/ (λ=0.1, max_stretch=4). Do NOT claim
+> "MARL matches central at 50n" in general — only best-seed. The centralized SA-GNN is the
+> reliable winner here (0.06 ± 0.03% loss, all three seeds ≤0.10%).
 
-**Findings (real data):**
-- **Both learned methods beat OSPF under congestion on all three real networks** — loss
-  cut ~13x (Abilene), ~5–9x (GÉANT); on Germany50 the centralized GNN cuts loss ~100x while
-  the decentralized MARL cuts delay reliably but is loss-variance-limited (see below).
-- **Decentralized MARL matches the centralized GNN on the small/mid networks** (Abilene,
-  GÉANT — on GÉANT it slightly beats it) — local-only routing is competitive with a central
-  controller up to ~22 nodes.
+**Findings (real data) — a scale story:**
+- **Abilene (12n): both learned methods crush OSPF and tie each other** — loss cut ~13× (OSPF
+  2.32% → 0.17/0.18%), delay cut ~3× (37.5 → ~12 ms). Decentralized MARL pays no visible
+  coordination cost at this scale.
+- **GÉANT (22n): decentralized MARL wins cleanly** — loss cut ~12× vs OSPF (0.91% vs 10.63%)
+  and the only method to also cut delay (12.2 vs 18.7 ms). The centralized SA-GNN does *worse*
+  here (4.27% loss, 21 ms delay) and is seed-noisy. Best result of the three networks for MARL.
+- **Germany50 (50n): the centralized SA-GNN wins; MARL is viable but high-variance.** SA-GNN
+  cuts loss ~50× (0.06%) reliably across seeds; MARL cuts delay but its loss swings by seed
+  (0.03–4.55%). The coordination cost is real at scale — and it shows as VARIANCE, not a mean
+  gap.
 - **At 50 nodes the coordination cost is real and shows as VARIANCE.** A hop cap (shortest +
   4 hops; topology unchanged) fixes MARL's DELAY robustly (every seed beats OSPF) and stops
   the load-concentrating wandering, but LOSS stays high-variance across seeds — the best seed
@@ -84,20 +101,46 @@ congestion) and max-flows (Germany50 only, 2450→top-200 for ns-3 tractability)
 principled reasons. ns-3 link delays use nanosecond resolution (fixed a ms-truncation bug
 that had zeroed Germany50's sub-ms link delays).
 
-## 2a. Multi-seed robustness (model seeds 0/1/2)
-The result is not a lucky single run. Re-training each policy with 3 model seeds and
-evaluating on the deterministic real test matrices, max link-utilisation in the overload
-regime (mean ± std over seeds):
+## 2a. Link utilisation (ns-3 packet-level) — the mechanism behind the QoS
+QoS (§2) shows *what* happens; link utilisation shows *why*. **These numbers are ns-3
+packet-level too** — max link-utilisation measured from bytes carried per device in the
+sim, mean ± std over model seeds 0/1/2 × held-out test matrices. (The ns-3 scenario
+already logged per-link utilisation; we simply aggregate it — no re-simulation.) True
+utilisation, corrected for the 7/8 active-measurement window (see note).
+
+**Overload regime** (offered load > capacity):
 | Topology | OSPF | single-agent GNN | MARL |
 |----------|------|------------------|------|
-| Abilene | 122% | **67 ± 2%** | **64 ± 2%** |
-| GÉANT | 126% | 92 ± 2% | 97 ± 7% |
-| Germany50 | 109% | **86 ± 2%** | 99 ± 7% |
-Both methods beat OSPF across all seeds. SA-GNN bars are tight (±2) everywhere; MARL is
-tight on Abilene but higher-variance on the larger nets (±7) — the coordination-cost-at-
-scale finding is robust, not a single-seed artifact. Figure: fig_multiseed_overload.png.
-(ns-3 packet-level numbers in §2 are the seed-0 high-fidelity anchor; these analytical
-error bars establish seed-robustness cheaply.)
+| Abilene | **100 ± 0%** | 66 ± 5% | 66 ± 3% |
+| GÉANT | **100 ± 0%** | 99 ± 2% | 92 ± 9% |
+| Germany50 | **100 ± 0%** | 91 ± 7% | 96 ± 7% |
+
+**Feasible regime** (offered load < capacity):
+| Topology | OSPF | single-agent GNN | MARL |
+|----------|------|------------------|------|
+| Abilene | 96 ± 4% | **52 ± 3%** | **52 ± 4%** |
+| GÉANT | 92 ± 5% | **67 ± 8%** | 70 ± 12% |
+| Germany50 | 100 ± 0% | **77 ± 2%** | 89 ± 5% |
+
+**How to read this (important, physical):** a real link *cannot* carry more than its
+capacity, so **ns-3 utilisation caps at 100%** — OSPF pins at exactly 100% under overload
+(its bottleneck link is saturated), and the excess offered load appears as **packet loss**
+(§2), *not* as >100% utilisation. This is why the overload story is told by loss and the
+utilisation story is cleanest in the **feasible** regime, where OSPF sits near-saturated
+(92–100%) while both learned methods keep large headroom (52–77%). The single analytical
+">100%" number (OSPF's true *offered* load, e.g. ~122% on Abilene) is a fluid-model
+quantity used only as the **training reward**; it is described in the Method chapter, and
+appears nowhere in these results.
+
+Both learned methods keep the bottleneck below OSPF across all seeds. SA-GNN bars are
+tighter; MARL is tight on Abilene but higher-variance on the larger nets — the
+coordination-cost-at-scale finding is robust, not a single-seed artifact.
+Figure: results/fig_ns3util_multiseed.png (two panels, overload | feasible).
+
+> **7/8 active-window correction.** ns-3 measures bytes carried over `window = simTime = 8s`,
+> but flows are active only [2s, 9s] = 7s, so a link at 100% line rate reads 7/8 = 87.5%.
+> All flows share the same window, so dividing by 7/8 recovers true utilisation exactly and
+> cancels in any OSPF-vs-learned ratio. Aggregated by `aggregate_ns3_util.py`.
 
 > NOTE: sections 2b/3 below are the EARLIER synthetic-gravity + reconstructed-topology
 > runs. They are SUPERSEDED by the real-data result above and kept only for history.

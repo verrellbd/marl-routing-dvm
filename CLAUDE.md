@@ -7,10 +7,24 @@ LP-optimum under dynamic traffic conditions, with QoS-aware reward design.
 Novel angle: GNN as the agent backbone (one novel element — keep scope disciplined).
 
 ## Environment (VERIFIED WORKING — do not reconfigure without reason)
-- Machine: malmo.ee.ucl.ac.uk (4x H100 NVL, shared, no sudo)
-- Python 3.9 venv at ~/thesis/ns3ai-venv (auto-activates via .bashrc)
+- PRIMARY MACHINE (as of 2026-07): monaco.ee.ucl.ac.uk — 40 CPU cores (4x Xeon
+  E5-4620 v4 @2.1GHz), 512GB RAM, Rocky 9, CPU-ONLY (no GPU). Dedicated (not shared)
+  -> use for training + eval. Cores are OLD/slow (~5x slower per-core than malmo) but
+  plentiful; parallelize across cores. Our work needs NO GPU (tiny nets, CPU surrogate,
+  CPU ns-3), so monaco is the right box and doesn't waste shared GPU machines.
+- HOME is NFS-shared (128.40.41.191:/vol_home_2/uceedv1) across ALL ee.ucl machines,
+  so ~/thesis, the venv, ~/.claude (transcripts + memory) are identical everywhere.
+  Switching machines keeps all context; `claude --continue` from ~/thesis resumes sessions.
+- OLD machine: malmo.ee.ucl.ac.uk (2x Xeon Gold 6426Y, 512GB, 4x H100 96GB, SHARED).
+  Faster per-core but shared/busy (hit thread-creation limits) + GPU-etiquette. Avoid for
+  big CPU batches.
+- Python 3.9 venv at ~/thesis/ns3ai-venv (auto-activates via .bashrc); verified imports OK
+  on monaco. Torch 2.6.0+cu124 runs CPU-only fine (cuda unavailable -> graceful).
 - PyTorch 2.6.0+cu124, PyG 2.6.1, Ray/RLlib 2.51.2, Stable-Baselines3 2.7.1
-- ns-3.42 at ~/thesis/ns-3-dev
+- ns-3.42 at ~/thesis/ns-3-dev. NOTE: ns-3 binaries built on malmo MAY fail on monaco's
+  older cores (illegal instruction) — rebuild on monaco if needed:
+  cd ns-3-dev && ~/thesis/configure_ns3.sh && ./ns3 build -j8. Also monaco is slow for
+  ns-3: raise per-sim timeout via NS3_TIMEOUT env (run_ns3_phase2.py reads it; default 900).
 - ns3-ai at commit b8c9858 (main branch, NOT the v1.2.0 tag)
 - Protobuf sourced from Anaconda (/opt/anaconda3), not system
 
@@ -21,8 +35,10 @@ Novel angle: GNN as the agent backbone (one novel element — keep scope discipl
 - PYTHONPATH must include the gym-interface/py dir (set in .bashrc).
 - Disabled ns3-ai examples (API drift with ns-3.42): rate-control, multi-bss.
   Do not re-enable them.
-- Build with -j8 (not nproc) to avoid disturbing other cluster users.
-- Pick a free GPU with CUDA_VISIBLE_DEVICES before training; check nvidia-smi first.
+- Build with -j8 (not nproc) on shared machines. On monaco (dedicated) more is fine.
+- Training/eval are CPU-ONLY (device="cpu" hardcoded in train_gnn_qos.py + mappo.py).
+  No GPU selection needed. For parallel jobs cap threads (OMP_NUM_THREADS=2) so many run
+  at once; see train_all_monaco.sh + eval_ns3_all_monaco.sh (18-model / 18-dir launchers).
 
 ## Sanity check (bridge works)
 cd ~/thesis/ns-3-dev/contrib/ai/examples/a-plus-b/use-gym && python apb.py
