@@ -7,6 +7,7 @@ regime. Use after evaluate_ns3.py has written the routing_seed*.json files.
 """
 import argparse
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -22,7 +23,8 @@ def run_ns3(topo_json, routing_file, routing, state_file, ratescale):
            f"scratch/abilene-validate/abilene-validate --topo={topo_json} "
            f"--routing_file={routing_file} --routing={routing} "
            f"--state={state_file} --simTime={SIMTIME} --rateScale={ratescale}"]
-    r = subprocess.run(cmd, cwd=NS3_DIR, capture_output=True, text=True, timeout=900)
+    r = subprocess.run(cmd, cwd=NS3_DIR, capture_output=True, text=True,
+                       timeout=int(os.environ.get("NS3_TIMEOUT", "900")))
     if not state_file.exists():
         raise RuntimeError(f"ns-3 ({routing}) no state. stderr:\n{r.stderr[-400:]}")
     return json.loads(state_file.read_text())
