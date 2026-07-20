@@ -140,6 +140,41 @@ Figure: results/fig_ns3util_multiseed.png (two panels, overload | feasible).
 > All flows share the same window, so dividing by 7/8 recovers true utilisation exactly and
 > cancels in any OSPF-vs-learned ratio. Aggregated by `aggregate_ns3_util.py`.
 
+### 3a. Offered load on the bottleneck (uncapped — the companion view)
+Carried utilisation (above) caps at 100% because a real link cannot pass more than its
+capacity. To show *how far past capacity* each routing pushes its worst link, we report
+**offered load** = the sum of the flow rates a routing places on a link ÷ capacity, maxed
+over links. This is an exact quantity computed from the installed per-flow paths (verified
+identical to the routing's stored max-util), **not** the analytical training surrogate; the
+excess above 100% is precisely what becomes packet loss in §2. Mean ± std over model seeds
+0/1/2 × held-out matrices.
+
+**Overload regime** — max offered load on the bottleneck link (>100% = overloads a link):
+| Topology | OSPF | single-agent GNN | MARL |
+|----------|------|------------------|------|
+| Abilene | 128 ± 16% | **64 ± 5%** | **65 ± 3%** |
+| GÉANT | 161 ± 19% | 119 ± 20% | **95 ± 14%** |
+| Germany50 | 115 ± 2% | **89 ± 7%** | 102 ± 15% |
+
+**Feasible regime** — max offered load on the bottleneck link:
+| Topology | OSPF | single-agent GNN | MARL |
+|----------|------|------------------|------|
+| Abilene | 95 ± 4% | **51 ± 2%** | **51 ± 4%** |
+| GÉANT | 90 ± 5% | **66 ± 8%** | 68 ± 11% |
+| Germany50 | 98 ± 1% | **75 ± 2%** | 88 ± 6% |
+
+Reading it: under overload OSPF drives its worst link well past capacity (128 / 161 / 115%);
+the learned routers pull it back toward or under the ceiling. **GÉANT is decisive** — OSPF
+161% → MARL **95%** (the only method under 100%, hence its ~12× lower loss), while SA-GNN
+still overloads at 119% (which is exactly why SA-GNN keeps 4.27% loss there — see §2). On
+Germany50 MARL sits *at* 102% with a wide bar (the coordination-cost-as-variance story);
+the centralized SA-GNN gets under at 89%. Figure: results/fig_offered_util_regime.png.
+
+> **Offered load vs carried utilisation — keep them distinct.** §3 (carried, ≤100%) is "what
+> physically flows in ns-3"; §3a (offered, uncapped) is "what the routing demands, and the
+> overshoot is the loss." Both are exact packet-level/path quantities — §3a is *not* the
+> fluid training surrogate. They are complementary: §3a explains *why* the §2 losses occur.
+
 ## 4. Method
 1. **Topologies + traffic**: SNDlib topologies (Abilene, GÉANT, Germany50) loaded from
    JSON (single source of truth for ns-3 and the Python model), with real capacities;
@@ -191,16 +226,30 @@ timesteps/seed.
   theoretical optimum (scope decision).
 
 ## 6. Figures
-- `results/fig_real3way_abilene.png`, `results/fig_real3way_geant.png`,
-  `results/fig_real3way_germany50.png` — main result: loss + delay by regime, per network.
-- `results/fig_ns3util_multiseed.png` — link-utilisation mechanism (overload | feasible).
+Main QoS (all three topologies on one axis, overload | feasible split):
+- `results/fig_qos_loss_regime.png` — packet loss, 3 topologies × 2 regimes.
+- `results/fig_qos_delay_regime.png` — mean delay, 3 topologies × 2 regimes.
+
+Utilisation (the mechanism):
+- `results/fig_ns3util_multiseed.png` — ns-3 *carried* utilisation, caps at 100% (§3).
+- `results/fig_offered_util_regime.png` — *offered load* on the bottleneck, uncapped;
+  shows OSPF pushing past 100% while learned routers pull it back (§3a).
+
+Per-network QoS (kept for discussing networks one at a time):
+- `results/fig_real3way_{abilene,geant,germany50}.png` — loss + delay by regime, per network.
+
+Training + references:
+- `results/fig_marl_training_curves.png` — MARL (MAPPO) reward + held-out gain vs steps.
 - `results/abilene_topology.png`, `results/geant_topology.png` — topology references.
 
 ## 7. Reproduce
 ```
-python make_3way_fresh.py        # regenerate the 3 QoS figures from per-seed summary.json
-python make_ns3util_fig.py       # regenerate the link-utilisation figure
-python aggregate_ns3_util.py     # re-aggregate ns-3 utilisation from per-sim JSONs
+python make_qos_regime_split.py  # QoS: fig_qos_{loss,delay}_regime.png (all topos, 2 regimes)
+python make_3way_fresh.py        # per-network QoS figures from per-seed summary.json
+python make_ns3util_fig.py       # ns-3 carried-utilisation figure (§3)
+python make_offered_util_fig.py  # offered-load figure (§3a) from routing files
+python make_training_curves.py   # MARL training curves from logs/RUN_*marl*.log
+python aggregate_ns3_util.py     # re-aggregate ns-3 carried utilisation from per-sim JSONs
 # QoS results:   results/ns3_eval_real{sa,marl}_fresh_{net}_s{0,1,2}/summary.json
 # Util results:  results/ns3_util_summary_{overload,feasible}.json
 # Models:        results/{net}_sndlib_{qos,marl}_real_seed{0,1,2}/,
