@@ -23,7 +23,7 @@ from marl_routing.graph_routing_env import A_MAX, N_MAX, LMAX, CAND_FEATS
 
 class TopoAgnosticGNNExtractor(BaseFeaturesExtractor):
     def __init__(self, observation_space, k_paths: int = 3, hidden_dim: int = 64,
-                 rounds: int = 3):
+                 rounds: int = 2):
         super().__init__(observation_space, features_dim=hidden_dim)
         self.k = k_paths
         self.h = hidden_dim
@@ -55,15 +55,20 @@ class TopoAgnosticGNNExtractor(BaseFeaturesExtractor):
         print(f"[TopoAgnosticGNNExtractor] k={k_paths}, hidden={hidden_dim}, "
               f"rounds={rounds}, out={hidden_dim} (topology-agnostic)")
 
-    def _scatter_nodes(self, h, idx, mask, B):
-        """Mean-aggregate arc embeddings h [B,A,H] into node slots by idx [B,A]."""
+    def _scatter_nodes(self, h, idx2, mask2, B):
+        """Mean-aggregate arc embeddings into node slots.
+
+        idx2/mask2 carry BOTH endpoints concatenated ([B, 2A]), so one fused
+        index_add replaces the two separate tail/head scatters — each node's
+        feature is the mean over all arcs incident to it (either direction).
+        """
         H = h.shape[-1]
-        flat = (torch.arange(B, device=h.device).unsqueeze(1) * N_MAX + idx).reshape(-1)
-        src = (h * mask.unsqueeze(-1)).reshape(-1, H)
+        flat = (torch.arange(B, device=h.device).unsqueeze(1) * N_MAX + idx2).reshape(-1)
+        src = (h * mask2.unsqueeze(-1)).reshape(-1, H)
         acc = torch.zeros(B * N_MAX, H, device=h.device, dtype=h.dtype)
         acc.index_add_(0, flat, src)
         cnt = torch.zeros(B * N_MAX, 1, device=h.device, dtype=h.dtype)
-        cnt.index_add_(0, flat, mask.reshape(-1, 1))
+        cnt.index_add_(0, flat, mask2.reshape(-1, 1))
         return (acc / cnt.clamp(min=1.0)).view(B, N_MAX, H)
 
     def forward(self, obs: torch.Tensor) -> torch.Tensor:
@@ -84,13 +89,17 @@ class TopoAgnosticGNNExtractor(BaseFeaturesExtractor):
         h = self.arc_enc(torch.stack([util, cap], dim=-1))        # [B,A,H]
         h = h * mask.unsqueeze(-1)
 
-        # 2. message passing rounds (arc -> node -> arc), shared weights
+        # 2. message passing rounds (arc -> node -> arc), shared weights.
+        # Endpoint indices/masks concatenated once outside the loop so each round
+        # needs a single fused scatter instead of two.
+        idx2 = torch.cat([src, dst], dim=1)                       # [B,2A]
+        mask2 = torch.cat([mask, mask], dim=1)
+        exp_s = src.unsqueeze(-1).expand(-1, -1, self.h)
+        exp_d = dst.unsqueeze(-1).expand(-1, -1, self.h)
         for blk in self.upd:
-            n_s = self._scatter_nodes(h, src, mask, B)
-            n_d = self._scatter_nodes(h, dst, mask, B)
-            node = n_s + n_d                                      # [B,N,H]
-            g_s = torch.gather(node, 1, src.unsqueeze(-1).expand(-1, -1, self.h))
-            g_d = torch.gather(node, 1, dst.unsqueeze(-1).expand(-1, -1, self.h))
+            node = self._scatter_nodes(torch.cat([h, h], dim=1), idx2, mask2, B)
+            g_s = torch.gather(node, 1, exp_s)
+            g_d = torch.gather(node, 1, exp_d)
             h = blk(torch.cat([h, g_s, g_d], dim=-1)) * mask.unsqueeze(-1)
 
         # 3. per-candidate path embedding: mean of the arcs on that path

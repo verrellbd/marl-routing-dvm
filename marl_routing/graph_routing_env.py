@@ -26,9 +26,10 @@ from marl_routing.gnn_routing_agent import compute_ksp
 from marl_routing.topology import load as load_topology
 
 # ---- padding bounds (cover Abilene 12/30, GEANT 22/72, Germany50 50/176) ----
-N_MAX = 64
-A_MAX = 224
-LMAX = 16          # max arcs on a candidate path (observed max = 9)
+# Kept tight: every padded slot costs compute in the extractor on EVERY step.
+N_MAX = 56
+A_MAX = 176        # exactly Germany50's arc count (the largest network)
+LMAX = 10          # max arcs on a candidate path (observed max = 9)
 CAND_FEATS = 3     # [resulting_bottleneck%, path_len_norm, min_headroom%]
 CAP_SCALE = 10000.0  # Mbps normaliser for capacity feature
 
@@ -75,15 +76,20 @@ class _TopoBundle:
             self.arc_dst[i] = v
             self.arc_mask[i] = 1.0
             self.arc_cap_f[i] = self.cap[i] / CAP_SCALE
+        # OSPF shortest-path arcs per pair, precomputed once (topology is static).
+        # Used for the baseline AND for the per-topology reward normaliser, so it
+        # must not re-run Dijkstra every episode.
+        self.ospf_arc_paths: List[List[int]] = []
+        for (s, d) in self.pairs:
+            p = nx.shortest_path(self.topo.graph, s, d)
+            self.ospf_arc_paths.append(
+                [self.arc_index[(p[j], p[j + 1])] for j in range(len(p) - 1)])
 
     def ospf_max_util(self, rates) -> float:
         load = np.zeros(self.n_arcs)
-        for i, (s, d) in enumerate(self.pairs):
-            if rates[i] <= 0:
-                continue
-            p = nx.shortest_path(self.topo.graph, s, d)
-            for j in range(len(p) - 1):
-                load[self.arc_index[(p[j], p[j + 1])]] += rates[i]
+        for i, arc_path in enumerate(self.ospf_arc_paths):
+            if rates[i] > 0:
+                load[arc_path] += rates[i]
         return float((100.0 * load / self.cap).max())
 
 
@@ -93,10 +99,20 @@ class GraphSeqRoutingEnv(gym.Env):
     metadata = {"render_modes": []}
 
     def __init__(self, topo_specs: Sequence[Tuple[str, object, object]],
-                 k_paths: int = 3, seed: int = 0, delay_penalty: float = 0.5):
-        """topo_specs: list of (topo_name, pairs, matrices)."""
+                 k_paths: int = 3, seed: int = 0, delay_penalty: float = 0.5,
+                 normalize_reward: bool = True):
+        """topo_specs: list of (topo_name, pairs, matrices).
+
+        normalize_reward: express the congestion term as a PERCENTAGE OF THIS
+        EPISODE'S OSPF BOTTLENECK rather than in raw utilisation points. Networks
+        sit at very different absolute utilisations (Abilene ~90%, Germany50
+        ~160%), so without this a single shared policy over-weights the
+        high-utilisation networks and mis-serves the others. Set False to recover
+        the original reward exactly (used for parity tests).
+        """
         self.k_paths = k_paths
         self.delay_penalty = delay_penalty
+        self.normalize_reward = normalize_reward
         self._rng = np.random.RandomState(seed)
         self.bundles = [_TopoBundle(n, p, m, k_paths) for (n, p, m) in topo_specs]
         self.action_space = spaces.Discrete(k_paths)
@@ -125,6 +141,8 @@ class GraphSeqRoutingEnv(gym.Env):
         self.load = np.zeros(b.n_arcs, dtype=np.float64)
         self.pos = 0
         self.cur_max = 0.0
+        # per-episode congestion scale: this matrix's OSPF bottleneck (>=1 to be safe)
+        self.ospf_ref = max(b.ospf_max_util(rates), 1.0) if self.normalize_reward else 100.0
 
     def _cand_block(self):
         """(cand_arcs [k*LMAX], cand_feats [k*CF], rate)."""
@@ -179,7 +197,10 @@ class GraphSeqRoutingEnv(gym.Env):
         self.load[arc_path] += self.rates[pair_i]
         new_max = float((100.0 * self.load / b.cap).max())
         extra_hops = len(arc_path) - len(b.pair_arc_paths[pair_i][0])
-        reward = float(-(new_max - self.cur_max) - self.delay_penalty * extra_hops)
+        # congestion term in "% of this episode's OSPF bottleneck" so the
+        # congestion/delay trade-off is comparable across networks
+        congestion = (new_max - self.cur_max) * (100.0 / self.ospf_ref)
+        reward = float(-congestion - self.delay_penalty * extra_hops)
         self.cur_max = new_max
         self.pos += 1
         terminated = self.pos >= len(self.order)

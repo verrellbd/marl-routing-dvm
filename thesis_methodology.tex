@@ -1,0 +1,378 @@
+\section{Methodology}
+\subsection{Design Philosophy and Principles}
+The concept of Multi-Agent Reinforcement Learning (MARL) gained significant attention following the victory of the AlphaGo agent over a world champion player \cite{shaheen2026reinforcementlearningstrategybasedatari}. Its implementation has expanded across various games in recent years \cite{marl-book}. This study applies MARL principles to network routing, where each node in the network is represented as an agent. Agents learn the network environment by analyzing both the network topology and the underlying traffic. By deploying agents, the network can adapt to changes in topology and traffic patterns. To model the topology, a Graph Neural Network (GNN) architecture is employed, representing the network state through nodes and links \cite{Rusek_2020}. This work uses Centralized Training and Decentralized Execution (CTDE) as the core of agent learning. The environment provides a global state for agents to learn during training, while each agent makes decisions based on its local policy \cite{marl-book}.
+
+Based on this context, three principles are established to ensure the effective implementation of the MARL algorithm in this project:
+\begin{enumerate}
+    \item The MARL approach employs Centralized Training with Decentralized Execution. Proximal Policy Optimization is used as the underlying algorithm, and the reward function incorporates maximum link utilization and quality of service (QoS).
+    \item The architecture is designed with a loop-free pattern to ensure that all traffic is transmitted from source to destination without routing loops.
+    \item The proposed approach is evaluated using real network topologies and traffic data from SNDlib.
+\end{enumerate}
+
+\subsection{Problem Formulation}
+\subsubsection{Network and Traffic Model}
+We model a telecommunication backbone as a directed graph
+$G=(\mathcal{N},\mathcal{E})$, where $\mathcal{N}$ is the set of $N$ nodes
+(routers) and $\mathcal{E}\subseteq\mathcal{N}\times\mathcal{N}$ is the set of
+directed links. The topology is \emph{fixed}: each link
+$e=(i,j)\in\mathcal{E}$ has a known, time-invariant capacity $c_e>0$ and
+propagation delay $\delta_e$. The adjacency matrix $A$ encodes connectivity,
+with $A_{ij}=1$ if $(i,j)\in\mathcal{E}$ and $0$ otherwise.
+
+Traffic is described by a time-varying demand matrix that decomposes into a set
+of flows (commodities)
+$\mathcal{F}=\{f=(s_f,d_f,r_f)\}$, where flow $f$ requests rate $r_f$ from
+source $s_f\in\mathcal{N}$ to destination $d_f\in\mathcal{N}$. Demands are
+dynamic and are drawn from real measured traffic matrices. A routing assigns
+each flow $f$ a single path $p_f$ from $s_f$ to $d_f$. The resulting load on
+link $e$ is
+\begin{equation}\label{eq:load}
+\ell_e=\sum_{f\in\mathcal{F}} r_f\,\mathbb{1}\!\left[e\in p_f\right],
+\end{equation}
+and its utilization is $u_e=\ell_e/c_e$, reported throughout as the percentage
+$100\,u_e$. The bottleneck (maximum link) utilization is
+\begin{equation}\label{eq:bottleneck}
+U=\max_{e\in\mathcal{E}} u_e .
+\end{equation}
+The traffic-engineering objective is to route all flows so as to minimize
+congestion, while preferring short paths to limit end-to-end delay:
+\begin{equation}\label{eq:objective}
+\min_{\,p_f,\;\forall f}\;\; U \;+\; \beta \sum_{f\in\mathcal{F}}
+\bigl(|p_f|-h^{\star}_f\bigr),
+\end{equation}
+where $|p_f|$ is the hop count of the chosen path, $h^{\star}_f$ the
+shortest-path hop count for the same flow, and $\beta\ge0$ weights the delay
+term. When $U>1$ a link is overloaded, and the excess offered load manifests at
+the packet level as loss and queueing delay; keeping $U<1$ preserves Quality of
+Service (QoS).
+
+\subsubsection{Multi-Agent MDP}
+We cast routing as a multi-agent Markov Decision Process
+$(\mathcal{N},\mathcal{S},\{\mathcal{A}_i\},\allowbreak P,R,\{\mathcal{O}_i\},\gamma)$
+under centralized training with decentralized execution (CTDE):
+\begin{itemize}
+\item $\mathcal{N}$: set of agents, one per node $i\in\mathcal{N}$, each
+deciding how flows transiting it are forwarded; the agent set therefore
+coincides with the node set.
+\item $\mathcal{S}$: global state, comprising the link utilizations
+$\{u_e\}_{e\in\mathcal{E}}$, the adjacency $A$, and the metadata of the flow
+being routed $(s_f,d_f,r_f)$.
+\item $\mathcal{A}_i(t)$: action space of agent $i$. For a flow arriving at $i$
+toward $d_f$, agent $i$ selects the outgoing link (next hop) among its
+neighbors, $\mathcal{A}_i=\{j\mid(i,j)\in\mathcal{E}\}$, restricted at each
+decision to the admissible set $\mathcal{A}^{\mathrm{ok}}_i$ of
+Section~\ref{sec:mask}. A centralized single-agent variant, used as an upper
+reference rather than as the proposed system, instead selects one path index
+from a candidate set $\mathcal{P}_f$ of the $k$ shortest paths of flow $f$,
+i.e.\ $\mathrm{Discrete}(k)$.
+\item $P$: transition dynamics. Placing a flow on its selected path updates the
+link loads and hence $\{u_e\}$ through \eqref{eq:load}--\eqref{eq:bottleneck}.
+\item $R$: shared team reward, defined below.
+\item $\mathcal{O}_i(t)$: local observation of agent $i$, a subset of
+$\mathcal{S}$ consisting of the utilizations of its incident links
+$\{u_{(i,j)}\mid(i,j)\in\mathcal{E}\}$, its local topology, and the flow
+metadata $(s_f,d_f)$. Multi-hop neighborhood context is approximated by
+Graph Neural Network (GNN) message passing over $G$, so each agent's embedding
+aggregates network-wide state without requiring full observability.
+\item $\gamma$: discount factor, balancing immediate and future rewards.
+\end{itemize}
+
+\subsubsection{Loop-Free Action Masking}\label{sec:mask}
+Principle 2 is enforced structurally rather than learned. Let $h_d(i)$ denote
+the shortest-path hop distance from node $i$ to destination $d$, let
+$\mathcal{V}_f$ be the set of nodes already visited by flow $f$, and let $t$ be
+the number of hops taken so far. The admissible next hops at node $i$ for
+destination $d$ are
+\begin{equation}\label{eq:mask}
+\mathcal{A}^{\mathrm{ok}}_i(d)=\bigl\{\,j\in\mathcal{A}_i \;:\;
+j\notin\mathcal{V}_f,\;\; h_d(j)<h_d(i)+\sigma,\;\;
+t+1+h_d(j)\le h^{\star}_f+\sigma_{\max}\bigr\},
+\end{equation}
+where the \emph{stretch} $\sigma$ bounds how far a single hop may move away
+from the destination ($\sigma=1$ confines the agent to the destination-oriented
+shortest-path DAG) and $\sigma_{\max}$ caps the excess length of the completed
+path. The visited set together with the finite node count guarantees that every
+trace is simple and terminates, so no emitted path can contain a loop. The
+constraint is applied to the policy as a binary mask
+$m\in\{0,1\}^{|\mathcal{A}_i|}$, with $m_j=1$ iff
+$j\in\mathcal{A}^{\mathrm{ok}}_i(d)$; if the set is empty the agent is forced
+onto the unvisited neighbor of least $h_d$.
+
+\subsubsection{Reward Design}
+Flows are placed sequentially; let $U_t$ denote the bottleneck utilization
+\eqref{eq:bottleneck} after the $t$-th flow is routed on path $p_t$, with
+$U_0=0$. The reward couples congestion relief with a delay penalty:
+\begin{equation}\label{eq:reward}
+r_t=-\bigl(U_t-U_{t-1}\bigr)\;-\;\beta\bigl(|p_t|-h^{\star}_t\bigr),
+\end{equation}
+where $\beta\ge 0$ weights the delay penalty. The first term is a
+potential-based shaping on the bottleneck: because it telescopes over an
+episode,
+\begin{equation}\label{eq:telescope}
+\sum_{t} r_t=-\,U_T\;-\;\beta\sum_{t}\bigl(|p_t|-h^{\star}_t\bigr),
+\end{equation}
+so maximizing the return is equivalent to minimizing the final bottleneck
+utilization $U_T$ plus the total excess path length, i.e.\ the objective
+\eqref{eq:objective}. The delay term makes the policy prefer shortest paths
+when the network is uncongested, matching OSPF, and detour only when
+detouring relieves the bottleneck.
+
+Each agent $i$ learns a policy $\pi_i:\mathcal{O}_i\to\mathcal{A}_i$ that
+maximizes the shared return, subject to cooperation with the other agents.
+Partial observability and non-stationarity (arising from other agents'
+concurrent decisions) make this challenging and motivate both the GNN state
+embedding and the CTDE scheme: a centralized critic accesses the global state
+$\mathcal{S}$ during training, whereas execution relies only on the local
+observations $\mathcal{O}_i$.
+
+\subsubsection{Assumptions}
+The formulation rests on the following explicit assumptions, each of which
+bounds the scope of the reported results:
+\begin{enumerate}
+\item \emph{Unsplittable routing.} Each flow follows a single path
+\eqref{eq:load}; traffic is not split across multiple paths.
+\item \emph{Static topology.} Capacities and propagation delays are
+time-invariant and no link or node failures occur during an episode.
+\item \emph{Matrix-granular decisions.} A routing is computed per demand
+matrix rather than per packet; forwarding is therefore destination-based and
+stable between matrices.
+\item \emph{Open-loop traffic.} Demands are offered as constant-rate UDP, so
+sources do not react to congestion and loss reflects queue overflow alone.
+\item \emph{Surrogate fidelity.} Training uses the analytical load model
+\eqref{eq:load}, which assumes offered demand is carried; this assumption fails
+above saturation, which is why all reported results are measured in ns-3.
+\end{enumerate}
+
+\subsection{System Architecture}
+In this study, the system architecture is structured as a pipeline of independent components that share a unified source of truth for both network topology and traffic data. The network consists of two dynamically changing environments: topology and traffic. Both environments employ SNDlib \cite{SNDlib10} \cite{OrlowskiPioroTomaszewskiWessaely2010}, which provides real-world network topologies and traffic data. The topology refers to the physical point-to-point connections between routers, while the traffic is derived from measured dynamic demand-matrix time series. Abilene, GEANT, and GERMANY50 serve as the foundational environments and are integrated into the ns-3 simulator for system modeling.
+
+The policy backbone employs a Graph Neural Network (GNN) feature extractor applied to the router-level topology. This model aggregates per-link utilization onto nodes using the link–node incidence structure, combines each node's state with those of its immediate neighbors through adjacency, and processes the results via fully connected layers to the actor and critic heads. The multi-agent policy is trained using a custom multi-agent Proximal Policy Optimization (MAPPO) algorithm that implements Centralized Training with Decentralized Execution (CTDE). This approach enables agents to develop learning algorithms that achieve superior results compared to traditional protocols.
+
+Concretely, let $B\in\{0,1\}^{N\times|\mathcal{E}|}$ be the node--link incidence
+matrix, with $B_{ie}=1$ iff node $i$ is an endpoint of link $e$, and let
+$u\in\mathbb{R}^{|\mathcal{E}|}$ collect the link utilizations. The utilizations
+are first aggregated onto nodes and then mixed with each node's immediate
+neighborhood through the degree-normalized adjacency:
+\begin{equation}\label{eq:gnn}
+\begin{gathered}
+x^{(0)}=\tilde{B}\,u,
+\qquad
+\tilde{B}_{ie}=\frac{B_{ie}}{\max\bigl(1,\sum_{e'}B_{ie'}\bigr)}, \\[3pt]
+x^{(1)}=\hat{A}\,x^{(0)},
+\qquad
+\hat{A}=\Lambda^{-1}A,
+\qquad
+\Lambda_{ii}=\sum_{j}A_{ij}+\epsilon .
+\end{gathered}
+\end{equation}
+The mixed node states are concatenated with the vectorized adjacency, so the
+encoder is conditioned on the topology it operates over, and passed through
+fully connected layers to form the graph embedding
+$z=\phi\bigl([\,x^{(1)}\,\Vert\,\mathrm{vec}(A)\,]\bigr)\in\mathbb{R}^{F}$. This
+is combined with the decision-local context $q$, comprising the one-hot
+encodings of the current node and destination, the normalized flow rate, and
+per-neighbor features (link utilization, the bottleneck that would result from
+using the link, remaining headroom, and normalized distance to the
+destination), giving the shared representation $\psi\bigl([\,z\,\Vert\,q\,]\bigr)$, which the actor
+and critic heads read. The actor emits next-hop logits $\eta$ from which the
+inadmissible hops of \eqref{eq:mask} are removed before the softmax,
+\begin{equation}\label{eq:policy}
+\pi_\theta(a\mid o,m)=\frac{\exp\bigl(\eta_a+\log m_a\bigr)}
+{\sum_{a'}\exp\bigl(\eta_{a'}+\log m_{a'}\bigr)},
+\end{equation}
+so that $\pi_\theta(a\mid o,m)=0$ whenever $m_a=0$ and every sampled action is
+loop-free by construction. Because $\tilde{B}$ and $\hat{A}$ are supplied as
+inputs rather than learned, a single parameter set $\theta$ is shared by every
+node agent.
+
+\subsection{Training and Evaluation Protocol}
+Training and evaluation are deliberately separated: the policy is \emph{learned} against a fast
+analytical model of the network, and \emph{judged} by packet-level simulation. Given the paths
+committed so far, the analytical model returns link loads and utilizations in closed form from
+\eqref{eq:load}--\eqref{eq:bottleneck}, so an episode
+costs milliseconds instead of the minutes an \mbox{ns-3} run requires. That model assumes offered
+demand is carried, which is precisely the assumption that fails once a link saturates; the
+simulator is therefore never part of the gradient path, but every reported number comes from it.
+
+An episode is a complete routing of one demand matrix: flows with $r_f > 0$ are ordered by
+decreasing rate and routed hop by hop, giving $H = \sum_f |p_f|$ decisions. Because the per-hop
+reward telescopes as in \eqref{eq:telescope}, no terminal bonus is
+required and the trained quantity is the one on which OSPF is scored:
+\begin{equation}\label{eq:objective-rl}
+J(\theta) = \mathbb{E}_{\mathbf{r} \sim \mathcal{D}_{\mathrm{train}}}
+\mathbb{E}_{\tau \sim \pi_\theta}\!\left[\sum_{t} \gamma^{t} r_t\right].
+\end{equation}
+The expectation is taken over a \emph{distribution} of demand matrices,
+$\mathcal{D}_{\mathrm{train}} = \{\alpha\,\mathbf{r}^{(\nu)} : \alpha \in \mathcal{Z},\,
+\nu \in \mathcal{T}_{\mathrm{train}}\}$, where $\mathcal{T}_{\mathrm{train}}$ is the earlier window
+of the measured SNDlib series (the first $70\%$ of the archive timeline) and $\mathcal{Z}$ is a
+per-network set of magnitude scales, listed in Table~\ref{tab:setup}, that places the demand in
+the congested regime in which routing decisions matter. Because the backbones are
+over-provisioned relative to the measured demand, the scales differ by network. Within a split,
+timestamps are selected as evenly spaced samples of the timeline rather than at random, so the
+matrix set is a deterministic function of the data alone. All evaluation draws from the disjoint
+later window $\mathcal{T}_{\mathrm{test}}$ (the last $30\%$), so results measure temporal
+generalization.
+
+Each iteration collects $T$ decision steps under $\pi_{\theta_{\mathrm{old}}}$, resetting to a
+newly drawn matrix at every episode end. Advantages use generalized advantage estimation with a
+bootstrap at the truncation point, and are standardized across the batch so the gradient scale
+does not depend on which load levels were sampled:
+\begin{equation}\label{eq:gae}
+\begin{gathered}
+\delta_t = r_t + \gamma\,V_\phi\bigl(s_{t+1}\bigr)\bigl(1-\mathrm{done}_t\bigr) - V_\phi\bigl(s_t\bigr), \\[3pt]
+\hat{A}_t = \sum_{j\ge 0} (\gamma\lambda)^{j}\,\delta_{t+j},
+\qquad
+\tilde{A}_t = \frac{\hat{A}_t - \mathrm{mean}(\hat{A})}{\mathrm{std}(\hat{A}) + 10^{-8}} .
+\end{gathered}
+\end{equation}
+The batch is reused for $E$ epochs of minibatch descent on the clipped actor--critic loss
+\begin{equation}\label{eq:loss}
+\begin{aligned}
+\mathcal{L}(\theta,\phi) \;=\;
+&-\,\mathbb{E}_{t}\Bigl[\min\bigl(\rho_t\tilde{A}_t,\;
+\mathrm{clip}(\rho_t,1-\varepsilon,1+\varepsilon)\,\tilde{A}_t\bigr)\Bigr] \\[2pt]
+&+\, c_v\,\mathbb{E}_{t}\Bigl[\bigl(V_\phi(s_t)-\hat{V}_t\bigr)^{2}\Bigr]
+\;-\; c_e\,\mathbb{E}_{t}\Bigl[\mathbb{H}\bigl[\pi_\theta(\cdot\mid o_t,m_t)\bigr]\Bigr],
+\end{aligned}
+\end{equation}
+where $\hat{V}_t = \hat{A}_t + V_\phi(s_t)$, $\mathbb{H}$ is the entropy, and
+$\rho_t = \pi_\theta(a_t\mid o_t,m_t) \,/\,
+\pi_{\theta_{\mathrm{old}}}(a_t\mid o_t,m_t)$. The action mask of \eqref{eq:mask} enters both
+policies, so the entropy term explores only among \emph{legal} next hops. Updates use Adam under
+global gradient-norm clipping at $g_{\max}$, necessary because the reward is a maximum over links
+and a single hop that creates a new bottleneck yields a large, sparse gradient. All router agents
+update the same $\theta$, so the effective sample size per iteration is $T$ decisions rather than
+$T/N$ per-agent trajectories.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llll}
+\hline
+Steps $N_{\mathrm{steps}}$ & $6\times10^{5}$ & Discount $\gamma$ & $0.99$ \\
+Rollout $T$ & $4096$ & GAE trace $\lambda$ & $0.95$ \\
+Epochs $E$ & $8$ & Clip $\varepsilon$ & $0.2$ \\
+Minibatch $B_{\mathrm{mb}}$ & $512$ & Value coeff.\ $c_v$ & $0.5$ \\
+Learning rate $\alpha_{\mathrm{lr}}$ & $3\times10^{-4}$ & Entropy coeff.\ $c_e$ & $0.01$ \\
+Embedding width $F$ & $128$ & Grad clip $g_{\max}$ & $0.5$ \\
+Stretch $\sigma$ & $1$ & Torch threads & $2$ \\
+\hline
+\end{tabular}
+\caption{MAPPO training hyperparameters, common to all three networks. The
+delay penalty $\beta$, the hop cap $\sigma_{\max}$ and the load scales
+$\mathcal{Z}$ are network-specific and are given in Table~\ref{tab:setup}.}
+\label{tab:hyperparams}
+\end{table}
+
+Training progress is monitored analytically on a held-out set $\mathcal{M}$ of unseen matrices
+under the deterministic policy $a = \arg\max_a \pi_\theta(a\mid o,m)$, using the mean
+bottleneck improvement over OSPF,
+$\overline{\Delta} = |\mathcal{M}|^{-1}\sum_{\mathbf{r}\in\mathcal{M}}
+(U^{\mathrm{OSPF}}(\mathbf{r}) - U^{\pi_\theta}(\mathbf{r}))$, together with the
+fraction of matrices on which the policy wins by more than $0.5$ percentage points. A myopic
+greedy best-response, which at each hop takes the admissible neighbor of \eqref{eq:mask}
+minimizing the resulting bottleneck, is scored on the same matrices as an intermediate reference
+between OSPF and the learned policy.
+
+Final evaluation replaces this analytical judge with \mbox{ns-3} (v3.42) in
+\emph{export--simulate} form. The same deterministic rollout emits an explicit node path per
+demand, OSPF emits its shortest path, and both are installed as \emph{static} per-hop routes,
+bypassing the global routing helper, so the simulator reproduces the intended paths exactly and
+the only difference between runs is the routing decision. Each link is a point-to-point device
+with data rate $c_e$ and propagation delay $\delta_e$ of the instance, and each demand becomes a
+one-way constant-rate UDP \texttt{OnOff} application with $1400$\,B payload sending at $r_f$, so that
+congestion manifests as genuine queue overflow rather than transport back-off. To keep large
+topologies tractable, rates and capacities are divided by a common factor $\kappa$,
+\begin{equation}\label{eq:scale}
+c_e \mapsto c_e/\kappa, \qquad r_f \mapsto r_f/\kappa
+\quad\Longrightarrow\quad
+u_e = \ell_e/c_e \;\; \text{invariant},
+\end{equation}
+which preserves every utilization ratio while cutting the packet count by $\kappa$; $\kappa = 20$
+over an $8$\,s horizon is used throughout, and on the largest instance the demand set is
+restricted to the $N_f$ largest flows, applied identically to every method.
+
+Loss, mean end-to-end delay and delivered throughput are collected with \texttt{FlowMonitor},
+while link utilization is measured from the bytes actually enqueued on each device rather than
+from the analytical load:
+\begin{equation}\label{eq:ns3-metrics}
+\begin{gathered}
+\mathrm{loss} = \frac{P_{\mathrm{tx}} - P_{\mathrm{rx}}}{P_{\mathrm{tx}}},
+\qquad
+\bar{d} = \frac{1}{P_{\mathrm{rx}}}\sum_{p}\bigl(t^{\mathrm{rx}}_p - t^{\mathrm{tx}}_p\bigr),
+\qquad
+\Theta = \frac{8\,B_{\mathrm{rx}}}{W}, \\[3pt]
+u^{\mathrm{ns3}}_e = \frac{1}{\chi}\cdot\frac{8\,B^{\mathrm{enq}}_e}{c_e\,W},
+\qquad
+U^{\mathrm{ns3}} = \max_{e\in\mathcal{E}} u^{\mathrm{ns3}}_e ,
+\end{gathered}
+\end{equation}
+where $P_{\mathrm{tx}},P_{\mathrm{rx}}$ are transmitted and received packet counts,
+$B_{\mathrm{rx}}$ the delivered bytes, $B^{\mathrm{enq}}_e$ the bytes enqueued on link $e$, $W$
+the accounting window, and $\chi = 7/8$ corrects for the applications being active for $7$\,s of
+the $8$\,s window. Unlike its analytical counterpart, $u^{\mathrm{ns3}}_e$ saturates at $1$:
+offered load beyond line rate appears not as utilization above capacity but as queue drops, so
+utilization and loss must be read together. OSPF, the greedy best-response and the learned
+policies are simulated on identical matrices, identical flow sets and identical scenario
+parameters, differing only in the installed paths, and every metric is averaged over held-out
+matrices and independent training seeds and reported as $\mu \pm \sigma_{\mathrm{sd}}$.
+
+\subsubsection{Experimental Setup}
+Table~\ref{tab:setup} records the three SNDlib instances and the per-network
+quantities of the protocol. Capacities and propagation delays are taken from the
+instance files unchanged; the demand archives are the measured
+directed time series shipped with SNDlib (Abilene, $5$-minute matrices over six
+months; GEANT, $15$-minute over four months; Germany50, $5$-minute over one
+day).
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lccc}
+\hline
+& Abilene & GEANT & Germany50 \\
+\hline
+Nodes $N$ & $12$ & $22$ & $50$ \\
+Links $|\mathcal{E}|$ (undirected) & $15$ & $36$ & $88$ \\
+Link capacities (Gb/s) & $2.48,\ 9.92$ & $40$ & $40$ \\
+Demand pairs & $132$ & $462$ & $2450$ \\
+Demand granularity & $5$\,min & $15$\,min & $5$\,min \\
+\hline
+Training scales $\mathcal{Z}$ & $\{8,12,16\}$ & $\{3,5,7\}$ & $\{35,50,65\}$ \\
+Evaluation scale & $12$ & $5$ & $35$ \\
+Delay penalty $\beta$ & $0.5$ & $0.5$ & $0.1$ \\
+Hop cap $\sigma_{\max}$ & uncapped & uncapped & $4$ \\
+Matrices per scale & $20$ & $20$ & $20$ \\
+Flow cap $N_f$ & all & all & $200$ \\
+\hline
+\end{tabular}
+\caption{Network instances and per-network protocol settings. A dash denotes an
+uncapped quantity. The demand scales differ by network because the measured
+demands are light relative to these over-provisioned backbones.}
+\label{tab:setup}
+\end{table}
+
+Every configuration is trained from three independent seeds ($0,1,2$), giving
+$3\ \text{networks}\times 2\ \text{methods}\times 3\ \text{seeds}=18$ models,
+where the two methods are the proposed decentralized MARL policy and the
+centralized single-agent GNN reference. Held-out evaluation uses
+$|\mathcal{M}|=5$ unseen matrices per network and seed, drawn from
+$\mathcal{T}_{\mathrm{test}}$ and selected to span both congestion regimes.
+The OSPF baseline is the minimum-hop shortest path between each pair, computed
+on the same graph with deterministic tie-breaking, and is installed in ns-3 by
+the identical static-route mechanism used for the learned paths, so the two
+differ only in the path chosen. The greedy best-response uses the same
+admissible set \eqref{eq:mask} as the learned policy.
+
+In ns-3, each link is a \texttt{PointToPointNetDevice} whose transmit queue is
+the default DropTail queue of $100$ packets; no active queue management or
+traffic shaping is configured, so loss is pure buffer overflow. Link delays are
+installed at nanosecond resolution, which matters on Germany50 where several
+links are below $1$\,ms and would otherwise truncate to zero.
+
+The software stack is ns-3.42, PyTorch 2.6.0, NetworkX, and Stable-Baselines3
+2.7.1 for the centralized reference, on Python 3.9; all training and evaluation
+are CPU-only. Training and evaluation are driven by two launcher scripts that
+record the exact command line, seed, and configuration of every run to a log
+file, so each of the 18 models and its evaluation directory can be traced back
+to the invocation that produced it.

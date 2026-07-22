@@ -1,0 +1,122 @@
+\section{Training and evaluation}
+
+Training and evaluation are deliberately separated: the policy is \emph{learned} against a fast
+analytical model of the network, and \emph{judged} by packet-level simulation. Given the paths
+committed so far, the analytical model returns arc loads and utilisations in closed form from
+$\boldsymbol{\ell} = \mathbf{R}^{\!\top}\mathbf{r}$ and $u_e = 100\,\ell_e/c_e$, so an episode
+costs milliseconds instead of the minutes an \mbox{ns-3} run requires. That model assumes offered
+demand is carried, which is precisely the assumption that fails once a link saturates; the
+simulator is therefore never part of the gradient path, but every reported number comes from it.
+
+An episode is a complete routing of one demand matrix: flows with $r_i > 0$ are ordered by
+decreasing rate and routed hop by hop, giving $K = \sum_i L_i$ decisions. Because the per-hop
+reward telescopes, the episode return is exactly the negated objective, so no terminal bonus is
+required and the trained quantity is the one on which OSPF is scored:
+\begin{equation}
+\sum_{k=0}^{K-1} R^{(k)} = -\,U_{\max} - \beta \sum_i \bigl(L_i - L_i^{\mathrm{sp}}\bigr),
+\quad
+J(\theta) = \mathbb{E}_{\mathbf{r} \sim \mathcal{D}_{\mathrm{train}}}
+\mathbb{E}_{\tau \sim \pi_\theta}\!\left[\sum_{k} \gamma^{k} R^{(k)}\right].
+\end{equation}
+The expectation is taken over a \emph{distribution} of demand matrices,
+$\mathcal{D}_{\mathrm{train}} = \{\alpha\,\mathbf{r}^{(t)} : \alpha \in \mathcal{A},\,
+t \in \mathcal{T}_{\mathrm{train}}\}$, where $\mathcal{T}_{\mathrm{train}}$ is the earlier window
+of the measured SNDlib series and $\mathcal{A} = \{2,3,4\}$ scales the demand into the congested
+regime in which routing decisions matter. All evaluation draws from the disjoint later window
+$\mathcal{T}_{\mathrm{test}}$, so results measure temporal generalisation.
+
+Each iteration collects $T$ decision steps under $\pi_{\theta_{\mathrm{old}}}$, resetting to a
+newly drawn matrix at every episode end. Advantages use generalised advantage estimation with a
+bootstrap at the truncation point, and are standardised across the batch so the gradient scale
+does not depend on which load levels were sampled:
+\begin{equation}
+\begin{gathered}
+\delta^{(k)} = R^{(k)} + \gamma\,V_\phi\bigl(s^{(k+1)}\bigr)\bigl(1-\mathrm{done}^{(k)}\bigr) - V_\phi\bigl(s^{(k)}\bigr), \\[3pt]
+\hat{A}^{(k)} = \sum_{j\ge 0} (\gamma\lambda)^{j}\,\delta^{(k+j)},
+\qquad
+\tilde{A}^{(k)} = \frac{\hat{A}^{(k)} - \mu_{\hat{A}}}{\sigma_{\hat{A}} + 10^{-8}} .
+\end{gathered}
+\end{equation}
+The batch is reused for $E$ epochs of minibatch descent on the clipped actor--critic loss
+\begin{equation}
+\begin{aligned}
+\mathcal{L}(\theta,\phi) \;=\;
+&-\,\mathbb{E}_{k}\Bigl[\min\bigl(\rho^{(k)}\tilde{A}^{(k)},\;
+\mathrm{clip}(\rho^{(k)},1-\varepsilon,1+\varepsilon)\,\tilde{A}^{(k)}\bigr)\Bigr] \\[2pt]
+&+\, c_v\,\mathbb{E}_{k}\Bigl[\bigl(V_\phi(s^{(k)})-\hat{V}^{(k)}\bigr)^{2}\Bigr]
+\;-\; c_e\,\mathbb{E}_{k}\Bigl[\mathbb{H}\bigl[\pi_\theta(\cdot\mid o^{(k)},\mathbf{m}^{(k)})\bigr]\Bigr],
+\end{aligned}
+\end{equation}
+where $\hat{V}^{(k)} = \hat{A}^{(k)} + V_\phi(s^{(k)})$ and
+$\rho^{(k)} = \pi_\theta(a^{(k)}\mid o^{(k)},\mathbf{m}^{(k)}) \,/\,
+\pi_{\theta_{\mathrm{old}}}(a^{(k)}\mid o^{(k)},\mathbf{m}^{(k)})$. The action mask enters both
+policies, so the entropy term explores only among \emph{legal} next hops. Updates use Adam under
+global gradient-norm clipping at $g_{\max}$, necessary because the reward is a maximum over arcs
+and a single hop that creates a new bottleneck yields a large, sparse gradient. All router agents
+update the same $\theta$, so the effective sample size per iteration is $T$ decisions rather than
+$T/N$ per-agent trajectories.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llll}
+\hline
+Steps $N_{\mathrm{steps}}$ & $6\times10^{5}$ & Discount $\gamma$ & $0.99$ \\
+Rollout $T$ & $4096$ & GAE trace $\lambda$ & $0.95$ \\
+Epochs $E$ & $8$ & Clip $\varepsilon$ & $0.2$ \\
+Minibatch $B$ & $512$ & Value coeff.\ $c_v$ & $0.5$ \\
+Learning rate $\alpha_{\mathrm{lr}}$ & $3\times10^{-4}$ & Entropy coeff.\ $c_e$ & $0.01$ \\
+Hidden width $H$ & $128$ & Grad clip $g_{\max}$ & $0.5$ \\
+Detour penalty $\beta$ & $0.5$ & Stretch $\sigma$ & $1$ \\
+\hline
+\end{tabular}
+\caption{MAPPO training hyperparameters.}
+\label{tab:hyperparams}
+\end{table}
+
+Training progress is monitored analytically on a held-out set $\mathcal{M}$ of unseen matrices
+under the deterministic policy $a = \arg\max_a \pi_\theta(a\mid o,\mathbf{m})$, using the mean
+bottleneck improvement over OSPF,
+$\overline{\Delta} = |\mathcal{M}|^{-1}\sum_{\mathbf{r}\in\mathcal{M}}
+(U^{\mathrm{OSPF}}_{\max}(\mathbf{r}) - U^{\pi_\theta}_{\max}(\mathbf{r}))$, together with the
+fraction of matrices on which the policy wins by more than $0.5$ percentage points.
+
+Final evaluation replaces this analytical judge with \mbox{ns-3} (v3.42) in
+\emph{export--simulate} form. The same deterministic rollout emits an explicit node path per
+demand, OSPF emits its shortest path, and both are installed as \emph{static} per-hop routes,
+bypassing the global routing helper, so the simulator reproduces the intended paths exactly and
+the only difference between runs is the routing decision. Each link is a point-to-point device
+with data rate $c_e$ and the propagation delay of the instance, and each demand becomes a one-way
+constant-rate UDP \texttt{OnOff} application with $1400$\,B payload sending at $r_i$, so that
+congestion manifests as genuine queue overflow rather than transport back-off. To keep large
+topologies tractable, rates and capacities are divided by a common factor $\kappa$,
+\begin{equation}
+c_e \mapsto c_e/\kappa, \qquad r_i \mapsto r_i/\kappa
+\quad\Longrightarrow\quad
+u_e = 100\,\ell_e/c_e \;\; \text{invariant},
+\end{equation}
+which preserves every utilisation ratio while cutting the packet count by $\kappa$; $\kappa = 20$
+over an $8$\,s horizon is used throughout, and on the largest instance the demand set is
+restricted to the $N_f$ largest flows, applied identically to every method.
+
+Loss, mean end-to-end delay and delivered throughput are collected with \texttt{FlowMonitor},
+while link utilisation is measured from the bytes actually enqueued on each device rather than
+from the analytical load:
+\begin{equation}
+\begin{gathered}
+\mathrm{loss} = 100\,\frac{P_{\mathrm{tx}} - P_{\mathrm{rx}}}{P_{\mathrm{tx}}},
+\qquad
+\bar{d} = \frac{1}{P_{\mathrm{rx}}}\sum_{p}\bigl(t^{\mathrm{rx}}_p - t^{\mathrm{tx}}_p\bigr),
+\qquad
+\Theta = \frac{8\,B_{\mathrm{rx}}}{W}, \\[3pt]
+u^{\mathrm{ns3}}_e = \frac{100}{\chi}\cdot\frac{8\,B^{\mathrm{enq}}_e}{c_e\,W},
+\qquad
+U^{\mathrm{ns3}}_{\max} = \max_{e\in\mathcal{E}} u^{\mathrm{ns3}}_e ,
+\end{gathered}
+\end{equation}
+with $\chi = 7/8$ correcting for the applications being active for $7$\,s of the $8$\,s accounting
+window. Unlike its analytical counterpart, $u^{\mathrm{ns3}}_e$ saturates at $100\%$: offered load
+beyond line rate appears not as utilisation above capacity but as queue drops, so utilisation and
+loss must be read together. OSPF, the greedy best-response and the learned policies are simulated
+on identical matrices, identical flow sets and identical scenario parameters, differing only in
+the installed paths, and every metric is averaged over held-out matrices and independent training
+seeds and reported as $\mu \pm \sigma$.

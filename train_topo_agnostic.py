@@ -17,6 +17,7 @@ from pathlib import Path
 
 import numpy as np
 from stable_baselines3 import PPO
+from stable_baselines3.common.vec_env import DummyVecEnv
 
 from marl_routing.graph_routing_env import GraphSeqRoutingEnv
 from marl_routing.real_traffic import real_matrices
@@ -39,9 +40,18 @@ ap.add_argument("--seed", type=int, default=0)
 ap.add_argument("--timesteps", type=int, default=500000)
 ap.add_argument("--n-per-scale", type=int, default=20)
 ap.add_argument("--k-paths", type=int, default=3)
-ap.add_argument("--hidden", type=int, default=64)
-ap.add_argument("--rounds", type=int, default=3, help="message-passing rounds")
+ap.add_argument("--hidden", type=int, default=32)
+ap.add_argument("--rounds", type=int, default=2, help="message-passing rounds")
+ap.add_argument("--n-envs", type=int, default=8,
+                help="parallel envs; batches the rollout forward passes")
+ap.add_argument("--n-steps", type=int, default=256,
+                help="PPO rollout length PER ENV. Total buffer = n_steps * n_envs, "
+                     "so keep n_steps*n_envs ~= 2048 to preserve the number of "
+                     "policy-improvement iterations.")
+ap.add_argument("--verbose", type=int, default=1)
 ap.add_argument("--delay-penalty", type=float, default=0.5)
+ap.add_argument("--raw-reward", action="store_true",
+                help="disable per-topology reward normalisation (ablation)")
 ap.add_argument("--tag", default="_topoagn")
 A = ap.parse_args()
 
@@ -86,19 +96,35 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
 
     train_specs = [spec(t, "train", A.n_per_scale) for t in train_topos]
-    env = GraphSeqRoutingEnv(train_specs, k_paths=A.k_paths, seed=A.seed,
-                             delay_penalty=A.delay_penalty)
+    norm = not A.raw_reward
+
+    # DummyVecEnv steps envs sequentially but issues ONE batched policy forward
+    # per step, which is what makes rollout collection affordable here.
+    def make_env(rank):
+        def _f():
+            return GraphSeqRoutingEnv(train_specs, k_paths=A.k_paths,
+                                      seed=A.seed * 100 + rank,
+                                      delay_penalty=A.delay_penalty,
+                                      normalize_reward=norm)
+        return _f
+
+    env = DummyVecEnv([make_env(i) for i in range(A.n_envs)])
     print(f"[train] topos={train_topos} holdout={A.holdout} seed={A.seed} "
-          f"steps={A.timesteps} rounds={A.rounds}")
+          f"steps={A.timesteps} hidden={A.hidden} rounds={A.rounds} "
+          f"n_envs={A.n_envs} normalize_reward={norm}")
 
     policy_kwargs = {
         "features_extractor_class": TopoAgnosticGNNExtractor,
         "features_extractor_kwargs": {"k_paths": A.k_paths, "hidden_dim": A.hidden,
                                       "rounds": A.rounds},
     }
-    model = PPO("MlpPolicy", env, learning_rate=3e-4, n_steps=2048, batch_size=256,
+    print(f"[ppo] rollout buffer = n_steps({A.n_steps}) * n_envs({A.n_envs}) "
+          f"= {A.n_steps * A.n_envs}  ->  "
+          f"{A.timesteps // (A.n_steps * A.n_envs)} policy updates")
+    model = PPO("MlpPolicy", env, learning_rate=3e-4, n_steps=A.n_steps, batch_size=256,
                 n_epochs=10, gamma=0.995, gae_lambda=0.95, ent_coef=0.01,
-                seed=A.seed, device="cpu", policy_kwargs=policy_kwargs, verbose=0)
+                seed=A.seed, device="cpu", policy_kwargs=policy_kwargs,
+                verbose=A.verbose)
     model.learn(total_timesteps=A.timesteps, progress_bar=False)
     model.save(out / "policy")
     print(f"[saved] {out/'policy'}.zip")
@@ -109,7 +135,7 @@ def main():
     print("\n[eval] SEEN topologies, held-out traffic (test split):")
     test_specs = [spec(t, "test", 5) for t in train_topos]
     eval_env = GraphSeqRoutingEnv(test_specs, k_paths=A.k_paths, seed=A.seed,
-                                  delay_penalty=A.delay_penalty)
+                                  delay_penalty=A.delay_penalty, normalize_reward=norm)
     for i, t in enumerate(train_topos):
         results["seen"][t] = evaluate(eval_env, i, test_specs[i][2], model, t)
 
@@ -117,7 +143,7 @@ def main():
         print(f"\n[eval] ZERO-SHOT on {A.holdout} (never trained on):")
         hs = spec(A.holdout, "test", 5)
         zenv = GraphSeqRoutingEnv([hs], k_paths=A.k_paths, seed=A.seed,
-                                  delay_penalty=A.delay_penalty)
+                                  delay_penalty=A.delay_penalty, normalize_reward=norm)
         results["zero_shot"][A.holdout] = evaluate(zenv, 0, hs[2], model, A.holdout)
 
     (out / "summary.json").write_text(json.dumps(results, indent=2))
