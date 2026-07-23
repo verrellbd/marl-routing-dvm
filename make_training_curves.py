@@ -65,8 +65,11 @@ def main():
         # align on the shortest run for the mean line
         n = min(len(r[0]) for r in runs)
         xs = runs[0][0][:n] / 1e3
-        for row, idx, ylab in [(0, 1, "Mean episode return"),
-                               (1, 2, "Held-out Δ vs OSPF (pt)")]:
+        for row, idx, ylab in [
+                (0, 1, "TRAIN traffic\nmean episode return\n"
+                       r"$\approx -(\max$ link util %$) - \lambda\,$(detour hops)"),
+                (1, 2, "HELD-OUT traffic\n"
+                       "Δ max link util vs OSPF (pt)\nhigher = less congested than OSPF")]:
             ax = axes[row][col]
             for si, r in enumerate(runs):
                 ax.plot(r[0] / 1e3, r[idx], lw=0.9, alpha=0.55,
@@ -81,14 +84,17 @@ def main():
                             fontsize=8, va="bottom", ha="right")
             ax.grid(alpha=0.3)
             if col == 0:
-                ax.set_ylabel(ylab)
+                ax.set_ylabel(ylab, fontsize=8.5)
         axes[0][col].set_title(title, fontweight="bold")
         axes[1][col].set_xlabel("Environment steps (×10³)")
     axes[0][0].legend(loc="lower right", fontsize=8)
-    fig.suptitle("MARL (MAPPO) training curves — reward and held-out gain vs OSPF\n"
-                 "seeds 0/1/2, logged every 5 PPO updates",
-                 fontsize=12.5, fontweight="bold")
-    fig.tight_layout(rect=(0, 0, 1, 0.93))
+    fig.suptitle(
+        "MARL (MAPPO) learning progress\n"
+        "top: reward optimised on the 60 TRAINING matrices  •  "
+        "bottom: generalisation on 5 UNSEEN later-period matrices at the heaviest load\n"
+        "seeds 0/1/2, logged every 5 PPO updates",
+        fontsize=11.5, fontweight="bold")
+    fig.tight_layout(rect=(0, 0, 1, 0.90))
     out = f"{R}/fig_marl_training_curves.png"
     fig.savefig(out, dpi=150)
     print(f"[saved] {out}")
