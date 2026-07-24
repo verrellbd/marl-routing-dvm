@@ -1,0 +1,18 @@
+{
+  "overload": {
+    "ospf_loss": 17.47,
+    "gnn_loss_mean": 15.68,
+    "gnn_loss_std": 0.55934485486743,
+    "ospf_delay_ms": 33.1,
+    "gnn_delay_mean": 29.843333333333334,
+    "gnn_delay_std": 0.9094442747573321
+  },
+  "feasible": {
+    "ospf_loss": 0.09000000000000001,
+    "gnn_loss_mean": 0.02666666666666667,
+    "gnn_loss_std": 0.004714045207910316,
+    "ospf_delay_ms": 3.75,
+    "gnn_delay_mean": 1.7433333333333334,
+    "gnn_delay_std": 0.03299831645537225
+  }
+}

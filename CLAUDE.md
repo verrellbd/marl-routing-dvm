@@ -7,11 +7,18 @@ LP-optimum under dynamic traffic conditions, with QoS-aware reward design.
 Novel angle: GNN as the agent backbone (one novel element — keep scope disciplined).
 
 ## Environment (VERIFIED WORKING — do not reconfigure without reason)
-- PRIMARY MACHINE (as of 2026-07): monaco.ee.ucl.ac.uk — 40 CPU cores (4x Xeon
-  E5-4620 v4 @2.1GHz), 512GB RAM, Rocky 9, CPU-ONLY (no GPU). Dedicated (not shared)
-  -> use for training + eval. Cores are OLD/slow (~5x slower per-core than malmo) but
-  plentiful; parallelize across cores. Our work needs NO GPU (tiny nets, CPU surrogate,
-  CPU ns-3), so monaco is the right box and doesn't waste shared GPU machines.
+- PRIMARY MACHINE (as of 2026-07): monaco.ee.ucl.ac.uk — 40 CPU cores / 80 threads
+  (4x Xeon E5-4620 v4 @2.1GHz), 512GB RAM, Rocky 9, CPU-ONLY (no GPU). Cores are
+  OLD/slow (~5x slower per-core than malmo). Our work needs NO GPU (tiny nets, CPU
+  surrogate, CPU ns-3).
+  ** NO LONGER DEDICATED (updated 2026-07-23): monaco is now SHARED and often
+  SATURATED — observed load avg ~81 on 80 threads (other users' OpenROAD/MATLAB
+  jobs). Consequences: (1) ns-3 sims run 2-3x slower than idle (germany50 ~25min/sim
+  idle -> 45-60min under contention); (2) fork-OOM risk when neighbours spike RAM
+  (crashed parallel training once — run heavy jobs SEQUENTIALLY, not parallel);
+  (3) be polite: `nice -n 19`, cap threads (OMP_NUM_THREADS=1-2). For big CPU batches
+  prefer UCL Myriad HPC (SGE scheduler, guaranteed CPU) — needs venv + ns-3 rebuilt
+  there. Check `uptime` before launching; if load >> ncores, expect timeouts. **
 - HOME is NFS-shared (128.40.41.191:/vol_home_2/uceedv1) across ALL ee.ucl machines,
   so ~/thesis, the venv, ~/.claude (transcripts + memory) are identical everywhere.
   Switching machines keeps all context; `claude --continue` from ~/thesis resumes sessions.
@@ -24,7 +31,9 @@ Novel angle: GNN as the agent backbone (one novel element — keep scope discipl
 - ns-3.42 at ~/thesis/ns-3-dev. NOTE: ns-3 binaries built on malmo MAY fail on monaco's
   older cores (illegal instruction) — rebuild on monaco if needed:
   cd ns-3-dev && ~/thesis/configure_ns3.sh && ./ns3 build -j8. Also monaco is slow for
-  ns-3: raise per-sim timeout via NS3_TIMEOUT env (run_ns3_phase2.py reads it; default 900).
+  ns-3: raise per-sim timeout via NS3_TIMEOUT env (run_ns3_phase2.py reads it; default 900
+  is TOO LOW for germany50 200-flow sims — they take ~25min idle / ~45-60min under
+  contention. Use NS3_TIMEOUT=3600 for germany50; 900 is fine for abilene/geant).
 - ns3-ai at commit b8c9858 (main branch, NOT the v1.2.0 tag)
 - Protobuf sourced from Anaconda (/opt/anaconda3), not system
 
