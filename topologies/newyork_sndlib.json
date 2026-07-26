@@ -1,0 +1,399 @@
+{
+  "name": "newyork_sndlib",
+  "capacity_unit": "Mbps",
+  "delay_unit": "ms",
+  "nodes": [
+    {
+      "id": 0,
+      "name": "N1",
+      "lon": 237.0,
+      "lat": 338.0
+    },
+    {
+      "id": 1,
+      "name": "N2",
+      "lon": 130.0,
+      "lat": 207.0
+    },
+    {
+      "id": 2,
+      "name": "N3",
+      "lon": 126.0,
+      "lat": 531.0
+    },
+    {
+      "id": 3,
+      "name": "N4",
+      "lon": 209.0,
+      "lat": 523.0
+    },
+    {
+      "id": 4,
+      "name": "N5",
+      "lon": 345.0,
+      "lat": 232.0
+    },
+    {
+      "id": 5,
+      "name": "N6",
+      "lon": 95.0,
+      "lat": 350.0
+    },
+    {
+      "id": 6,
+      "name": "N7",
+      "lon": 302.0,
+      "lat": 404.0
+    },
+    {
+      "id": 7,
+      "name": "N8",
+      "lon": 161.0,
+      "lat": 454.0
+    },
+    {
+      "id": 8,
+      "name": "N9",
+      "lon": 394.0,
+      "lat": 499.0
+    },
+    {
+      "id": 9,
+      "name": "N10",
+      "lon": 389.0,
+      "lat": 656.0
+    },
+    {
+      "id": 10,
+      "name": "N11",
+      "lon": 237.0,
+      "lat": 645.0
+    },
+    {
+      "id": 11,
+      "name": "N12",
+      "lon": 277.0,
+      "lat": 70.0
+    },
+    {
+      "id": 12,
+      "name": "N13",
+      "lon": 540.0,
+      "lat": 147.0
+    },
+    {
+      "id": 13,
+      "name": "N14",
+      "lon": 592.0,
+      "lat": 503.0
+    },
+    {
+      "id": 14,
+      "name": "N15",
+      "lon": 490.0,
+      "lat": 349.0
+    },
+    {
+      "id": 15,
+      "name": "N16",
+      "lon": 463.0,
+      "lat": 543.0
+    }
+  ],
+  "links": [
+    {
+      "src": 0,
+      "dst": 1,
+      "capacity": 10000.0,
+      "delay": 36.524
+    },
+    {
+      "src": 0,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 34.394
+    },
+    {
+      "src": 0,
+      "dst": 5,
+      "capacity": 10000.0,
+      "delay": 72.766
+    },
+    {
+      "src": 0,
+      "dst": 6,
+      "capacity": 10000.0,
+      "delay": 49.348
+    },
+    {
+      "src": 0,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 62.777
+    },
+    {
+      "src": 0,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 53.52
+    },
+    {
+      "src": 0,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 71.648
+    },
+    {
+      "src": 0,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 56.277
+    },
+    {
+      "src": 1,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 52.96
+    },
+    {
+      "src": 1,
+      "dst": 5,
+      "capacity": 10000.0,
+      "delay": 72.159
+    },
+    {
+      "src": 1,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 55.513
+    },
+    {
+      "src": 1,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 42.544
+    },
+    {
+      "src": 1,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 78.948
+    },
+    {
+      "src": 2,
+      "dst": 3,
+      "capacity": 10000.0,
+      "delay": 44.892
+    },
+    {
+      "src": 2,
+      "dst": 5,
+      "capacity": 10000.0,
+      "delay": 83.074
+    },
+    {
+      "src": 2,
+      "dst": 6,
+      "capacity": 10000.0,
+      "delay": 19.555
+    },
+    {
+      "src": 2,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 43.217
+    },
+    {
+      "src": 2,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 51.934
+    },
+    {
+      "src": 3,
+      "dst": 6,
+      "capacity": 10000.0,
+      "delay": 42.347
+    },
+    {
+      "src": 3,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 39.112
+    },
+    {
+      "src": 3,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 67.726
+    },
+    {
+      "src": 3,
+      "dst": 9,
+      "capacity": 10000.0,
+      "delay": 45.034
+    },
+    {
+      "src": 3,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 66.752
+    },
+    {
+      "src": 4,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 80.628
+    },
+    {
+      "src": 4,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 87.907
+    },
+    {
+      "src": 4,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 27.689
+    },
+    {
+      "src": 5,
+      "dst": 6,
+      "capacity": 10000.0,
+      "delay": 77.141
+    },
+    {
+      "src": 5,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 56.49
+    },
+    {
+      "src": 6,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 23.878
+    },
+    {
+      "src": 6,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 34.282
+    },
+    {
+      "src": 6,
+      "dst": 9,
+      "capacity": 10000.0,
+      "delay": 70.85
+    },
+    {
+      "src": 6,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 16.049
+    },
+    {
+      "src": 6,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 25.425
+    },
+    {
+      "src": 6,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 42.921
+    },
+    {
+      "src": 6,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 81.33
+    },
+    {
+      "src": 8,
+      "dst": 9,
+      "capacity": 10000.0,
+      "delay": 87.186
+    },
+    {
+      "src": 8,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 65.046
+    },
+    {
+      "src": 8,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 55.752
+    },
+    {
+      "src": 8,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 51.559
+    },
+    {
+      "src": 8,
+      "dst": 15,
+      "capacity": 10000.0,
+      "delay": 42.456
+    },
+    {
+      "src": 9,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 22.142
+    },
+    {
+      "src": 9,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 57.059
+    },
+    {
+      "src": 9,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 47.186
+    },
+    {
+      "src": 11,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 31.61
+    },
+    {
+      "src": 11,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 65.296
+    },
+    {
+      "src": 12,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 23.494
+    },
+    {
+      "src": 12,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 71.876
+    },
+    {
+      "src": 13,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 48.503
+    },
+    {
+      "src": 13,
+      "dst": 15,
+      "capacity": 10000.0,
+      "delay": 67.96
+    }
+  ]
+}

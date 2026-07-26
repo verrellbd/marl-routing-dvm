@@ -1,0 +1,70 @@
+{
+  "train_topos": [
+    "atlanta_sndlib",
+    "cost266_sndlib",
+    "dfn-bwin_sndlib",
+    "dfn-gwin_sndlib",
+    "di-yuan_sndlib",
+    "france_sndlib",
+    "india35_sndlib",
+    "janos-us_sndlib",
+    "newyork_sndlib",
+    "nobel-eu_sndlib",
+    "nobel-germany_sndlib",
+    "nobel-us_sndlib",
+    "norway_sndlib",
+    "pdh_sndlib",
+    "polska_sndlib",
+    "ta1_sndlib",
+    "zib54_sndlib"
+  ],
+  "test_topos": [
+    "abilene_sndlib",
+    "geant_sndlib",
+    "germany50_sndlib"
+  ],
+  "seed": 0,
+  "zero_shot": {
+    "abilene_sndlib": {
+      "overload": {
+        "ospf_mean": 144.83700014112907,
+        "marl_mean": 87.39401074092743,
+        "delta_pt": 57.44298940020164,
+        "win_pct": 100.0,
+        "n": 8
+      },
+      "feasible": {
+        "ospf_mean": 68.82060487096774,
+        "marl_mean": 52.30979239516129,
+        "delta_pt": 16.510812475806453,
+        "win_pct": 100.0,
+        "n": 10
+      }
+    },
+    "geant_sndlib": {
+      "overload": {
+        "ospf_mean": 145.54425913562503,
+        "marl_mean": 102.00061653937499,
+        "delta_pt": 43.54364259625004,
+        "win_pct": 100.0,
+        "n": 8
+      },
+      "feasible": {
+        "ospf_mean": 71.242983034,
+        "marl_mean": 48.86384253475,
+        "delta_pt": 22.379140499250006,
+        "win_pct": 100.0,
+        "n": 10
+      }
+    },
+    "germany50_sndlib": {
+      "overload": {
+        "ospf_mean": 159.42434320833337,
+        "marl_mean": 115.53820015208333,
+        "delta_pt": 43.886143056250035,
+        "win_pct": 100.0,
+        "n": 18
+      }
+    }
+  }
+}

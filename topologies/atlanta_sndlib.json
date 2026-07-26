@@ -1,0 +1,231 @@
+{
+  "name": "atlanta_sndlib",
+  "capacity_unit": "Mbps",
+  "delay_unit": "ms",
+  "nodes": [
+    {
+      "id": 0,
+      "name": "N1",
+      "lon": 283.0,
+      "lat": 248.0
+    },
+    {
+      "id": 1,
+      "name": "N2",
+      "lon": 451.0,
+      "lat": 201.0
+    },
+    {
+      "id": 2,
+      "name": "N3",
+      "lon": 516.0,
+      "lat": 230.0
+    },
+    {
+      "id": 3,
+      "name": "N4",
+      "lon": 324.0,
+      "lat": 43.0
+    },
+    {
+      "id": 4,
+      "name": "N5",
+      "lon": 459.0,
+      "lat": 31.0
+    },
+    {
+      "id": 5,
+      "name": "N6",
+      "lon": 339.0,
+      "lat": 151.0
+    },
+    {
+      "id": 6,
+      "name": "N7",
+      "lon": 185.0,
+      "lat": 323.0
+    },
+    {
+      "id": 7,
+      "name": "N8",
+      "lon": 384.0,
+      "lat": 298.0
+    },
+    {
+      "id": 8,
+      "name": "N9",
+      "lon": 318.0,
+      "lat": 353.0
+    },
+    {
+      "id": 9,
+      "name": "N10",
+      "lon": 147.0,
+      "lat": 403.0
+    },
+    {
+      "id": 10,
+      "name": "N11",
+      "lon": 56.0,
+      "lat": 132.0
+    },
+    {
+      "id": 11,
+      "name": "N12",
+      "lon": 253.0,
+      "lat": 466.0
+    },
+    {
+      "id": 12,
+      "name": "N13",
+      "lon": 216.0,
+      "lat": 59.0
+    },
+    {
+      "id": 13,
+      "name": "N14",
+      "lon": 97.0,
+      "lat": 218.0
+    },
+    {
+      "id": 14,
+      "name": "N15",
+      "lon": 463.0,
+      "lat": 431.0
+    }
+  ],
+  "links": [
+    {
+      "src": 0,
+      "dst": 5,
+      "capacity": 10000.0,
+      "delay": 58.624
+    },
+    {
+      "src": 0,
+      "dst": 6,
+      "capacity": 10000.0,
+      "delay": 29.554
+    },
+    {
+      "src": 0,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 17.539
+    },
+    {
+      "src": 1,
+      "dst": 2,
+      "capacity": 10000.0,
+      "delay": 32.313
+    },
+    {
+      "src": 1,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 93.233
+    },
+    {
+      "src": 1,
+      "dst": 5,
+      "capacity": 10000.0,
+      "delay": 65.972
+    },
+    {
+      "src": 2,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 74.499
+    },
+    {
+      "src": 2,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 15.88
+    },
+    {
+      "src": 3,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 52.973
+    },
+    {
+      "src": 3,
+      "dst": 5,
+      "capacity": 10000.0,
+      "delay": 59.318
+    },
+    {
+      "src": 5,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 27.038
+    },
+    {
+      "src": 6,
+      "dst": 9,
+      "capacity": 10000.0,
+      "delay": 48.45
+    },
+    {
+      "src": 6,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 38.697
+    },
+    {
+      "src": 7,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 40.427
+    },
+    {
+      "src": 7,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 79.88
+    },
+    {
+      "src": 8,
+      "dst": 9,
+      "capacity": 10000.0,
+      "delay": 79.581
+    },
+    {
+      "src": 8,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 57.521
+    },
+    {
+      "src": 8,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 62.452
+    },
+    {
+      "src": 9,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 24.836
+    },
+    {
+      "src": 10,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 8.944
+    },
+    {
+      "src": 10,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 51.937
+    },
+    {
+      "src": 12,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 60.783
+    }
+  ]
+}

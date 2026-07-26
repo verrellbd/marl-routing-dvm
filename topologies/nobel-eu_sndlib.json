@@ -1,0 +1,423 @@
+{
+  "name": "nobel-eu_sndlib",
+  "capacity_unit": "Mbps",
+  "delay_unit": "ms",
+  "nodes": [
+    {
+      "id": 0,
+      "name": "Amsterdam",
+      "lon": 4.51,
+      "lat": 52.2
+    },
+    {
+      "id": 1,
+      "name": "Athens",
+      "lon": 23.42,
+      "lat": 37.58
+    },
+    {
+      "id": 2,
+      "name": "Barcelona",
+      "lon": 2.07,
+      "lat": 41.22
+    },
+    {
+      "id": 3,
+      "name": "Belgrade",
+      "lon": 20.25,
+      "lat": 44.47
+    },
+    {
+      "id": 4,
+      "name": "Berlin",
+      "lon": 13.21,
+      "lat": 52.31
+    },
+    {
+      "id": 5,
+      "name": "Bordeaux",
+      "lon": -0.35,
+      "lat": 44.51
+    },
+    {
+      "id": 6,
+      "name": "Brussels",
+      "lon": 4.2,
+      "lat": 50.49
+    },
+    {
+      "id": 7,
+      "name": "Budapest",
+      "lon": 19.02,
+      "lat": 47.29
+    },
+    {
+      "id": 8,
+      "name": "Copenhagen",
+      "lon": 12.32,
+      "lat": 55.41
+    },
+    {
+      "id": 9,
+      "name": "Dublin",
+      "lon": -6.15,
+      "lat": 53.21
+    },
+    {
+      "id": 10,
+      "name": "Frankfurt",
+      "lon": 8.38,
+      "lat": 50.07
+    },
+    {
+      "id": 11,
+      "name": "Glasgow",
+      "lon": -4.16,
+      "lat": 55.51
+    },
+    {
+      "id": 12,
+      "name": "Hamburg",
+      "lon": 10.0,
+      "lat": 53.33
+    },
+    {
+      "id": 13,
+      "name": "London",
+      "lon": -0.07,
+      "lat": 51.3
+    },
+    {
+      "id": 14,
+      "name": "Lyon",
+      "lon": 4.49,
+      "lat": 45.43
+    },
+    {
+      "id": 15,
+      "name": "Madrid",
+      "lon": -3.42,
+      "lat": 40.25
+    },
+    {
+      "id": 16,
+      "name": "Milan",
+      "lon": 9.11,
+      "lat": 45.28
+    },
+    {
+      "id": 17,
+      "name": "Munich",
+      "lon": 11.33,
+      "lat": 48.07
+    },
+    {
+      "id": 18,
+      "name": "Oslo",
+      "lon": 10.45,
+      "lat": 59.54
+    },
+    {
+      "id": 19,
+      "name": "Paris",
+      "lon": 2.2,
+      "lat": 48.51
+    },
+    {
+      "id": 20,
+      "name": "Prague",
+      "lon": 14.25,
+      "lat": 50.04
+    },
+    {
+      "id": 21,
+      "name": "Rome",
+      "lon": 12.29,
+      "lat": 41.53
+    },
+    {
+      "id": 22,
+      "name": "Stockholm",
+      "lon": 18.03,
+      "lat": 59.19
+    },
+    {
+      "id": 23,
+      "name": "Strasbourg",
+      "lon": 7.45,
+      "lat": 48.35
+    },
+    {
+      "id": 24,
+      "name": "Vienna",
+      "lon": 16.21,
+      "lat": 48.12
+    },
+    {
+      "id": 25,
+      "name": "Warsaw",
+      "lon": 20.59,
+      "lat": 52.14
+    },
+    {
+      "id": 26,
+      "name": "Zagreb",
+      "lon": 15.57,
+      "lat": 45.48
+    },
+    {
+      "id": 27,
+      "name": "Zurich",
+      "lon": 8.32,
+      "lat": 47.22
+    }
+  ],
+  "links": [
+    {
+      "src": 0,
+      "dst": 6,
+      "capacity": 10000.0,
+      "delay": 0.957
+    },
+    {
+      "src": 0,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 3.383
+    },
+    {
+      "src": 0,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 1.95
+    },
+    {
+      "src": 0,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 1.654
+    },
+    {
+      "src": 1,
+      "dst": 3,
+      "capacity": 10000.0,
+      "delay": 4.054
+    },
+    {
+      "src": 1,
+      "dst": 21,
+      "capacity": 10000.0,
+      "delay": 5.247
+    },
+    {
+      "src": 2,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 2.537
+    },
+    {
+      "src": 2,
+      "dst": 15,
+      "capacity": 10000.0,
+      "delay": 2.374
+    },
+    {
+      "src": 3,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 1.638
+    },
+    {
+      "src": 3,
+      "dst": 26,
+      "capacity": 10000.0,
+      "delay": 1.924
+    },
+    {
+      "src": 4,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 1.748
+    },
+    {
+      "src": 4,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 1.218
+    },
+    {
+      "src": 4,
+      "dst": 17,
+      "capacity": 10000.0,
+      "delay": 2.45
+    },
+    {
+      "src": 4,
+      "dst": 20,
+      "capacity": 10000.0,
+      "delay": 1.313
+    },
+    {
+      "src": 4,
+      "dst": 25,
+      "capacity": 10000.0,
+      "delay": 2.514
+    },
+    {
+      "src": 5,
+      "dst": 15,
+      "capacity": 10000.0,
+      "delay": 2.683
+    },
+    {
+      "src": 5,
+      "dst": 19,
+      "capacity": 10000.0,
+      "delay": 2.428
+    },
+    {
+      "src": 6,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 1.503
+    },
+    {
+      "src": 6,
+      "dst": 19,
+      "capacity": 10000.0,
+      "delay": 1.316
+    },
+    {
+      "src": 7,
+      "dst": 20,
+      "capacity": 10000.0,
+      "delay": 2.324
+    },
+    {
+      "src": 7,
+      "dst": 25,
+      "capacity": 10000.0,
+      "delay": 2.755
+    },
+    {
+      "src": 8,
+      "dst": 18,
+      "capacity": 10000.0,
+      "delay": 2.363
+    },
+    {
+      "src": 9,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 1.432
+    },
+    {
+      "src": 9,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 2.325
+    },
+    {
+      "src": 10,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 1.896
+    },
+    {
+      "src": 10,
+      "dst": 17,
+      "capacity": 10000.0,
+      "delay": 1.546
+    },
+    {
+      "src": 10,
+      "dst": 23,
+      "capacity": 10000.0,
+      "delay": 1.014
+    },
+    {
+      "src": 13,
+      "dst": 19,
+      "capacity": 10000.0,
+      "delay": 1.751
+    },
+    {
+      "src": 14,
+      "dst": 19,
+      "capacity": 10000.0,
+      "delay": 1.92
+    },
+    {
+      "src": 16,
+      "dst": 17,
+      "capacity": 10000.0,
+      "delay": 1.767
+    },
+    {
+      "src": 16,
+      "dst": 21,
+      "capacity": 10000.0,
+      "delay": 2.448
+    },
+    {
+      "src": 16,
+      "dst": 27,
+      "capacity": 10000.0,
+      "delay": 1.121
+    },
+    {
+      "src": 17,
+      "dst": 24,
+      "capacity": 10000.0,
+      "delay": 1.812
+    },
+    {
+      "src": 18,
+      "dst": 22,
+      "capacity": 10000.0,
+      "delay": 2.155
+    },
+    {
+      "src": 19,
+      "dst": 23,
+      "capacity": 10000.0,
+      "delay": 1.938
+    },
+    {
+      "src": 20,
+      "dst": 24,
+      "capacity": 10000.0,
+      "delay": 1.284
+    },
+    {
+      "src": 21,
+      "dst": 26,
+      "capacity": 10000.0,
+      "delay": 2.563
+    },
+    {
+      "src": 22,
+      "dst": 25,
+      "capacity": 10000.0,
+      "delay": 4.0
+    },
+    {
+      "src": 27,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 1.775
+    },
+    {
+      "src": 23,
+      "dst": 27,
+      "capacity": 10000.0,
+      "delay": 0.707
+    },
+    {
+      "src": 24,
+      "dst": 26,
+      "capacity": 10000.0,
+      "delay": 1.488
+    }
+  ]
+}

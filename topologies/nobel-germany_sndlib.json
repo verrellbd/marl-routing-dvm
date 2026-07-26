@@ -1,0 +1,267 @@
+{
+  "name": "nobel-germany_sndlib",
+  "capacity_unit": "Mbps",
+  "delay_unit": "ms",
+  "nodes": [
+    {
+      "id": 0,
+      "name": "Hannover",
+      "lon": 9.8,
+      "lat": 52.39
+    },
+    {
+      "id": 1,
+      "name": "Frankfurt",
+      "lon": 8.66,
+      "lat": 50.14
+    },
+    {
+      "id": 2,
+      "name": "Hamburg",
+      "lon": 10.08,
+      "lat": 53.55
+    },
+    {
+      "id": 3,
+      "name": "Norden",
+      "lon": 7.21,
+      "lat": 53.6
+    },
+    {
+      "id": 4,
+      "name": "Bremen",
+      "lon": 8.8,
+      "lat": 53.08
+    },
+    {
+      "id": 5,
+      "name": "Berlin",
+      "lon": 13.48,
+      "lat": 52.52
+    },
+    {
+      "id": 6,
+      "name": "Muenchen",
+      "lon": 11.55,
+      "lat": 48.15
+    },
+    {
+      "id": 7,
+      "name": "Ulm",
+      "lon": 9.99,
+      "lat": 48.4
+    },
+    {
+      "id": 8,
+      "name": "Nuernberg",
+      "lon": 11.08,
+      "lat": 49.45
+    },
+    {
+      "id": 9,
+      "name": "Stuttgart",
+      "lon": 9.12,
+      "lat": 48.73
+    },
+    {
+      "id": 10,
+      "name": "Karlsruhe",
+      "lon": 8.41,
+      "lat": 49.01
+    },
+    {
+      "id": 11,
+      "name": "Mannheim",
+      "lon": 8.49,
+      "lat": 49.49
+    },
+    {
+      "id": 12,
+      "name": "Essen",
+      "lon": 7.0,
+      "lat": 51.44
+    },
+    {
+      "id": 13,
+      "name": "Dortmund",
+      "lon": 7.48,
+      "lat": 51.51
+    },
+    {
+      "id": 14,
+      "name": "Duesseldorf",
+      "lon": 6.78,
+      "lat": 51.22
+    },
+    {
+      "id": 15,
+      "name": "Koeln",
+      "lon": 7.01,
+      "lat": 50.92
+    },
+    {
+      "id": 16,
+      "name": "Leipzig",
+      "lon": 12.38,
+      "lat": 51.34
+    }
+  ],
+  "links": [
+    {
+      "src": 5,
+      "dst": 2,
+      "capacity": 10000.0,
+      "delay": 1.273
+    },
+    {
+      "src": 5,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 1.249
+    },
+    {
+      "src": 5,
+      "dst": 16,
+      "capacity": 10000.0,
+      "delay": 0.757
+    },
+    {
+      "src": 4,
+      "dst": 2,
+      "capacity": 10000.0,
+      "delay": 0.499
+    },
+    {
+      "src": 4,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 0.51
+    },
+    {
+      "src": 4,
+      "dst": 3,
+      "capacity": 10000.0,
+      "delay": 0.602
+    },
+    {
+      "src": 13,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 0.171
+    },
+    {
+      "src": 13,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 0.933
+    },
+    {
+      "src": 13,
+      "dst": 15,
+      "capacity": 10000.0,
+      "delay": 0.367
+    },
+    {
+      "src": 13,
+      "dst": 3,
+      "capacity": 10000.0,
+      "delay": 1.166
+    },
+    {
+      "src": 14,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 0.144
+    },
+    {
+      "src": 14,
+      "dst": 15,
+      "capacity": 10000.0,
+      "delay": 0.185
+    },
+    {
+      "src": 1,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 1.312
+    },
+    {
+      "src": 1,
+      "dst": 15,
+      "capacity": 10000.0,
+      "delay": 0.727
+    },
+    {
+      "src": 1,
+      "dst": 16,
+      "capacity": 10000.0,
+      "delay": 1.469
+    },
+    {
+      "src": 1,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 0.366
+    },
+    {
+      "src": 1,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 0.949
+    },
+    {
+      "src": 2,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 0.652
+    },
+    {
+      "src": 0,
+      "dst": 16,
+      "capacity": 10000.0,
+      "delay": 1.061
+    },
+    {
+      "src": 10,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 0.268
+    },
+    {
+      "src": 10,
+      "dst": 9,
+      "capacity": 10000.0,
+      "delay": 0.303
+    },
+    {
+      "src": 16,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 1.147
+    },
+    {
+      "src": 6,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 0.743
+    },
+    {
+      "src": 6,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 0.594
+    },
+    {
+      "src": 8,
+      "dst": 9,
+      "capacity": 10000.0,
+      "delay": 0.818
+    },
+    {
+      "src": 9,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 0.369
+    }
+  ]
+}

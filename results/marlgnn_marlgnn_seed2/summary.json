@@ -1,0 +1,53 @@
+{
+  "train_topos": [
+    "abilene_sndlib",
+    "geant_sndlib"
+  ],
+  "holdout": "germany50_sndlib",
+  "seed": 2,
+  "seen": {
+    "abilene_sndlib": {
+      "overload": {
+        "ospf_mean": 144.83700014112907,
+        "marl_mean": 116.23906008064515,
+        "delta_pt": 28.59794006048392,
+        "win_pct": 87.5,
+        "n": 8
+      },
+      "feasible": {
+        "ospf_mean": 68.82060487096774,
+        "marl_mean": 78.89771277419355,
+        "delta_pt": -10.077107903225809,
+        "win_pct": 30.0,
+        "n": 10
+      }
+    },
+    "geant_sndlib": {
+      "overload": {
+        "ospf_mean": 145.54425913562503,
+        "marl_mean": 96.864101814375,
+        "delta_pt": 48.68015732125002,
+        "win_pct": 100.0,
+        "n": 8
+      },
+      "feasible": {
+        "ospf_mean": 71.242983034,
+        "marl_mean": 63.91549754875,
+        "delta_pt": 7.327485485250008,
+        "win_pct": 70.0,
+        "n": 10
+      }
+    }
+  },
+  "zero_shot": {
+    "germany50_sndlib": {
+      "overload": {
+        "ospf_mean": 159.42434320833337,
+        "marl_mean": 112.0698405777778,
+        "delta_pt": 47.35450263055557,
+        "win_pct": 100.0,
+        "n": 18
+      }
+    }
+  }
+}

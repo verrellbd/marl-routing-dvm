@@ -1,0 +1,189 @@
+{
+  "name": "polska_sndlib",
+  "capacity_unit": "Mbps",
+  "delay_unit": "ms",
+  "nodes": [
+    {
+      "id": 0,
+      "name": "Gdansk",
+      "lon": 18.6,
+      "lat": 54.2
+    },
+    {
+      "id": 1,
+      "name": "Bydgoszcz",
+      "lon": 17.9,
+      "lat": 53.1
+    },
+    {
+      "id": 2,
+      "name": "Kolobrzeg",
+      "lon": 16.1,
+      "lat": 54.2
+    },
+    {
+      "id": 3,
+      "name": "Katowice",
+      "lon": 18.8,
+      "lat": 50.3
+    },
+    {
+      "id": 4,
+      "name": "Krakow",
+      "lon": 19.8,
+      "lat": 50.0
+    },
+    {
+      "id": 5,
+      "name": "Bialystok",
+      "lon": 23.1,
+      "lat": 53.1
+    },
+    {
+      "id": 6,
+      "name": "Lodz",
+      "lon": 19.4,
+      "lat": 51.7
+    },
+    {
+      "id": 7,
+      "name": "Poznan",
+      "lon": 16.8,
+      "lat": 52.4
+    },
+    {
+      "id": 8,
+      "name": "Rzeszow",
+      "lon": 21.9,
+      "lat": 50.0
+    },
+    {
+      "id": 9,
+      "name": "Szczecin",
+      "lon": 14.5,
+      "lat": 53.4
+    },
+    {
+      "id": 10,
+      "name": "Warsaw",
+      "lon": 21.0,
+      "lat": 52.2
+    },
+    {
+      "id": 11,
+      "name": "Wroclaw",
+      "lon": 16.9,
+      "lat": 51.1
+    }
+  ],
+  "links": [
+    {
+      "src": 0,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 1.369
+    },
+    {
+      "src": 0,
+      "dst": 2,
+      "capacity": 10000.0,
+      "delay": 0.813
+    },
+    {
+      "src": 1,
+      "dst": 2,
+      "capacity": 10000.0,
+      "delay": 0.852
+    },
+    {
+      "src": 1,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 0.537
+    },
+    {
+      "src": 1,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 1.159
+    },
+    {
+      "src": 2,
+      "dst": 9,
+      "capacity": 10000.0,
+      "delay": 0.688
+    },
+    {
+      "src": 3,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 0.393
+    },
+    {
+      "src": 3,
+      "dst": 6,
+      "capacity": 10000.0,
+      "delay": 0.806
+    },
+    {
+      "src": 3,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 0.803
+    },
+    {
+      "src": 4,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 0.75
+    },
+    {
+      "src": 4,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 1.293
+    },
+    {
+      "src": 5,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 1.773
+    },
+    {
+      "src": 5,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 0.867
+    },
+    {
+      "src": 6,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 0.615
+    },
+    {
+      "src": 6,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 0.929
+    },
+    {
+      "src": 7,
+      "dst": 9,
+      "capacity": 10000.0,
+      "delay": 0.951
+    },
+    {
+      "src": 7,
+      "dst": 11,
+      "capacity": 10000.0,
+      "delay": 0.724
+    },
+    {
+      "src": 0,
+      "dst": 5,
+      "capacity": 10000.0,
+      "delay": 1.604
+    }
+  ]
+}

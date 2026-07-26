@@ -1,0 +1,783 @@
+{
+  "name": "pioro40_sndlib",
+  "capacity_unit": "Mbps",
+  "delay_unit": "ms",
+  "nodes": [
+    {
+      "id": 0,
+      "name": "N0",
+      "lon": 149.0,
+      "lat": 563.0
+    },
+    {
+      "id": 1,
+      "name": "N1",
+      "lon": 286.0,
+      "lat": 393.0
+    },
+    {
+      "id": 2,
+      "name": "N2",
+      "lon": 550.0,
+      "lat": 228.0
+    },
+    {
+      "id": 3,
+      "name": "N3",
+      "lon": 136.0,
+      "lat": 446.0
+    },
+    {
+      "id": 4,
+      "name": "N4",
+      "lon": 273.0,
+      "lat": 488.0
+    },
+    {
+      "id": 5,
+      "name": "N5",
+      "lon": 104.0,
+      "lat": 212.0
+    },
+    {
+      "id": 6,
+      "name": "N6",
+      "lon": 236.0,
+      "lat": 182.0
+    },
+    {
+      "id": 7,
+      "name": "N7",
+      "lon": 515.0,
+      "lat": 494.0
+    },
+    {
+      "id": 8,
+      "name": "N8",
+      "lon": 595.0,
+      "lat": 421.0
+    },
+    {
+      "id": 9,
+      "name": "N9",
+      "lon": 334.0,
+      "lat": 162.0
+    },
+    {
+      "id": 10,
+      "name": "N10",
+      "lon": 198.0,
+      "lat": 470.0
+    },
+    {
+      "id": 11,
+      "name": "N11",
+      "lon": 521.0,
+      "lat": 547.0
+    },
+    {
+      "id": 12,
+      "name": "N12",
+      "lon": 182.0,
+      "lat": 543.0
+    },
+    {
+      "id": 13,
+      "name": "N13",
+      "lon": 90.0,
+      "lat": 473.0
+    },
+    {
+      "id": 14,
+      "name": "N14",
+      "lon": 586.0,
+      "lat": 494.0
+    },
+    {
+      "id": 15,
+      "name": "N15",
+      "lon": 637.0,
+      "lat": 563.0
+    },
+    {
+      "id": 16,
+      "name": "N16",
+      "lon": 42.0,
+      "lat": 565.0
+    },
+    {
+      "id": 17,
+      "name": "N17",
+      "lon": 507.0,
+      "lat": 313.0
+    },
+    {
+      "id": 18,
+      "name": "N18",
+      "lon": 695.0,
+      "lat": 335.0
+    },
+    {
+      "id": 19,
+      "name": "N19",
+      "lon": 241.0,
+      "lat": 606.0
+    },
+    {
+      "id": 20,
+      "name": "N20",
+      "lon": 410.0,
+      "lat": 574.0
+    },
+    {
+      "id": 21,
+      "name": "N21",
+      "lon": 464.0,
+      "lat": 240.0
+    },
+    {
+      "id": 22,
+      "name": "N22",
+      "lon": 402.0,
+      "lat": 185.0
+    },
+    {
+      "id": 23,
+      "name": "N23",
+      "lon": 543.0,
+      "lat": 173.0
+    },
+    {
+      "id": 24,
+      "name": "N24",
+      "lon": 223.0,
+      "lat": 331.0
+    },
+    {
+      "id": 25,
+      "name": "N25",
+      "lon": 610.0,
+      "lat": 242.0
+    },
+    {
+      "id": 26,
+      "name": "N26",
+      "lon": 562.0,
+      "lat": 340.0
+    },
+    {
+      "id": 27,
+      "name": "N27",
+      "lon": 682.0,
+      "lat": 608.0
+    },
+    {
+      "id": 28,
+      "name": "N28",
+      "lon": 143.0,
+      "lat": 497.0
+    },
+    {
+      "id": 29,
+      "name": "N29",
+      "lon": 277.0,
+      "lat": 288.0
+    },
+    {
+      "id": 30,
+      "name": "N30",
+      "lon": 572.0,
+      "lat": 388.0
+    },
+    {
+      "id": 31,
+      "name": "N31",
+      "lon": 323.0,
+      "lat": 502.0
+    },
+    {
+      "id": 32,
+      "name": "N32",
+      "lon": 459.0,
+      "lat": 483.0
+    },
+    {
+      "id": 33,
+      "name": "N33",
+      "lon": 315.0,
+      "lat": 627.0
+    },
+    {
+      "id": 34,
+      "name": "N34",
+      "lon": 410.0,
+      "lat": 435.0
+    },
+    {
+      "id": 35,
+      "name": "N35",
+      "lon": 345.0,
+      "lat": 344.0
+    },
+    {
+      "id": 36,
+      "name": "N36",
+      "lon": 35.0,
+      "lat": 360.0
+    },
+    {
+      "id": 37,
+      "name": "N37",
+      "lon": 252.0,
+      "lat": 514.0
+    },
+    {
+      "id": 38,
+      "name": "N38",
+      "lon": 409.0,
+      "lat": 640.0
+    },
+    {
+      "id": 39,
+      "name": "N39",
+      "lon": 438.0,
+      "lat": 326.0
+    }
+  ],
+  "links": [
+    {
+      "src": 0,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 20.951
+    },
+    {
+      "src": 0,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 55.623
+    },
+    {
+      "src": 0,
+      "dst": 16,
+      "capacity": 10000.0,
+      "delay": 52.55
+    },
+    {
+      "src": 0,
+      "dst": 19,
+      "capacity": 10000.0,
+      "delay": 38.855
+    },
+    {
+      "src": 0,
+      "dst": 28,
+      "capacity": 10000.0,
+      "delay": 36.823
+    },
+    {
+      "src": 1,
+      "dst": 3,
+      "capacity": 10000.0,
+      "delay": 33.628
+    },
+    {
+      "src": 1,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 52.395
+    },
+    {
+      "src": 1,
+      "dst": 31,
+      "capacity": 10000.0,
+      "delay": 56.208
+    },
+    {
+      "src": 1,
+      "dst": 39,
+      "capacity": 10000.0,
+      "delay": 87.123
+    },
+    {
+      "src": 2,
+      "dst": 17,
+      "capacity": 10000.0,
+      "delay": 43.306
+    },
+    {
+      "src": 2,
+      "dst": 21,
+      "capacity": 10000.0,
+      "delay": 26.781
+    },
+    {
+      "src": 2,
+      "dst": 23,
+      "capacity": 10000.0,
+      "delay": 30.771
+    },
+    {
+      "src": 2,
+      "dst": 25,
+      "capacity": 10000.0,
+      "delay": 19.786
+    },
+    {
+      "src": 3,
+      "dst": 5,
+      "capacity": 10000.0,
+      "delay": 69.7
+    },
+    {
+      "src": 3,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 12.315
+    },
+    {
+      "src": 3,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 14.416
+    },
+    {
+      "src": 3,
+      "dst": 36,
+      "capacity": 10000.0,
+      "delay": 50.462
+    },
+    {
+      "src": 4,
+      "dst": 31,
+      "capacity": 10000.0,
+      "delay": 20.658
+    },
+    {
+      "src": 4,
+      "dst": 33,
+      "capacity": 10000.0,
+      "delay": 77.685
+    },
+    {
+      "src": 4,
+      "dst": 37,
+      "capacity": 10000.0,
+      "delay": 16.931
+    },
+    {
+      "src": 5,
+      "dst": 10,
+      "capacity": 10000.0,
+      "delay": 67.39
+    },
+    {
+      "src": 5,
+      "dst": 13,
+      "capacity": 10000.0,
+      "delay": 55.359
+    },
+    {
+      "src": 5,
+      "dst": 29,
+      "capacity": 10000.0,
+      "delay": 22.336
+    },
+    {
+      "src": 5,
+      "dst": 36,
+      "capacity": 10000.0,
+      "delay": 59.874
+    },
+    {
+      "src": 6,
+      "dst": 9,
+      "capacity": 10000.0,
+      "delay": 54.611
+    },
+    {
+      "src": 6,
+      "dst": 24,
+      "capacity": 10000.0,
+      "delay": 81.501
+    },
+    {
+      "src": 6,
+      "dst": 29,
+      "capacity": 10000.0,
+      "delay": 56.448
+    },
+    {
+      "src": 6,
+      "dst": 35,
+      "capacity": 10000.0,
+      "delay": 39.581
+    },
+    {
+      "src": 7,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 30.692
+    },
+    {
+      "src": 7,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 26.454
+    },
+    {
+      "src": 7,
+      "dst": 15,
+      "capacity": 10000.0,
+      "delay": 71.337
+    },
+    {
+      "src": 7,
+      "dst": 32,
+      "capacity": 10000.0,
+      "delay": 19.697
+    },
+    {
+      "src": 8,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 40.448
+    },
+    {
+      "src": 8,
+      "dst": 15,
+      "capacity": 10000.0,
+      "delay": 73.571
+    },
+    {
+      "src": 8,
+      "dst": 18,
+      "capacity": 10000.0,
+      "delay": 64.761
+    },
+    {
+      "src": 8,
+      "dst": 32,
+      "capacity": 10000.0,
+      "delay": 12.545
+    },
+    {
+      "src": 9,
+      "dst": 22,
+      "capacity": 10000.0,
+      "delay": 39.393
+    },
+    {
+      "src": 9,
+      "dst": 29,
+      "capacity": 10000.0,
+      "delay": 65.048
+    },
+    {
+      "src": 9,
+      "dst": 35,
+      "capacity": 10000.0,
+      "delay": 94.123
+    },
+    {
+      "src": 9,
+      "dst": 39,
+      "capacity": 10000.0,
+      "delay": 49.466
+    },
+    {
+      "src": 10,
+      "dst": 12,
+      "capacity": 10000.0,
+      "delay": 41.026
+    },
+    {
+      "src": 10,
+      "dst": 19,
+      "capacity": 10000.0,
+      "delay": 77.378
+    },
+    {
+      "src": 11,
+      "dst": 14,
+      "capacity": 10000.0,
+      "delay": 43.502
+    },
+    {
+      "src": 11,
+      "dst": 15,
+      "capacity": 10000.0,
+      "delay": 61.527
+    },
+    {
+      "src": 11,
+      "dst": 32,
+      "capacity": 10000.0,
+      "delay": 45.191
+    },
+    {
+      "src": 11,
+      "dst": 38,
+      "capacity": 10000.0,
+      "delay": 44.124
+    },
+    {
+      "src": 12,
+      "dst": 19,
+      "capacity": 10000.0,
+      "delay": 41.758
+    },
+    {
+      "src": 12,
+      "dst": 28,
+      "capacity": 10000.0,
+      "delay": 32.172
+    },
+    {
+      "src": 13,
+      "dst": 28,
+      "capacity": 10000.0,
+      "delay": 20.512
+    },
+    {
+      "src": 13,
+      "dst": 36,
+      "capacity": 10000.0,
+      "delay": 57.238
+    },
+    {
+      "src": 14,
+      "dst": 15,
+      "capacity": 10000.0,
+      "delay": 46.163
+    },
+    {
+      "src": 15,
+      "dst": 27,
+      "capacity": 10000.0,
+      "delay": 29.295
+    },
+    {
+      "src": 16,
+      "dst": 19,
+      "capacity": 10000.0,
+      "delay": 48.842
+    },
+    {
+      "src": 16,
+      "dst": 28,
+      "capacity": 10000.0,
+      "delay": 63.659
+    },
+    {
+      "src": 16,
+      "dst": 36,
+      "capacity": 10000.0,
+      "delay": 85.675
+    },
+    {
+      "src": 17,
+      "dst": 21,
+      "capacity": 10000.0,
+      "delay": 37.484
+    },
+    {
+      "src": 17,
+      "dst": 23,
+      "capacity": 10000.0,
+      "delay": 72.027
+    },
+    {
+      "src": 17,
+      "dst": 25,
+      "capacity": 10000.0,
+      "delay": 24.535
+    },
+    {
+      "src": 18,
+      "dst": 25,
+      "capacity": 10000.0,
+      "delay": 39.12
+    },
+    {
+      "src": 18,
+      "dst": 26,
+      "capacity": 10000.0,
+      "delay": 64.419
+    },
+    {
+      "src": 18,
+      "dst": 27,
+      "capacity": 10000.0,
+      "delay": 48.092
+    },
+    {
+      "src": 18,
+      "dst": 30,
+      "capacity": 10000.0,
+      "delay": 71.923
+    },
+    {
+      "src": 20,
+      "dst": 27,
+      "capacity": 10000.0,
+      "delay": 32.269
+    },
+    {
+      "src": 20,
+      "dst": 33,
+      "capacity": 10000.0,
+      "delay": 31.309
+    },
+    {
+      "src": 20,
+      "dst": 34,
+      "capacity": 10000.0,
+      "delay": 77.28
+    },
+    {
+      "src": 20,
+      "dst": 38,
+      "capacity": 10000.0,
+      "delay": 36.694
+    },
+    {
+      "src": 21,
+      "dst": 22,
+      "capacity": 10000.0,
+      "delay": 40.02
+    },
+    {
+      "src": 21,
+      "dst": 23,
+      "capacity": 10000.0,
+      "delay": 50.383
+    },
+    {
+      "src": 22,
+      "dst": 23,
+      "capacity": 10000.0,
+      "delay": 78.488
+    },
+    {
+      "src": 22,
+      "dst": 39,
+      "capacity": 10000.0,
+      "delay": 71.317
+    },
+    {
+      "src": 23,
+      "dst": 25,
+      "capacity": 10000.0,
+      "delay": 47.663
+    },
+    {
+      "src": 24,
+      "dst": 31,
+      "capacity": 10000.0,
+      "delay": 55.764
+    },
+    {
+      "src": 24,
+      "dst": 35,
+      "capacity": 10000.0,
+      "delay": 60.142
+    },
+    {
+      "src": 24,
+      "dst": 36,
+      "capacity": 10000.0,
+      "delay": 83.401
+    },
+    {
+      "src": 24,
+      "dst": 37,
+      "capacity": 10000.0,
+      "delay": 85.713
+    },
+    {
+      "src": 25,
+      "dst": 26,
+      "capacity": 10000.0,
+      "delay": 49.821
+    },
+    {
+      "src": 26,
+      "dst": 30,
+      "capacity": 10000.0,
+      "delay": 27.223
+    },
+    {
+      "src": 26,
+      "dst": 34,
+      "capacity": 10000.0,
+      "delay": 68.403
+    },
+    {
+      "src": 26,
+      "dst": 39,
+      "capacity": 10000.0,
+      "delay": 57.902
+    },
+    {
+      "src": 27,
+      "dst": 38,
+      "capacity": 10000.0,
+      "delay": 13.642
+    },
+    {
+      "src": 28,
+      "dst": 37,
+      "capacity": 10000.0,
+      "delay": 47.328
+    },
+    {
+      "src": 29,
+      "dst": 35,
+      "capacity": 10000.0,
+      "delay": 37.847
+    },
+    {
+      "src": 29,
+      "dst": 38,
+      "capacity": 10000.0,
+      "delay": 14.316
+    },
+    {
+      "src": 30,
+      "dst": 34,
+      "capacity": 10000.0,
+      "delay": 42.444
+    },
+    {
+      "src": 30,
+      "dst": 35,
+      "capacity": 10000.0,
+      "delay": 75.108
+    },
+    {
+      "src": 31,
+      "dst": 33,
+      "capacity": 10000.0,
+      "delay": 69.512
+    },
+    {
+      "src": 32,
+      "dst": 34,
+      "capacity": 10000.0,
+      "delay": 24.542
+    },
+    {
+      "src": 33,
+      "dst": 37,
+      "capacity": 10000.0,
+      "delay": 63.719
+    },
+    {
+      "src": 33,
+      "dst": 38,
+      "capacity": 10000.0,
+      "delay": 5.69
+    }
+  ]
+}

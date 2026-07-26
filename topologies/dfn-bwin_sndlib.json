@@ -1,0 +1,339 @@
+{
+  "name": "dfn-bwin_sndlib",
+  "capacity_unit": "Mbps",
+  "delay_unit": "ms",
+  "nodes": [
+    {
+      "id": 0,
+      "name": "Frankfurt",
+      "lon": 8.4,
+      "lat": 50.07
+    },
+    {
+      "id": 1,
+      "name": "Koeln",
+      "lon": 6.57,
+      "lat": 50.57
+    },
+    {
+      "id": 2,
+      "name": "Hamburg",
+      "lon": 10.02,
+      "lat": 53.34
+    },
+    {
+      "id": 3,
+      "name": "Hannover",
+      "lon": 9.44,
+      "lat": 52.23
+    },
+    {
+      "id": 4,
+      "name": "Karlsruhe",
+      "lon": 8.24,
+      "lat": 49.01
+    },
+    {
+      "id": 5,
+      "name": "Stuttgart",
+      "lon": 9.11,
+      "lat": 48.47
+    },
+    {
+      "id": 6,
+      "name": "Muenchen",
+      "lon": 11.34,
+      "lat": 48.08
+    },
+    {
+      "id": 7,
+      "name": "Nuernberg",
+      "lon": 11.05,
+      "lat": 49.27
+    },
+    {
+      "id": 8,
+      "name": "Berlin",
+      "lon": 13.18,
+      "lat": 52.32
+    },
+    {
+      "id": 9,
+      "name": "Leipzig",
+      "lon": 12.22,
+      "lat": 51.21
+    }
+  ],
+  "links": [
+    {
+      "src": 9,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 0.7
+    },
+    {
+      "src": 9,
+      "dst": 1,
+      "capacity": 10000.0,
+      "delay": 2.013
+    },
+    {
+      "src": 9,
+      "dst": 6,
+      "capacity": 10000.0,
+      "delay": 1.769
+    },
+    {
+      "src": 2,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 2.486
+    },
+    {
+      "src": 2,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 1.203
+    },
+    {
+      "src": 2,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 2.291
+    },
+    {
+      "src": 2,
+      "dst": 5,
+      "capacity": 10000.0,
+      "delay": 2.726
+    },
+    {
+      "src": 2,
+      "dst": 6,
+      "capacity": 10000.0,
+      "delay": 2.961
+    },
+    {
+      "src": 3,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 1.254
+    },
+    {
+      "src": 3,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 1.84
+    },
+    {
+      "src": 3,
+      "dst": 1,
+      "capacity": 10000.0,
+      "delay": 1.357
+    },
+    {
+      "src": 5,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 0.438
+    },
+    {
+      "src": 5,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 0.837
+    },
+    {
+      "src": 5,
+      "dst": 1,
+      "capacity": 10000.0,
+      "delay": 1.484
+    },
+    {
+      "src": 6,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 1.253
+    },
+    {
+      "src": 6,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 2.446
+    },
+    {
+      "src": 6,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 0.67
+    },
+    {
+      "src": 1,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 1.759
+    },
+    {
+      "src": 7,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 1.052
+    },
+    {
+      "src": 8,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 2.532
+    },
+    {
+      "src": 9,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 1.873
+    },
+    {
+      "src": 9,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 1.156
+    },
+    {
+      "src": 9,
+      "dst": 5,
+      "capacity": 10000.0,
+      "delay": 1.888
+    },
+    {
+      "src": 9,
+      "dst": 3,
+      "capacity": 10000.0,
+      "delay": 1.113
+    },
+    {
+      "src": 9,
+      "dst": 2,
+      "capacity": 10000.0,
+      "delay": 1.401
+    },
+    {
+      "src": 9,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 1.488
+    },
+    {
+      "src": 2,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 1.902
+    },
+    {
+      "src": 2,
+      "dst": 1,
+      "capacity": 10000.0,
+      "delay": 1.941
+    },
+    {
+      "src": 2,
+      "dst": 3,
+      "capacity": 10000.0,
+      "delay": 0.647
+    },
+    {
+      "src": 3,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 1.273
+    },
+    {
+      "src": 3,
+      "dst": 7,
+      "capacity": 10000.0,
+      "delay": 1.74
+    },
+    {
+      "src": 3,
+      "dst": 6,
+      "capacity": 10000.0,
+      "delay": 2.404
+    },
+    {
+      "src": 3,
+      "dst": 5,
+      "capacity": 10000.0,
+      "delay": 2.094
+    },
+    {
+      "src": 5,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 0.926
+    },
+    {
+      "src": 5,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 2.58
+    },
+    {
+      "src": 5,
+      "dst": 6,
+      "capacity": 10000.0,
+      "delay": 0.853
+    },
+    {
+      "src": 6,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 1.539
+    },
+    {
+      "src": 6,
+      "dst": 1,
+      "capacity": 10000.0,
+      "delay": 2.214
+    },
+    {
+      "src": 1,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 0.707
+    },
+    {
+      "src": 1,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 1.054
+    },
+    {
+      "src": 1,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 2.487
+    },
+    {
+      "src": 7,
+      "dst": 4,
+      "capacity": 10000.0,
+      "delay": 1.032
+    },
+    {
+      "src": 7,
+      "dst": 8,
+      "capacity": 10000.0,
+      "delay": 1.853
+    },
+    {
+      "src": 8,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 2.082
+    },
+    {
+      "src": 4,
+      "dst": 0,
+      "capacity": 10000.0,
+      "delay": 0.592
+    }
+  ]
+}
