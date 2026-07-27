@@ -19,6 +19,7 @@ import numpy as np
 from marl_routing.marl_gnn import GNNMAPPO
 from marl_routing.nominal_traffic import nominal_matrices
 from marl_routing.real_traffic import real_matrices
+from marl_routing.tmgen_traffic import tmgen_matrices
 from marl_routing.topo_agnostic_marl_env import TopoAgnosticMARLEnv
 from marl_routing.topology import load as load_topology
 
@@ -47,6 +48,10 @@ ap.add_argument("--stretch", type=int, default=2)
 ap.add_argument("--delay-penalty", type=float, default=0.5)
 ap.add_argument("--max-flows", type=int, default=500,
                 help="cap flows/matrix to top-N by rate for tractable episodes (0=off)")
+ap.add_argument("--traffic", choices=["nominal", "tmgen"], default="nominal",
+                help="training traffic source on the 17 SNDlib topos: real nominal demand "
+                     "(default) or TMgen modulated-gravity (for the ablation isolating "
+                     "traffic-type from topo-set)")
 ap.add_argument("--tag", default="_tier2")
 A = ap.parse_args()
 
@@ -69,43 +74,51 @@ def _cap(mats, k):
 
 
 def evaluate(env, mats, policy, label):
-    ospf, marl = [], []
+    ospf, ecmp, marl = [], [], []
     for m in mats:
         o = env.ospf_max_util(m, 0)
+        e = env.ecmp_max_util(m, 0)
         env.set_matrix(m, 0)
         obs, mask, _ = env.reset()
         done = False; info = {}
         while not done:
             obs, mask, _, _, done, info = env.step(policy(env))
-        ospf.append(o); marl.append(info["max_util"])
-    ospf = np.array(ospf); marl = np.array(marl)
+        ospf.append(o); ecmp.append(e); marl.append(info["max_util"])
+    ospf = np.array(ospf); ecmp = np.array(ecmp); marl = np.array(marl)
     out = {}
     for regime, sel in [("overload", ospf >= 100), ("feasible", ospf < 100)]:
         if sel.sum() == 0:
             continue
-        o = ospf[sel]; g = marl[sel]
-        out[regime] = {"ospf_mean": float(o.mean()), "marl_mean": float(g.mean()),
-                       "delta_pt": float(o.mean() - g.mean()),
-                       "win_pct": float((g < o).mean() * 100), "n": int(sel.sum())}
-        print(f"  [{label:20s} {regime:8s}] OSPF {o.mean():6.1f}% -> MARL {g.mean():6.1f}%"
-              f"  delta {o.mean()-g.mean():+6.1f}pt  beats {out[regime]['win_pct']:.0f}%"
-              f" (n={sel.sum()})", flush=True)
+        o = ospf[sel]; e = ecmp[sel]; g = marl[sel]
+        out[regime] = {"ospf_mean": float(o.mean()), "ecmp_mean": float(e.mean()),
+                       "marl_mean": float(g.mean()),
+                       "delta_ospf_pt": float(o.mean() - g.mean()),
+                       "delta_ecmp_pt": float(e.mean() - g.mean()),
+                       "win_ospf_pct": float((g < o).mean() * 100),
+                       "win_ecmp_pct": float((g < e).mean() * 100), "n": int(sel.sum())}
+        print(f"  [{label:20s} {regime:8s}] OSPF {o.mean():6.1f}%  ECMP {e.mean():6.1f}%  "
+              f"MARL {g.mean():6.1f}%  vs-OSPF {o.mean()-g.mean():+.1f}pt  "
+              f"vs-ECMP {e.mean()-g.mean():+.1f}pt  (n={sel.sum()})", flush=True)
     return out
 
 
 def main():
     out = Path(f"results/marlgnn{A.tag}_seed{A.seed}"); out.mkdir(parents=True, exist_ok=True)
 
-    # ---- training specs: real nominal demand, load-scaled, no noise ----
+    # ---- training specs: real nominal demand or TMgen gravity, load-scaled ----
     train_specs = []
     for t in TRAIN_TOPOS:
         p = pairs_of(t)
-        mats = _cap(nominal_matrices(t, p, seed=A.seed), A.max_flows)
-        train_specs.append((t, p, mats))
+        if A.traffic == "tmgen":
+            raw = tmgen_matrices(t, p, n_patterns=3,
+                                 load_scales=(0.6, 0.8, 1.0, 1.2, 1.5), seed=A.seed)
+        else:
+            raw = nominal_matrices(t, p, seed=A.seed)
+        train_specs.append((t, p, _cap(raw, A.max_flows)))
     env = TopoAgnosticMARLEnv(train_specs, seed=A.seed, delay_penalty=A.delay_penalty,
                               stretch=A.stretch, normalize_reward=True)
-    print(f"[tier2] train on {len(TRAIN_TOPOS)} topos, zero-shot test on {TEST_TOPOS}; "
-          f"seed={A.seed} updates={A.updates}", flush=True)
+    print(f"[tier2] train on {len(TRAIN_TOPOS)} topos ({A.traffic} traffic), "
+          f"zero-shot test on {TEST_TOPOS}; seed={A.seed} updates={A.updates}", flush=True)
 
     mappo = GNNMAPPO(env, hidden=A.hidden, rounds=A.rounds, rollout_steps=A.rollout,
                      n_epochs=6, minibatch=512, seed=A.seed)

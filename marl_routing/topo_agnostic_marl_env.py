@@ -30,10 +30,10 @@ import numpy as np
 
 from marl_routing.topology import load as load_topology
 
-MAX_DEG = 12          # >= max out-degree over all topologies (GEANT=8); headroom for more
-A_MAX = 176           # >= max directed-arc count (germany50); matches graph_routing_env
+MAX_DEG = 60          # >= max out-degree over the Topology Zoo <=100-node set (hub graphs)
+A_MAX = 240           # >= max directed-arc count over that set (max 230)
 NF = 4                # per-neighbour: [arc_util, resulting_bottleneck, headroom, dist_norm]
-N_MAX = 56            # >= max node count (germany50=50); matches graph_routing_env
+N_MAX = 100           # >= max node count over the trainable set (Zoo <=100 nodes)
 NODE_F = 6            # per-node graph features (see _graph_obs) — for the GNN-actor variant
 
 
@@ -68,6 +68,32 @@ class _MARLBundle:
                 p = nx.shortest_path(self.G, s, d)
                 for j in range(len(p) - 1):
                     load[self.arc_index[(p[j], p[j + 1])]] += rates[i]
+        return float((100.0 * load / self.cap).max())
+
+    def ecmp_max_util(self, rates) -> float:
+        """Max link utilisation under ECMP: each flow is split equally, per hop, among
+        equal-cost (shortest) next-hops toward its destination (fractional flow model)."""
+        load = np.zeros(self.n_arcs)
+        for i, (s, d) in enumerate(self.pairs):
+            r = rates[i]
+            if r <= 0:
+                continue
+            dist = self.dist_to[d]                       # hops from any node to d
+            if dist.get(s, 10 ** 9) >= 10 ** 9:
+                continue
+            frac = {s: 1.0}
+            # topological order of the shortest-path DAG: farthest-from-d first
+            for u in sorted(dist, key=lambda n: -dist[n]):
+                fu = frac.get(u, 0.0)
+                if fu <= 0.0 or u == d:
+                    continue
+                nh = [v for v in self.G.successors(u) if dist.get(v, 10 ** 9) == dist[u] - 1]
+                if not nh:
+                    continue
+                share = fu / len(nh)
+                for v in nh:
+                    load[self.arc_index[(u, v)]] += share * r
+                    frac[v] = frac.get(v, 0.0) + share
         return float((100.0 * load / self.cap).max())
 
 
@@ -106,6 +132,9 @@ class TopoAgnosticMARLEnv:
 
     def ospf_max_util(self, rates, topo_idx: int = 0) -> float:
         return self.bundles[topo_idx].ospf_max_util(rates)
+
+    def ecmp_max_util(self, rates, topo_idx: int = 0) -> float:
+        return self.bundles[topo_idx].ecmp_max_util(rates)
 
     # ---- per-episode topology view (supports link failure) ----
     def _build_view(self, b: _MARLBundle):

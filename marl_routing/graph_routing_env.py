@@ -92,6 +92,35 @@ class _TopoBundle:
                 load[arc_path] += rates[i]
         return float((100.0 * load / self.cap).max())
 
+    def ecmp_max_util(self, rates) -> float:
+        """Max link utilisation under ECMP (per-hop equal split among equal-cost
+        next-hops toward the destination; fractional flow model)."""
+        G = self.topo.graph
+        if not hasattr(self, "_dist_to"):
+            self._dist_to = {d: nx.single_source_shortest_path_length(G.reverse(copy=False), d)
+                             for d in range(self.n_nodes)}
+        load = np.zeros(self.n_arcs)
+        for i, (s, d) in enumerate(self.pairs):
+            r = rates[i]
+            if r <= 0:
+                continue
+            dist = self._dist_to[d]
+            if dist.get(s, 10 ** 9) >= 10 ** 9:
+                continue
+            frac = {s: 1.0}
+            for u in sorted(dist, key=lambda n: -dist[n]):
+                fu = frac.get(u, 0.0)
+                if fu <= 0.0 or u == d:
+                    continue
+                nh = [v for v in G.successors(u) if dist.get(v, 10 ** 9) == dist[u] - 1]
+                if not nh:
+                    continue
+                share = fu / len(nh)
+                for v in nh:
+                    load[self.arc_index[(u, v)]] += share * r
+                    frac[v] = frac.get(v, 0.0) + share
+        return float((100.0 * load / self.cap).max())
+
 
 class GraphSeqRoutingEnv(gym.Env):
     """Sequential per-flow routing over one or more topologies (structured obs)."""
@@ -130,6 +159,9 @@ class GraphSeqRoutingEnv(gym.Env):
 
     def ospf_max_util(self, rates, topo_idx: int = 0) -> float:
         return self.bundles[topo_idx].ospf_max_util(rates)
+
+    def ecmp_max_util(self, rates, topo_idx: int = 0) -> float:
+        return self.bundles[topo_idx].ecmp_max_util(rates)
 
     # ---- core ---------------------------------------------------------------
     def _start_episode(self, b: _TopoBundle, rates):
@@ -197,10 +229,13 @@ class GraphSeqRoutingEnv(gym.Env):
         self.load[arc_path] += self.rates[pair_i]
         new_max = float((100.0 * self.load / b.cap).max())
         extra_hops = len(arc_path) - len(b.pair_arc_paths[pair_i][0])
-        # congestion term in "% of this episode's OSPF bottleneck" so the
-        # congestion/delay trade-off is comparable across networks
-        congestion = (new_max - self.cur_max) * (100.0 / self.ospf_ref)
-        reward = float(-congestion - self.delay_penalty * extra_hops)
+        # Scale the WHOLE reward (congestion + delay) by 100/ospf_ref so it is comparable
+        # across networks WITHOUT distorting the congestion/delay trade-off. (Scaling only
+        # the congestion term shrinks it below the fixed delay penalty on high-utilisation
+        # networks -> the policy collapses to shortest-path. scale=1 when not normalising,
+        # recovering the raw reward exactly.)
+        scale = 100.0 / self.ospf_ref if self.normalize_reward else 1.0
+        reward = float(-((new_max - self.cur_max) + self.delay_penalty * extra_hops) * scale)
         self.cur_max = new_max
         self.pos += 1
         terminated = self.pos >= len(self.order)

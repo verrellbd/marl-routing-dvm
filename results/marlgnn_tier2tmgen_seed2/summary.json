@@ -1,0 +1,85 @@
+{
+  "train_topos": [
+    "atlanta_sndlib",
+    "cost266_sndlib",
+    "dfn-bwin_sndlib",
+    "dfn-gwin_sndlib",
+    "di-yuan_sndlib",
+    "france_sndlib",
+    "india35_sndlib",
+    "janos-us_sndlib",
+    "newyork_sndlib",
+    "nobel-eu_sndlib",
+    "nobel-germany_sndlib",
+    "nobel-us_sndlib",
+    "norway_sndlib",
+    "pdh_sndlib",
+    "polska_sndlib",
+    "ta1_sndlib",
+    "zib54_sndlib"
+  ],
+  "test_topos": [
+    "abilene_sndlib",
+    "geant_sndlib",
+    "germany50_sndlib"
+  ],
+  "seed": 2,
+  "zero_shot": {
+    "abilene_sndlib": {
+      "overload": {
+        "ospf_mean": 144.83700014112907,
+        "ecmp_mean": 132.5187985080645,
+        "marl_mean": 90.66676128528225,
+        "delta_ospf_pt": 54.17023885584682,
+        "delta_ecmp_pt": 41.85203722278224,
+        "win_ospf_pct": 100.0,
+        "win_ecmp_pct": 100.0,
+        "n": 8
+      },
+      "feasible": {
+        "ospf_mean": 68.82060487096774,
+        "ecmp_mean": 74.0975689032258,
+        "marl_mean": 57.462858862903225,
+        "delta_ospf_pt": 11.357746008064517,
+        "delta_ecmp_pt": 16.63471004032258,
+        "win_ospf_pct": 80.0,
+        "win_ecmp_pct": 100.0,
+        "n": 10
+      }
+    },
+    "geant_sndlib": {
+      "overload": {
+        "ospf_mean": 145.54425913562503,
+        "ecmp_mean": 106.2756872229948,
+        "marl_mean": 100.88753751062501,
+        "delta_ospf_pt": 44.65672162500002,
+        "delta_ecmp_pt": 5.3881497123697955,
+        "win_ospf_pct": 100.0,
+        "win_ecmp_pct": 75.0,
+        "n": 8
+      },
+      "feasible": {
+        "ospf_mean": 71.242983034,
+        "ecmp_mean": 54.219160045979166,
+        "marl_mean": 55.3376266785,
+        "delta_ospf_pt": 15.905356355500004,
+        "delta_ecmp_pt": -1.1184666325208354,
+        "win_ospf_pct": 90.0,
+        "win_ecmp_pct": 50.0,
+        "n": 10
+      }
+    },
+    "germany50_sndlib": {
+      "overload": {
+        "ospf_mean": 159.42434320833337,
+        "ecmp_mean": 183.80022191449655,
+        "marl_mean": 182.0808280451389,
+        "delta_ospf_pt": -22.656484836805532,
+        "delta_ecmp_pt": 1.7193938693576456,
+        "win_ospf_pct": 22.22222222222222,
+        "win_ecmp_pct": 55.55555555555556,
+        "n": 18
+      }
+    }
+  }
+}
