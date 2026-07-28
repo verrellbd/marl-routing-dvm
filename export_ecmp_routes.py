@@ -23,6 +23,8 @@ import networkx as nx
 
 from marl_routing.graph_routing_env import GraphSeqRoutingEnv
 from marl_routing.real_traffic import real_matrices
+from marl_routing.ospf_metric import (weighted_graph, shortest_path,
+                                      all_shortest_paths, max_util)
 from marl_routing.topology import load as load_topology
 
 ap = argparse.ArgumentParser()
@@ -33,6 +35,8 @@ ap.add_argument("--max-flows", type=int, default=200)
 ap.add_argument("--n-overload", type=int, default=3)
 ap.add_argument("--n-feasible", type=int, default=3)
 ap.add_argument("--seed", type=int, default=0, help="ECMP hash seed (path tie-breaking)")
+ap.add_argument("--metric", choices=["hop", "weighted"], default="hop",
+                help="cost metric for equal-cost sets AND stratification. Real ECMP\nsplits among paths of equal OSPF COST, not equal hop count")
 ap.add_argument("--out", required=True)
 A = ap.parse_args()
 
@@ -52,12 +56,14 @@ def main():
     mats = real_matrices(A.topo, pairs, loads, n_per_scale=A.n_per_scale, split="test")
     cand = {i: filt_rates(mats[i], A.max_flows) for i in range(len(mats))}
 
-    env = GraphSeqRoutingEnv([(A.topo, pairs, mats)], k_paths=3, seed=0)
+    env = GraphSeqRoutingEnv([(A.topo, pairs, mats)], k_paths=3, seed=0, metric=A.metric)
     b = env.bundles[0]
     G = b.topo.graph
 
     # identical stratification to the other arms -> same matrices judged
-    util = {i: round(b.ospf_max_util(r), 1) for i, r in cand.items()}
+    W = weighted_graph(G)
+    util = {i: round(max_util(G, W, pairs, b.arc_index, b.cap, r, A.metric), 1)
+            for i, r in cand.items()}
     by = sorted(util, key=lambda i: -util[i])
     overload = [i for i in by if util[i] >= 100][:A.n_overload]
     feasible = [i for i in by if util[i] < 100][:A.n_feasible]
@@ -69,10 +75,10 @@ def main():
     rng = np.random.RandomState(A.seed)
     ecmp_choice = {}
     for pi, (s, d) in enumerate(pairs):
-        paths = list(nx.all_shortest_paths(G, s, d))
+        paths = all_shortest_paths(G, W, s, d, A.metric)
         ecmp_choice[pi] = paths[rng.randint(len(paths))] if len(paths) > 1 else paths[0]
     multi = sum(1 for pi, (s, d) in enumerate(pairs)
-                if len(list(nx.all_shortest_paths(G, s, d))) > 1)
+                if len(all_shortest_paths(G, W, s, d, A.metric)) > 1)
     print(f"[ecmp] {multi}/{len(pairs)} pairs have >1 equal-cost path (seed {A.seed})")
 
     out = Path(f"results/{A.out}"); out.mkdir(parents=True, exist_ok=True)
@@ -86,7 +92,7 @@ def main():
                 "src": int(s), "dst": int(d), "rate_mbps": float(rates[pi]),
                 "start": 2.0, "stop": 18.0,
                 "gnn_path": [int(x) for x in ecmp_choice[pi]],   # = ECMP path
-                "ospf_path": [int(x) for x in nx.shortest_path(G, s, d)],
+                "ospf_path": [int(x) for x in shortest_path(G, W, s, d, A.metric)],
             })
         regime = "overload" if util[i] >= 100 else "feasible"
         (out / f"routing_seed{i}.json").write_text(json.dumps(

@@ -23,6 +23,8 @@ import numpy as np
 from gymnasium import spaces
 
 from marl_routing.gnn_routing_agent import compute_ksp
+from marl_routing.ospf_metric import (dist_to_all, edge_cost,
+                                      shortest_path as ospf_shortest_path, weighted_graph)
 from marl_routing.topology import load as load_topology
 
 # ---- padding bounds (cover Abilene 12/30, GEANT 22/72, Germany50 50/176) ----
@@ -40,9 +42,14 @@ def obs_size(k_paths: int) -> int:
 class _TopoBundle:
     """Precomputed per-topology structure (built once)."""
 
-    def __init__(self, topo_name: str, pairs, matrices, k_paths: int):
+    def __init__(self, topo_name: str, pairs, matrices, k_paths: int, metric: str = "hop"):
         self.name = topo_name
+        self.metric = metric
         self.topo = load_topology(topo_name)
+        # OSPF-cost view of the graph; identical to the hop view on uniform-capacity
+        # topologies (geant/germany50), different on heterogeneous ones (abilene).
+        self.W = weighted_graph(self.topo.graph)
+        wt = "w" if metric == "weighted" else None
         self.pairs = list(pairs)
         self.matrices = [np.asarray(m, dtype=np.float64) for m in matrices]
         self.arcs = list(self.topo.graph.edges())
@@ -57,7 +64,8 @@ class _TopoBundle:
         # candidate arc-paths per node-pair
         self.pair_arc_paths: List[List[List[int]]] = []
         for (s, d) in self.pairs:
-            paths = compute_ksp(self.topo.graph, s, d, k=k_paths)
+            g = self.W if metric == "weighted" else self.topo.graph
+            paths = compute_ksp(g, s, d, k=k_paths, weight=wt)
             ap = [[self.arc_index[(p[i], p[i + 1])] for i in range(len(p) - 1)]
                   for p in paths]
             while len(ap) < k_paths:
@@ -81,7 +89,7 @@ class _TopoBundle:
         # must not re-run Dijkstra every episode.
         self.ospf_arc_paths: List[List[int]] = []
         for (s, d) in self.pairs:
-            p = nx.shortest_path(self.topo.graph, s, d)
+            p = ospf_shortest_path(self.topo.graph, self.W, s, d, metric)
             self.ospf_arc_paths.append(
                 [self.arc_index[(p[j], p[j + 1])] for j in range(len(p) - 1)])
 
@@ -97,8 +105,7 @@ class _TopoBundle:
         next-hops toward the destination; fractional flow model)."""
         G = self.topo.graph
         if not hasattr(self, "_dist_to"):
-            self._dist_to = {d: nx.single_source_shortest_path_length(G.reverse(copy=False), d)
-                             for d in range(self.n_nodes)}
+            self._dist_to = dist_to_all(G, self.W, self.metric)
         load = np.zeros(self.n_arcs)
         for i, (s, d) in enumerate(self.pairs):
             r = rates[i]
@@ -112,7 +119,10 @@ class _TopoBundle:
                 fu = frac.get(u, 0.0)
                 if fu <= 0.0 or u == d:
                     continue
-                nh = [v for v in G.successors(u) if dist.get(v, 10 ** 9) == dist[u] - 1]
+                # equal-COST next-hops (float costs under the weighted metric -> tolerance)
+                nh = [v for v in G.successors(u)
+                      if abs(dist.get(v, 10 ** 9) + edge_cost(self.W, u, v, self.metric)
+                             - dist[u]) < 1e-9]
                 if not nh:
                     continue
                 share = fu / len(nh)
@@ -129,8 +139,13 @@ class GraphSeqRoutingEnv(gym.Env):
 
     def __init__(self, topo_specs: Sequence[Tuple[str, object, object]],
                  k_paths: int = 3, seed: int = 0, delay_penalty: float = 0.5,
-                 normalize_reward: bool = True):
+                 normalize_reward: bool = True, metric: str = "hop"):
         """topo_specs: list of (topo_name, pairs, matrices).
+
+        metric: "hop" (legacy) or "weighted" (OSPF cost = refBW/linkBW). Governs the
+        candidate k-shortest paths, the OSPF/ECMP baselines, and hence the reward
+        normaliser. "weighted" makes the policy capacity-aware; on uniform-capacity
+        topologies the two are identical.
 
         normalize_reward: express the congestion term as a PERCENTAGE OF THIS
         EPISODE'S OSPF BOTTLENECK rather than in raw utilisation points. Networks
@@ -143,14 +158,16 @@ class GraphSeqRoutingEnv(gym.Env):
         self.delay_penalty = delay_penalty
         self.normalize_reward = normalize_reward
         self._rng = np.random.RandomState(seed)
-        self.bundles = [_TopoBundle(n, p, m, k_paths) for (n, p, m) in topo_specs]
+        self.metric = metric
+        self.bundles = [_TopoBundle(n, p, m, k_paths, metric) for (n, p, m) in topo_specs]
         self.action_space = spaces.Discrete(k_paths)
         self.observation_space = spaces.Box(-1e6, 1e6, (obs_size(k_paths),),
                                             dtype=np.float32)
         self._forced = None
         self._forced_topo = None
         names = ", ".join(f"{b.name}({b.n_nodes}n/{b.n_arcs}a)" for b in self.bundles)
-        print(f"[GraphSeqRoutingEnv] {len(self.bundles)} topologies: {names}; k={k_paths}")
+        print(f"[GraphSeqRoutingEnv] {len(self.bundles)} topologies: {names}; k={k_paths}; "
+              f"metric={metric}")
 
     # ---- evaluation helpers -------------------------------------------------
     def set_matrix(self, rates, topo_idx: int = 0):

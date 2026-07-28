@@ -52,6 +52,10 @@ ap.add_argument("--traffic", choices=["nominal", "tmgen"], default="nominal",
                 help="training traffic source on the 17 SNDlib topos: real nominal demand "
                      "(default) or TMgen modulated-gravity (for the ablation isolating "
                      "traffic-type from topo-set)")
+ap.add_argument("--metric", choices=["hop", "weighted"], default="hop",
+                help="path-cost metric. 'weighted' = OSPF cost refBW/linkBW, making the\n"
+                     "candidate paths and detour limits CAPACITY-AWARE; 'hop' is the\n"
+                     "legacy capacity-blind behaviour. Identical on uniform-capacity topos.")
 ap.add_argument("--tag", default="_tier2")
 A = ap.parse_args()
 
@@ -116,7 +120,8 @@ def main():
             raw = nominal_matrices(t, p, seed=A.seed)
         train_specs.append((t, p, _cap(raw, A.max_flows)))
     env = TopoAgnosticMARLEnv(train_specs, seed=A.seed, delay_penalty=A.delay_penalty,
-                              stretch=A.stretch, normalize_reward=True)
+                              stretch=A.stretch, normalize_reward=True,
+                              metric=A.metric)
     print(f"[tier2] train on {len(TRAIN_TOPOS)} topos ({A.traffic} traffic), "
           f"zero-shot test on {TEST_TOPOS}; seed={A.seed} updates={A.updates}", flush=True)
 
@@ -137,7 +142,7 @@ def main():
         mats = real_matrices(t, p, TEST_LOADS[t], n_per_scale=6, split="test")
         ev = TopoAgnosticMARLEnv([(t, p, mats)], seed=A.seed + 1,
                                  delay_penalty=A.delay_penalty, stretch=A.stretch,
-                                 normalize_reward=True)
+                                 normalize_reward=True, metric=A.metric)
         results["zero_shot"][t] = evaluate(ev, mats, policy, t)
 
     (out / "summary.json").write_text(json.dumps(results, indent=2))

@@ -28,6 +28,8 @@ from typing import Callable, Dict, List
 import networkx as nx
 import numpy as np
 
+from marl_routing.ospf_metric import (dist_to_all, edge_cost,
+                                      shortest_path as ospf_shortest_path, weighted_graph)
 from marl_routing.topology import load as load_topology
 
 MAX_DEG = 60          # >= max out-degree over the Topology Zoo <=100-node set (hub graphs)
@@ -40,8 +42,9 @@ NODE_F = 6            # per-node graph features (see _graph_obs) — for the GNN
 class _MARLBundle:
     """Per-topology precomputed structure for the intact graph."""
 
-    def __init__(self, topo_name, pairs, matrices):
+    def __init__(self, topo_name, pairs, matrices, metric: str = "hop"):
         self.name = topo_name
+        self.metric = metric
         self.topo = load_topology(topo_name)
         self.G = self.topo.graph
         self.n_nodes = self.topo.n_nodes
@@ -58,14 +61,16 @@ class _MARLBundle:
             raise ValueError(f"{topo_name}: degree > MAX_DEG={MAX_DEG}")
         self.nbr_arc = {n: [self.arc_index[(n, m)] for m in self.nbrs[n]]
                         for n in range(self.n_nodes)}
-        self.dist_to = {d: nx.single_source_shortest_path_length(self.G.reverse(copy=False), d)
-                        for d in range(self.n_nodes)}
+        # OSPF-cost view; under metric="weighted" dist_to is COST distance, which is what
+        # makes the agent's progress/detour test capacity-aware.
+        self.W = weighted_graph(self.G)
+        self.dist_to = dist_to_all(self.G, self.W, metric)
 
     def ospf_max_util(self, rates) -> float:
         load = np.zeros(self.n_arcs)
         for i, (s, d) in enumerate(self.pairs):
             if rates[i] > 0:
-                p = nx.shortest_path(self.G, s, d)
+                p = ospf_shortest_path(self.G, self.W, s, d, self.metric)
                 for j in range(len(p) - 1):
                     load[self.arc_index[(p[j], p[j + 1])]] += rates[i]
         return float((100.0 * load / self.cap).max())
@@ -87,7 +92,10 @@ class _MARLBundle:
                 fu = frac.get(u, 0.0)
                 if fu <= 0.0 or u == d:
                     continue
-                nh = [v for v in self.G.successors(u) if dist.get(v, 10 ** 9) == dist[u] - 1]
+                # equal-COST next-hops (float costs under "weighted" -> compare with tol)
+                nh = [v for v in self.G.successors(u)
+                      if abs(dist.get(v, 10 ** 9) + edge_cost(self.W, u, v, self.metric)
+                             - dist[u]) < 1e-9]
                 if not nh:
                     continue
                 share = fu / len(nh)
@@ -109,8 +117,11 @@ class TopoAgnosticMARLEnv:
 
     def __init__(self, topo_specs, seed: int = 0, delay_penalty: float = 0.5,
                  stretch: int = 2, max_stretch=4, fail_links: int = 0,
-                 normalize_reward: bool = True):
-        self.bundles = [_MARLBundle(n, p, m) for (n, p, m) in topo_specs]
+                 normalize_reward: bool = True, metric: str = "hop"):
+        # metric="weighted" -> distances, stretch limits, OSPF/ECMP refs are all in OSPF
+        # COST units (refBW/linkBW) instead of hops. Identical on uniform-capacity topos.
+        self.metric = metric
+        self.bundles = [_MARLBundle(n, p, m, metric) for (n, p, m) in topo_specs]
         self.delay_penalty = delay_penalty
         self.stretch = stretch
         self.max_stretch = max_stretch
@@ -123,7 +134,8 @@ class TopoAgnosticMARLEnv:
         self._forced_topo = 0
         names = ", ".join(f"{b.name}({b.n_nodes}n)" for b in self.bundles)
         print(f"[TopoAgnosticMARLEnv] {len(self.bundles)} topos: {names}; "
-              f"stretch={stretch} max_stretch={max_stretch} fail_links={fail_links}")
+              f"stretch={stretch} max_stretch={max_stretch} fail_links={fail_links} "
+              f"metric={metric}")
 
     # ---- evaluation hooks ----
     def set_matrix(self, rates, topo_idx: int = 0):
@@ -158,8 +170,8 @@ class TopoAgnosticMARLEnv:
         live = np.array([b.arcs[i] not in dead for i in range(b.n_arcs)], dtype=bool)
         nbrs = {n: [m for m in b.nbrs[n] if (n, m) not in dead] for n in range(b.n_nodes)}
         nbr_arc = {n: [b.arc_index[(n, m)] for m in nbrs[n]] for n in range(b.n_nodes)}
-        dist_to = {d: nx.single_source_shortest_path_length(H.reverse(copy=False), d)
-                   for d in range(b.n_nodes)}
+        # ref_bw pinned to the INTACT graph so a failed fast link doesn't rescale all costs
+        dist_to = dist_to_all(H, weighted_graph(H, ref_bw=float(b.cap.max())), self.metric)
         self._live = live
         return nbrs, nbr_arc, dist_to
 
@@ -193,6 +205,7 @@ class TopoAgnosticMARLEnv:
         self.visited = {s}
         self.cur_path[pi] = [s]
         self.cur_shortest = self.dist_to[d].get(s, 10 ** 9)
+        self.cur_cost = 0.0        # cost of the path built so far, in dist_to's units
 
     def _valid(self) -> List[bool]:
         n, d = self.cur_node, self.cur_dst
@@ -200,12 +213,13 @@ class TopoAgnosticMARLEnv:
         if n == d:
             return v
         dn = self.dist_to[d].get(n, 10 ** 9)
-        hops = len(self.cur_path[self.cur_pi]) - 1
         for i, m in enumerate(self.nbrs[n]):
             dm = self.dist_to[d].get(m, 10 ** 9)
+            c = edge_cost(self.b.W, n, m, self.metric)
             if m not in self.visited and dm < dn + self.stretch and dm < 10 ** 9:
+                # total cost if we commit to this arc then go shortest-path onward
                 if (self.max_stretch is not None
-                        and hops + 1 + dm > self.cur_shortest + self.max_stretch):
+                        and self.cur_cost + c + dm > self.cur_shortest + self.max_stretch):
                     continue
                 v[i] = True
         if not any(v):
@@ -307,6 +321,7 @@ class TopoAgnosticMARLEnv:
         congestion = (new_max - self.cur_max) * (100.0 / self.ospf_ref)
         reward = -congestion - self.delay_penalty * (1.0 if is_detour else 0.0)
         self.cur_max = new_max
+        self.cur_cost += edge_cost(b.W, self.cur_node, nxt, self.metric)
         self.visited.add(nxt)
         self.cur_path[self.cur_pi].append(nxt)
         self.cur_node = nxt

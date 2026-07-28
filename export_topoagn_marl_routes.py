@@ -24,6 +24,7 @@ import networkx as nx
 from marl_routing.marl_gnn import GNNMAPPO
 from marl_routing.real_traffic import real_matrices
 from marl_routing.topo_agnostic_marl_env import TopoAgnosticMARLEnv
+from marl_routing.ospf_metric import weighted_graph, shortest_path, max_util
 from marl_routing.topology import load as load_topology
 
 ap = argparse.ArgumentParser()
@@ -39,6 +40,8 @@ ap.add_argument("--n-feasible", type=int, default=3)
 ap.add_argument("--hidden", type=int, default=32, help="must match the trained policy")
 ap.add_argument("--rounds", type=int, default=3, help="must match the trained policy")
 ap.add_argument("--stretch", type=int, default=2)
+ap.add_argument("--metric", choices=["hop", "weighted"], default="hop",
+                help="OSPF cost metric for the baseline path + stratification")
 ap.add_argument("--out", required=True, help="output dir under results/")
 A = ap.parse_args()
 
@@ -59,11 +62,14 @@ def main():
     cand = {i: filt_rates(mats[i], A.max_flows) for i in range(len(mats))}
 
     env = TopoAgnosticMARLEnv([(A.topo, pairs, mats)], seed=0, stretch=A.stretch,
+                              metric=A.metric,
                               normalize_reward=True)
     b = env.bundles[0]
 
     # stratify by OSPF analytical bottleneck (same rule as export_topoagn_routes.py)
-    util = {i: round(b.ospf_max_util(r), 1) for i, r in cand.items()}
+    W = weighted_graph(b.G)
+    util = {i: round(max_util(b.G, W, pairs, b.arc_index, b.cap, r, A.metric), 1)
+            for i, r in cand.items()}
     by = sorted(util, key=lambda i: -util[i])
     overload = [i for i in by if util[i] >= 100][:A.n_overload]
     feasible = [i for i in by if util[i] < 100][:A.n_feasible]
@@ -97,7 +103,7 @@ def main():
                 "src": int(s), "dst": int(d), "rate_mbps": float(rates[pi]),
                 "start": 2.0, "stop": 18.0,
                 "gnn_path": [int(x) for x in marl_nodes],
-                "ospf_path": [int(x) for x in nx.shortest_path(b.G, s, d)],
+                "ospf_path": [int(x) for x in shortest_path(b.G, W, s, d, A.metric)],
             })
         regime = "overload" if util[i] >= 100 else "feasible"
         (out / f"routing_seed{i}.json").write_text(json.dumps(

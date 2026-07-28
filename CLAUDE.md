@@ -124,7 +124,69 @@ Matched budget = 1.5M env steps each, 3 seeds each.
 - ECMP is WORSE than OSPF on germany50 in both regimes (23.40% vs 18.94% loss).
 Grid: `results/matched_ns3_grid.json` (via `make_matched_grid.py`).
 
-**KNOWN DEFECT — fix before writing up (highest priority).** Our OSPF baseline routes by
+**!! RESULT REVERSAL 2026-07-28 — ABILENE IS A LOSS. Do not report the old abilene win. !!**
+Measured with a correctly configured OSPF (cost = refBW/linkBW), on all 18 abilene test
+matrices: **weighted OSPF 57.25%** < MARL h64 70.64% < MARL h32 72.61% < single 88.99% <
+ECMP 100.06% < hop-count OSPF 102.61%. Real OSPF BEATS every learned method by ~13pt, and
+abilene has NO overload regime at all under it (0/18 matrices >=100%; the old "abilene
+overload" was entirely an artifact of hop-count routing through the single 2.48G link).
+WHY (this is the insight, not just a bug): abilene_sndlib is 14x9.92G + 1x2.48G. Weighted
+OSPF gives that link cost 4 and avoids it. Everything else in the table is CAPACITY-BLIND in
+path construction — hop-count OSPF walks into it, ECMP sprays onto it, and our learned
+policies choose among HOP-COUNT k-shortest paths with hop-based detour limits, so the slow
+link sits in their candidate set. Honest framing: on heterogeneous-capacity topologies a
+capacity-aware baseline beats capacity-blind optimisation, however good the optimiser.
+WHAT SURVIVES: geant + germany50 have UNIFORM 40G links, so weighted == hop-count there
+(verified identical, 145.5%). ALL geant/germany50 results — including the whole packet-level
+grid and the germany50 headroom finding — STAND UNCHANGED. The core claim holds on the two
+larger topologies and fails on the 12-node toy.
+PACKET-LEVEL CONFIRMATION (2026-07-28, 126 sims, 0 fails, `results/ns3m_*_abilenew_s*`,
+loads 16/22/28, `--metric weighted` on all exporters). Abilene with a CORRECT baseline:
+  loss %  OVERLOAD  OSPF 14.35 | ECMP 14.30 | MARLh64 14.37 | MARLh32 16.53 | single 18.29
+  loss %  FEASIBLE  OSPF  0.17 | ECMP  0.18 | MARLh64  1.61 | MARLh32  1.67 | single  2.75
+  delay   FEASIBLE  OSPF 11.45ms vs learned 36.7-42.1ms  (3-4x WORSE)
+So on abilene the learned methods are at BEST tied (MARLh64 in overload) and clearly worse
+everywhere else — the detours cost delay without buying congestion relief. Report abilene as
+a NEGATIVE RESULT. `_abilenew_` dirs are the correct ones; the old `ns3m_*_abilene_s*` dirs
+use the hop-count straw man and must NOT be reported.
+MECHANISM PROVEN (2026-07-28): the slow link is arc (1,5)/(5,1) @2480 Mbps. Mean utilisation
+OF THAT LINK across the 18 abilene matrices: hop-count OSPF **83.6%**, weighted OSPF
+**0.0%** (it avoids it entirely), MARL h64 **58.0%**. Fast links sit at only ~21-24% in all
+three, so there is ample spare capacity — weighted OSPF simply moves everything off the slow
+link. MARL learned to PARTIALLY relieve it (83.6 -> 58.0) but cannot eliminate it, because
+its k=3 candidates are HOP-shortest (for some pairs all 3 traverse the slow link) and its
+hop-based stretch limit forbids the longer capacity-avoiding route.
+RE-MATCH AT HIGHER LOAD DOES NOT SAVE IT: at loads 16/22/28 (weighted OSPF genuinely
+congested, 129.3% on its overload subset) the learned methods are still far worse —
+MARL h64 148.9% (-19.6pt), h32 155.4%, single 195.9%. The failure is STRUCTURAL
+(capacity-blind candidate paths), not a load-distribution artifact.
+NOTE ECMP IS ALSO WRONG ON ABILENE: real ECMP splits among equal-cost paths under OSPF's
+METRIC; ours used equal-HOP-COUNT paths. Re-baselining abilene must fix both OSPF and ECMP.
+**CAPACITY-AWARE FIX — IMPLEMENTED 2026-07-28, RETRAIN IN FLIGHT.** The deeper fix was
+taken. `--metric weighted` now threads through the ENVIRONMENTS, not just the exporters:
+- `marl_routing/ospf_metric.py`: added `dist_to_all()` (Dijkstra on OSPF cost) + `edge_cost()`.
+- `compute_ksp(..., weight="w")`: candidate k-shortest paths are now COST-shortest.
+- `graph_routing_env._TopoBundle(metric=)`: weighted KSP, weighted `ospf_arc_paths`,
+  equal-COST next-hops in `ecmp_max_util` (float costs -> 1e-9 tolerance, not `== dist-1`).
+- `topo_agnostic_marl_env._MARLBundle(metric=)`: `dist_to` is COST distance, so the agent's
+  progress test and the reward's `is_detour` are capacity-aware. `_valid()` now accumulates
+  `self.cur_cost` in cost units instead of counting hops — the hop-based stretch limit was
+  the thing forbidding the capacity-avoiding route.
+- `--metric` flag on both trainers; exporters pass theirs into the env too.
+DEFAULT REMAINS "hop" everywhere, so every committed result keeps its old meaning.
+PRE-LAUNCH VERIFICATION (do not re-derive):
+  abilene   slow link in k=3 candidates 112/396 -> 50/396; random policy max util 80.4 -> 40.2
+  geant     identical under both metrics (uniform 40G) — confirms nothing else can regress
+  germany50 max util identical 69.9; OSPF ref 28.6 -> 28.2 (equal-cost tie-break only)
+RETRAIN: `train_capaware.sh`, 9 runs (single | MARL h32 | MARL h64) x 3 seeds, matched
+1.5M steps, tags `_singleH64gcap` / `_tier2m15cap` / `_tier2m15h64cap`. Hyperparameters
+were RECOVERED FROM THE SAVED POLICIES, not guessed, so `--metric` is the only variable.
+Old capacity-blind dirs stay on disk for the before/after table.
+AFTER IT LANDS: re-run the ns-3 grid with `--metric weighted` and rebuild
+`results/matched_ns3_grid.json`. Only then is the abilene verdict final — report whichever
+way it falls.
+
+**KNOWN DEFECT — being fixed (this is what caused the reversal above).** Our OSPF baseline routes by
 HOP COUNT (`nx.shortest_path` with no weight), but real OSPF uses cost = refBW/linkBW.
 abilene_sndlib has ONE 2.48G link among fourteen 9.92G links, so hop-count OSPF routes
 straight through it and looks ~45pt worse than a correctly configured OSPF
@@ -135,8 +197,16 @@ alone, so its OSPF number is fragile too. Fix = weighted Dijkstra in the exporte
 re-run the OSPF arm (~1h of sims).
 
 ## Next steps (ranked, after long deliberation)
-1. **Fix the OSPF metric** (above). Cheap, and it is the thing an examiner will catch.
-   Expect the abilene margin to shrink; report it honestly either way.
+1. **Fix the OSPF metric** — DONE for the baselines (exporters), and the deeper
+   capacity-aware fix to the ENVIRONMENTS is implemented + retraining (see above).
+   Remaining: re-run the ns-3 grid weighted once the 9 runs land.
+1b. **Specialist baseline** (decided 2026-07-28): KEEP the 17-topology zero-shot design as
+   the headline — it is the contribution the survey identifies as unmet (GDDR/GROM fail to
+   beat per-topology retraining). Add per-topology specialists at the SAME 1.5M budget as a
+   REFERENCE arm to quantify the generalization gap (the ROAR-style comparison nobody
+   reports). Needs a `--topos` flag on `train_marl_gnn_tier2.py` (currently hardcoded
+   `TRAIN_TOPOS`). ~9 runs, ~3h parallel on geneva. NOT a replacement for the 17.
+   The existing `*_sndlib_marl_real_seed*` dirs are an OLDER env/budget — not comparable.
 2. **Finish the ns3-ospf branch** — see below. Citability, not correctness.
 3. **Failure robustness**: env already supports `fail_links` (currently 0). Evaluate the
    SAVED policies zero-shot with 1 link failed. No retraining, ~2h. Biggest claim-per-hour.

@@ -21,6 +21,7 @@ from stable_baselines3 import PPO
 from marl_routing.graph_routing_env import GraphSeqRoutingEnv
 from marl_routing.real_traffic import real_matrices
 from marl_routing.topo_gnn_extractor import TopoAgnosticGNNExtractor  # noqa: F401 (registers class)
+from marl_routing.ospf_metric import weighted_graph, shortest_path, max_util
 from marl_routing.topology import load as load_topology
 
 ap = argparse.ArgumentParser()
@@ -34,6 +35,9 @@ ap.add_argument("--max-flows", type=int, default=200,
 ap.add_argument("--n-overload", type=int, default=3)
 ap.add_argument("--n-feasible", type=int, default=3)
 ap.add_argument("--k-paths", type=int, default=3)
+ap.add_argument("--metric", choices=["hop", "weighted"], default="hop",
+                help="OSPF cost metric. 'weighted' = refBW/linkBW (real OSPF); "
+                     "'hop' = hop count (the original, weaker baseline)")
 ap.add_argument("--out", required=True, help="output dir under results/")
 A = ap.parse_args()
 
@@ -63,11 +67,15 @@ def main():
     mats = real_matrices(A.topo, pairs, loads, n_per_scale=A.n_per_scale, split="test")
     cand = {i: filt_rates(mats[i], A.max_flows) for i in range(len(mats))}
 
-    env = GraphSeqRoutingEnv([(A.topo, pairs, mats)], k_paths=A.k_paths, seed=0)
+    env = GraphSeqRoutingEnv([(A.topo, pairs, mats)], k_paths=A.k_paths, seed=0,
+                              metric=A.metric)
     b = env.bundles[0]
 
     # stratify by OSPF analytical bottleneck (same rule as evaluate_ns3.py)
-    util = {i: round(b.ospf_max_util(r), 1) for i, r in cand.items()}
+    G = b.topo.graph
+    W = weighted_graph(G)
+    util = {i: round(max_util(G, W, pairs, b.arc_index, b.cap, r, A.metric), 1)
+            for i, r in cand.items()}
     by = sorted(util, key=lambda i: -util[i])
     overload = [i for i in by if util[i] >= 100][:A.n_overload]
     feasible = [i for i in by if util[i] < 100][:A.n_feasible]
@@ -100,7 +108,7 @@ def main():
                 "src": int(s), "dst": int(d), "rate_mbps": float(rates[pi]),
                 "start": 2.0, "stop": 18.0,
                 "gnn_path": [int(x) for x in gnn_nodes],
-                "ospf_path": [int(x) for x in nx.shortest_path(b.topo.graph, s, d)],
+                "ospf_path": [int(x) for x in shortest_path(G, W, s, d, A.metric)],
             })
         regime = "overload" if util[i] >= 100 else "feasible"
         (out / f"routing_seed{i}.json").write_text(json.dumps(

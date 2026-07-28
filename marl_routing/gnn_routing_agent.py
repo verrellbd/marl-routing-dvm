@@ -25,7 +25,8 @@ from gymnasium import spaces
 from marl_routing.topology import load as load_topology
 
 
-def compute_ksp(graph: nx.Graph, src: int, dst: int, k: int = 3) -> List[List[int]]:
+def compute_ksp(graph: nx.Graph, src: int, dst: int, k: int = 3,
+                weight: str | None = None) -> List[List[int]]:
     """Compute k-shortest paths using Yen's algorithm.
 
     Args:
@@ -33,6 +34,10 @@ def compute_ksp(graph: nx.Graph, src: int, dst: int, k: int = 3) -> List[List[in
         src: source node
         dst: destination node
         k: number of paths to compute
+        weight: edge attribute to minimise (None = hop count). Pass "w" on a
+            `ospf_metric.weighted_graph` to get CAPACITY-AWARE candidates — hop-shortest
+            candidates can all traverse the same slow link, which no downstream policy
+            can then route around.
 
     Returns:
         list of paths, each path is list of node indices
@@ -45,7 +50,7 @@ def compute_ksp(graph: nx.Graph, src: int, dst: int, k: int = 3) -> List[List[in
         # (Materializing the full generator enumerates every simple path in the
         # graph -> combinatorial blowup, ~0.8s/pair on dense topologies.)
         from itertools import islice
-        paths = list(islice(nx.shortest_simple_paths(graph, src, dst, weight=None), k))
+        paths = list(islice(nx.shortest_simple_paths(graph, src, dst, weight=weight), k))
         return paths if paths else [[src, dst]]
     except nx.NetworkXNoPath:
         return [[src, dst]]
