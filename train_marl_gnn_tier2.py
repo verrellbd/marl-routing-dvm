@@ -52,6 +52,12 @@ ap.add_argument("--traffic", choices=["nominal", "tmgen"], default="nominal",
                 help="training traffic source on the 17 SNDlib topos: real nominal demand "
                      "(default) or TMgen modulated-gravity (for the ablation isolating "
                      "traffic-type from topo-set)")
+ap.add_argument("--gamma", type=float, default=0.99)
+ap.add_argument("--n-epochs", type=int, default=6,
+                help="PPO epochs per update. Set 10 to match SB3's default, i.e. to match "
+                     "the SINGLE-AGENT BASELINE rather than bending the baseline to us — "
+                     "the baseline should keep its standard configuration.")
+ap.add_argument("--minibatch", type=int, default=512)
 ap.add_argument("--metric", choices=["hop", "weighted"], default="hop",
                 help="path-cost metric. 'weighted' = OSPF cost refBW/linkBW, making the\n"
                      "candidate paths and detour limits CAPACITY-AWARE; 'hop' is the\n"
@@ -126,7 +132,7 @@ def main():
           f"zero-shot test on {TEST_TOPOS}; seed={A.seed} updates={A.updates}", flush=True)
 
     mappo = GNNMAPPO(env, hidden=A.hidden, rounds=A.rounds, rollout_steps=A.rollout,
-                     n_epochs=6, minibatch=512, seed=A.seed)
+                     gamma=A.gamma, n_epochs=A.n_epochs, minibatch=A.minibatch, seed=A.seed)
     mappo.learn(total_steps=A.rollout * A.updates, log_every=5,
                 ckpt_dir=out / "ckpts", ckpt_every=40)
     mappo.save(out / "policy.pt")

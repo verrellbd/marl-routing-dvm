@@ -182,9 +182,44 @@ RETRAIN: `train_capaware.sh`, 9 runs (single | MARL h32 | MARL h64) x 3 seeds, m
 1.5M steps, tags `_singleH64gcap` / `_tier2m15cap` / `_tier2m15h64cap`. Hyperparameters
 were RECOVERED FROM THE SAVED POLICIES, not guessed, so `--metric` is the only variable.
 Old capacity-blind dirs stay on disk for the before/after table.
-AFTER IT LANDS: re-run the ns-3 grid with `--metric weighted` and rebuild
-`results/matched_ns3_grid.json`. Only then is the abilene verdict final — report whichever
-way it falls.
+**!! ABILENE NEGATIVE RESULT IS REVERSED (2026-07-28, 126 ns-3 sims, 0 fails). !!**
+`results/ns3m_*_abilenecap_s*` — the SAME saved policies, re-exported with capacity-aware
+candidates (no retraining; the policies are topology-agnostic and consume whatever the env
+gives them). Compare `_abilenew_` (capacity-blind learned paths) -> `_abilenecap_`:
+  OVERLOAD loss%   OSPF 14.35 | ECMP 14.30 | single 18.29->14.11 | h32 16.53->15.06 |
+                   h64 14.37->**13.62**   (h64 delay 119.9->102.1ms vs OSPF 122.6ms)
+  FEASIBLE loss%   OSPF  0.17 | single 2.75->0.17 | h32 1.67->0.20 | h64 1.61->0.20
+  FEASIBLE delay   OSPF 11.45ms | single 42.10->11.40 | h32 36.68->12.09 | h64 36.93->12.11
+  FEASIBLE maxutil OSPF 96.7 | single 100.1->**91.6** | h32 98.5->94.5 | h64 100.0->96.5
+THE OLD CONCLUSION "detours cost delay without buying congestion relief" WAS AN ARTIFACT OF
+CAPACITY-BLIND CANDIDATE PATHS. Delete it. The 3-4x delay penalty is gone (11.4-12.1ms vs
+OSPF 11.45), and the single agent frees 5.1pt of headroom at identical QoS.
+HONEST READING: this is PARITY + a headroom gain, NOT dominance. Feasible loss 0.20 vs OSPF
+0.17 is marginally worse (noise); h32 still trails OSPF in overload (15.06 vs 14.35).
+Report abilene as "capacity-blind failure diagnosed and fixed", not as a win.
+STILL TO DO: re-run geant/germany50 with `--metric weighted` env candidates and rebuild
+`results/matched_ns3_grid.json`. Expect NO change there (uniform 40G -> weighted == hop),
+but verify rather than assume.
+
+## Hyperparameter matching (audited 2026-07-28)
+ENV/DATA SIDE IS ALREADY FULLY MATCHED between single-agent and MARL — same 17 train topos,
+same TMgen call (n_patterns=3, load_scales 0.6-1.5, same seed), same max_flows=500 filter,
+same test matrices (real_matrices n_per_scale=6 split=test), delay_penalty 0.5,
+normalize_reward True, eval seed A.seed+1. Nothing to fix. Do not re-audit this.
+PPO SIDE had four mismatches (lr/gae_lambda/clip/vf_coef/max_grad_norm/ent_coef were already
+identical): gamma 0.99 vs 0.995, n_epochs 6 vs 10, minibatch 512 vs 256, buffer 4096 vs 2048.
+DIRECTION OF THE FIX MATTERS: the single agent is the BASELINE, so it KEEPS SB3's defaults
+untouched (trimming a baseline's optimisation to match ours would read as handicapping it);
+OUR MAPPO moves to meet it. `train_marl_gnn_tier2.py` gained `--gamma/--n-epochs/--minibatch`
+for this. Launcher: `train_matched_hparams.sh`, tags `_cm`. The earlier `_cap` MARL runs
+(n_epochs 6, gamma 0.99) stay on disk as the "MARL at its own defaults" ablation.
+NOT MATCHABLE, state as a limitation: one single-agent step routes a WHOLE FLOW, one MARL
+step routes ONE HOP, so 1.5M steps = ~6x more flows routed for the single agent. Matched on
+env steps, unmatched on work. Report a second budget axis (flows routed) and show the
+conclusion is invariant. NOTE this mismatch favours the SINGLE AGENT (it also got 3.3x more
+gradient steps under the old settings), so MARL winning anyway is not an under-training
+artifact — but SB3's 10 epochs over a 2048 buffer could itself explain the single agent's
+seed collapse, which is why the matched re-run is worth having.
 
 **KNOWN DEFECT — being fixed (this is what caused the reversal above).** Our OSPF baseline routes by
 HOP COUNT (`nx.shortest_path` with no weight), but real OSPF uses cost = refBW/linkBW.
