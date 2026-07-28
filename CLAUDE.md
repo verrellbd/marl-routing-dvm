@@ -201,6 +201,39 @@ STILL TO DO: re-run geant/germany50 with `--metric weighted` env candidates and 
 `results/matched_ns3_grid.json`. Expect NO change there (uniform 40G -> weighted == hop),
 but verify rather than assume.
 
+## FINAL PACKET-LEVEL GRID (2026-07-28) — `results/final_ns3_grid.json`
+378 ns-3 sims, 0 failures, `results/ns3f_*`. Capacity-aware (`--metric weighted` in the ENV)
++ matched hyperparameters. Arms: single `_singleH64gcap`, h32 `_tier2m15cm`, h64
+`_tier2m15h64cm`. THIS SUPERSEDES `matched_ns3_grid.json` AND ALL `ns3m_*` DIRS.
+Abilene ran at loads 16/22/28 (weighted OSPF has no overload regime below ~16), so its
+packet row does NOT correspond to its analytical row (8/12/16). geant/germany50 do.
+
+  geant OVERLOAD    loss%  OSPF 14.13 | ECMP 6.82 | single 13.29 | h32 **2.92** | h64 3.56
+  geant FEASIBLE    util%  OSPF 97.3  | ECMP 78.2 | single 95.8  | h32 **66.7** | h64 68.2
+                    (h32 loss 0.12 vs OSPF 0.16, delay 8.33 vs 9.46 — headroom is FREE here)
+  g50   OVERLOAD    loss%  OSPF 27.29 | ECMP 22.90 | single 16.73 | h32 10.62 | h64 **8.88**
+  g50   FEASIBLE    util%  OSPF 95.6  | single 74.8 | h32 70.8 | h64 61.9
+                    BUT loss  OSPF 0.03 | single **0.03** | h32 1.02 | h64 2.44
+                    -> SINGLE AGENT WINS THIS CELL (OSPF's loss, 20.8pt more headroom).
+                       MARL's extra headroom here is BOUGHT WITH LOSS. Report the trade.
+  abilene FEASIBLE  loss%  OSPF **0.17** | h32 0.97 | h64 3.30 | single 3.69
+                    delay  OSPF **11.45**| h32 14.17| h64 24.80| single 37.84
+  abilene OVERLOAD  loss%  OSPF 14.35 | ECMP 14.30 | h32 15.41 | h64 14.57 | single 21.64
+
+**ABILENE IS STILL A NEGATIVE RESULT — the reversal recorded below applies ONLY to the OLD
+capacity-blind-trained policies re-exported with capacity-aware candidates (`_abilenecap_`).
+The RETRAINED matched arm is WORSE on abilene (h64 feasible loss 0.20 -> 3.30).** The
+analytical grid predicted this independently (h64 abilene 61.6 +/-6.5 vs OSPF 57.2), so both
+measurements agree. The matched hyperparameters that helped geant/germany50 hurt abilene.
+Do not quote `_abilenecap_` as the final abilene result.
+
+**ECMP FINDING FLIPPED.** Real equal-COST ECMP beats OSPF in BOTH overload cells (geant 6.82
+vs 14.13; germany50 22.90 vs 27.29). The old "ECMP is WORSE than OSPF on germany50 (23.40 vs
+18.94)" was equal-HOP ECMP, a straw man. ECMP is a much stronger baseline than we reported.
+
+MARL h32 > h64 on geant + abilene and has ~1/3 the seed spread; h64 wins only germany50.
+The results chapter currently treats h64 as headline — change it to h32.
+
 ## Hyperparameter matching (audited 2026-07-28)
 ENV/DATA SIDE IS ALREADY FULLY MATCHED between single-agent and MARL — same 17 train topos,
 same TMgen call (n_patterns=3, load_scales 0.6-1.5, same seed), same max_flows=500 filter,
