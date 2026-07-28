@@ -1,4 +1,3 @@
-cat > ~/thesis/CLAUDE.md << 'EOF'
 # MARL for Network Routing — Master's Thesis
 
 ## Project
@@ -7,18 +6,19 @@ LP-optimum under dynamic traffic conditions, with QoS-aware reward design.
 Novel angle: GNN as the agent backbone (one novel element — keep scope disciplined).
 
 ## Environment (VERIFIED WORKING — do not reconfigure without reason)
-- PRIMARY MACHINE (as of 2026-07): monaco.ee.ucl.ac.uk — 40 CPU cores / 80 threads
-  (4x Xeon E5-4620 v4 @2.1GHz), 512GB RAM, Rocky 9, CPU-ONLY (no GPU). Cores are
-  OLD/slow (~5x slower per-core than malmo). Our work needs NO GPU (tiny nets, CPU
-  surrogate, CPU ns-3).
-  ** NO LONGER DEDICATED (updated 2026-07-23): monaco is now SHARED and often
-  SATURATED — observed load avg ~81 on 80 threads (other users' OpenROAD/MATLAB
-  jobs). Consequences: (1) ns-3 sims run 2-3x slower than idle (germany50 ~25min/sim
-  idle -> 45-60min under contention); (2) fork-OOM risk when neighbours spike RAM
-  (crashed parallel training once — run heavy jobs SEQUENTIALLY, not parallel);
-  (3) be polite: `nice -n 19`, cap threads (OMP_NUM_THREADS=1-2). For big CPU batches
-  prefer UCL Myriad HPC (SGE scheduler, guaranteed CPU) — needs venv + ns-3 rebuilt
-  there. Check `uptime` before launching; if load >> ncores, expect timeouts. **
+- PRIMARY MACHINE (as of 2026-07-27): **geneva.ee.ucl.ac.uk** — 128 threads
+  (AMD EPYC 7543, Zen 3), 512GB RAM, CPU-ONLY. Typically at load ~15-30/128, i.e. mostly
+  FREE, and much faster per-core than monaco. ns-3 + the venv are verified working here
+  (binaries built on monaco run fine — no AVX-512 on either, so no illegal-instruction
+  problem). Measured on geneva: abilene/geant ns-3 sim ~1 min, germany50 ~17 min;
+  single-agent 1.5M-step training ~3h; MARL 366 updates ~40 min.
+- MOVED OFF monaco.ee.ucl.ac.uk (4x Xeon E5-4620 v4 @2.1GHz, 80 threads): old/slow cores,
+  and it is now SHARED and often SATURATED (load ~81/80). A single 1.5M training run took
+  6h+ there vs ~3h on geneva. Do not use for big batches.
+- Other good hosts if geneva is busy, best first: berlin (EPYC 9455, 96c), malmo
+  (Xeon Gold 6426Y), turin, london. ALWAYS `uptime` + `nproc` first: an idle slow box beats
+  a saturated fast one. Rule of thumb: load < 0.3 x nproc = plenty free.
+- Etiquette everywhere: `nice -n 19`, and cap threads (see Working conventions).
 - HOME is NFS-shared (128.40.41.191:/vol_home_2/uceedv1) across ALL ee.ucl machines,
   so ~/thesis, the venv, ~/.claude (transcripts + memory) are identical everywhere.
   Switching machines keeps all context; `claude --continue` from ~/thesis resumes sessions.
@@ -98,16 +98,105 @@ cd ~/thesis/ns-3-dev/contrib/ai/examples/a-plus-b/use-gym && python apb.py
   * Tested: 5 steps run successfully, rewards computed from real utilization
   * α=0.3 (light traffic, 38 flows) baseline: ~13.6% max link util
 
-### In Progress
-- 🔄 Phase 3: PPO training (50k timesteps on GPU 1, ~30-60 min, started 18:50 UTC)
-  * Goal: Beat 13.6% baseline (α=0.3)
-  * Checkpoints saved to results/models/
-  * TensorBoard logs to results/tb_logs/
+> NOTE: everything above this line is EARLY-PHASE HISTORY (gravity traffic, per-topology
+> models, α load factors). It is kept for provenance. The CURRENT experiment is described
+> below and supersedes it. Do not resume "Phase 3 PPO" — that line of work is finished and
+> was superseded twice (per-topology GNN -> MARL -> topology-agnostic MARL).
 
-### Next (Deferred for later)
-- Phase 2B: Upgrade to proper ns3-ai gym interface (protobuf, not urgent)
-- Phase 4: MAPPO multi-agent coordination (after PPO validation)
-- Phase 5: GNN backbone (the novel element, requires MAPPO working first)
+## CURRENT STATE (2026-07-28)
+
+Branch `sndlib-tmgen-matched` holds the main result. Branch `ns3-ospf-baseline` is an
+in-flight side quest (see below).
+
+**The experiment.** Train ONE topology-agnostic policy on 17 SNDlib topologies with TMgen
+modulated-gravity traffic; test ZERO-SHOT on abilene/geant/germany50 with real measured
+traffic. Five arms, all scored on identical matrices:
+OSPF | ECMP | single-agent GNN | MARL h32 | MARL h64 (hidden=64 = capacity-matched).
+Matched budget = 1.5M env steps each, 3 seeds each.
+
+**Headline results (all packet-level ns-3, 378 sims, 0 failures):**
+- MARL beats BOTH baselines on loss in EVERY overload cell:
+  abilene 7.19 -> 0.62%, geant 14.13 -> 3.65%, germany50 18.94 -> 11.60%.
+- germany50 feasible: MARL h64 frees 19pt of headroom (util 96.9 -> 77.9) at no QoS cost.
+- MARL is the STABLE method (seed spread ~4pt); the single-agent is seed-fragile
+  (spread up to 62pt; 2 of 3 seeds collapse to shortest-path). This REVERSES the old
+  "MARL miscoordinates at scale" finding, which was under-training.
+- ECMP is WORSE than OSPF on germany50 in both regimes (23.40% vs 18.94% loss).
+Grid: `results/matched_ns3_grid.json` (via `make_matched_grid.py`).
+
+**KNOWN DEFECT — fix before writing up (highest priority).** Our OSPF baseline routes by
+HOP COUNT (`nx.shortest_path` with no weight), but real OSPF uses cost = refBW/linkBW.
+abilene_sndlib has ONE 2.48G link among fourteen 9.92G links, so hop-count OSPF routes
+straight through it and looks ~45pt worse than a correctly configured OSPF
+(102.6% -> 57.2% mean offered load). **Every abilene gain is currently measured against a
+straw-man baseline and may not survive the fix.** geant/germany50 have uniform 40G links,
+so weighting changes nothing there — but germany50 swings 92pt on equal-cost TIE-BREAKING
+alone, so its OSPF number is fragile too. Fix = weighted Dijkstra in the exporters +
+re-run the OSPF arm (~1h of sims).
+
+## Next steps (ranked, after long deliberation)
+1. **Fix the OSPF metric** (above). Cheap, and it is the thing an examiner will catch.
+   Expect the abilene margin to shrink; report it honestly either way.
+2. **Finish the ns3-ospf branch** — see below. Citability, not correctness.
+3. **Failure robustness**: env already supports `fail_links` (currently 0). Evaluate the
+   SAVED policies zero-shot with 1 link failed. No retraining, ~2h. Biggest claim-per-hour.
+4. **Within-episode traffic shifts.** The project premise says "dynamic traffic" but each
+   ns-3 run holds ONE static matrix; we test generalization ACROSS matrices, not adaptation
+   WITHIN an episode. State this as a limitation or close it.
+5. Update the results chapter: two written conclusions changed (germany50 MARL variance;
+   "no benefit in the feasible regime" was abilene-specific and is FALSE at 50 nodes).
+6. Greedy-k3 oracle as a cheap upper reference (no ceiling in the table currently).
+
+## ns-3 evaluation: what is real and what is not
+- **Reported loss/delay/throughput/utilisation are ns-3 packet-level.** Training and the
+  reward stay on the analytical surrogate (ns-3 is far too slow in a training loop).
+- **Analytical ">100%" is OFFERED LOAD, not utilisation.** ns-3 utilisation SATURATES at
+  100% (excess becomes loss). So: report utilisation in the FEASIBLE regime, loss/delay in
+  OVERLOAD. Never present offered load as measured utilisation.
+- **ECMP exists in two flavours, deliberately.** Analytical `ecmp_max_util` splits each
+  demand fractionally (fluid). ns-3 has (a) our flow-level hashed ECMP —
+  `export_ecmp_routes.py`, one equal-cost path per flow, what real routers do — and
+  (b) ns-3 native `RandomEcmpRouting` (per-packet spraying) via `--routing=ecmp`, which we
+  ADDED to `abilene-validate.cc`. They are different policies; label them separately.
+- **`abilene-validate.cc` installs per-flow static host routes**, which is how a learned
+  policy's exact path gets into ns-3. Consequence to state in the thesis: those routes are
+  source-routed and would need MPLS/segment routing to deploy — plain destination-based IP
+  forwarding cannot express them.
+- germany50 at loads 35/50/65 is ALL overload (OSPF 207-220%); its feasible regime needs
+  loads <=30 and lives in separate `…_g50feas_…` dirs.
+
+## ns3-ospf side quest (branch `ns3-ospf-baseline`)
+WHY: ns-3 ships no OSPF, so "we used a real OSPF implementation" is more citable than
+"we installed shortest paths". WHAT IT BUYS: control-plane realism (Hello/LSA/convergence).
+WHAT IT DOES NOT BUY: it does NOT fix the metric defect above, and our evaluation is static
+(one matrix per sim, no link failures), so in steady state real OSPF converges to exactly
+the shortest paths we already install. Treat as nice-to-have, not a blocker.
+- Module: github.com/markverick/ns3-ospf, pinned `c56950f` (2026-03-02), in `vendor/ns3-ospf`,
+  symlinked to `ns-3-dev/contrib/ospf`. Actively maintained; Application-based; installs
+  routes into Ipv4StaticRouting.
+- **PORT DONE 2026-07-28 and it WORKS** — far cheaper than feared. Only TWO changes were
+  needed; all 39 upstream source files compile unmodified against ns-3.42:
+  (1) `ospf/CMakeLists.txt` (upstream ships only a waf wscript);
+  (2) `model/ospf-app-sockets.cc` — Hello/LSA raw sockets bound to the OSPF multicast group
+      224.0.0.5, and ns-3.42's `Ipv4RawSocketImpl::SendTo` asserts
+      `GetInterfaceForAddress(m_src) >= 0`, which fails for a multicast group (ns-3.35 did
+      not check). Bind to `Any` instead; `Connect()` still sets the multicast destination
+      and receive filtering is by IP protocol 89 + `BindToNetDevice`.
+  Verified: `scratch/ospf-smoke` (= upstream ospf-four-nodes) converges, all LSDBs
+  synchronised with correct adjacencies at t=99.
+- BOTH changes are saved in `ns3_patches/` (patch + CMakeLists + setup README) because
+  `ns-3-dev/` is gitignored. Re-apply from there after any ns-3 reinstall.
+- NEXT for this branch: write `scratch/ospf-validate` — our topology JSON + OspfAppHelper on
+  every node with interface metric = refBW/linkBW, let it converge, then run the same traffic
+  and measure. That gives a real-OSPF baseline AND fixes the hop-count metric defect at the
+  same time. Compare against the static shortest-path OSPF arm: in steady state they should
+  match if the metrics agree — if they do, that VALIDATES the static approach for the thesis.
+
+## REPRODUCIBILITY GAP (fix this)
+`ns-3-dev/` is in .gitignore and has NO git of its own. Our `abilene-validate.cc` changes
+(the ECMP mode) and the ns3-ospf CMake port are therefore UNVERSIONED. Track the scratch
+scenario sources + the CMake port inside the thesis repo, with a setup script that clones
+the pinned vendor commit.
 
 ## Scope decisions
 - LP-optimum baseline SKIPPED. Research question is "MARL vs traditional routing";
@@ -115,15 +204,23 @@ cd ~/thesis/ns-3-dev/contrib/ai/examples/a-plus-b/use-gym && python apb.py
   what's actually used. Revisit if time permits (~half a day with CVXPY).
 
 ## Topology choice
-- Start on Abilene (12 nodes, 15 links, all 10G). Move to GEANT (23 nodes, 39 links,
-  mixed 10G/2.5G) once Abilene results are clean. Both already built.
+- SUPERSEDED. We no longer train per-topology. Training = 17 SNDlib topologies
+  (`*_sndlib.json`); testing = zero-shot on abilene/geant/germany50 SNDlib variants with
+  real measured traffic. The old hand-built `abilene.json`/`geant.json` (gravity traffic)
+  belong to the early phase. NOTE `abilene_sndlib` is NOT all-10G: 14x9.92G + 1x2.48G.
+- Topology Zoo (245 topos, `ingest_topzoo.py`, `vendor`-free, in `topologies/zoo_*.json`)
+  was tried and is KEPT ONLY as an honest negative: more topological diversity did not
+  help; germany50 degraded out-of-distribution. Not the main story.
 
 ## Working conventions
 - Research design questions: discuss, don't just implement.
 - Be honest where MARL loses to OSPF/MPLS-TE (predictability, convergence).
 - One novel element only. Push back on scope creep.
-- Decision interval 1-2s simulated; episode 60-120s.
-- Topologies: Abilene (12 nodes) then GEANT (24 nodes). Traffic: gravity model.
-EOF
-
-cat ~/thesis/CLAUDE.md
+- Always report the honest negative alongside the win (ECMP beating us somewhere, a seed
+  collapsing, a regime where learned routing adds loss). Several findings this project
+  REVERSED on more data — treat single-seed/short-budget conclusions as provisional.
+- Parallelism gotcha: cap `OMP_NUM_THREADS=1` (and MKL/OPENBLAS) when running many python
+  jobs at once. 24 uncapped torch procs took geneva to load 275/128 and died with
+  MemoryError + segfaults.
+- Long jobs: run with `nohup nice -n 19`, write a `.done` marker, and watch for the marker
+  rather than polling a process.

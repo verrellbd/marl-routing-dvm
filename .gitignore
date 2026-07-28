@@ -28,3 +28,11 @@ results/**/gnn_generalist*
 # ── OS / editor cruft ─────────────────────────────────────────────────
 .DS_Store
 *.swp
+
+# ── Exceptions: trained policies MUST be versioned (reproducibility standing rule) ──
+# The *.zip rule above would otherwise silently drop every SB3 single-agent policy.zip
+!results/**/policy.zip
+!results/**/policy_ckpt.zip
+
+# ── Vendored external repo (carries its own .git); reproduce via ns3_patches/ instead ──
+vendor/

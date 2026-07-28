@@ -15,6 +15,7 @@
 #include "ns3/core-module.h"
 #include "ns3/flow-monitor-module.h"
 #include "ns3/internet-module.h"
+#include "ns3/ipv4-global-routing-helper.h"
 #include "ns3/ipv4-static-routing-helper.h"
 #include "ns3/network-module.h"
 #include "ns3/point-to-point-module.h"
@@ -49,14 +50,25 @@ main(int argc, char* argv[])
     CommandLine cmd;
     cmd.AddValue("topo", "Topology JSON", topoPath);
     cmd.AddValue("routing_file", "Routing JSON (per-flow paths)", routingPath);
-    cmd.AddValue("routing", "Which path to install: ospf | gnn", routing);
+    cmd.AddValue("routing", "Which path to install: ospf | gnn | ecmp", routing);
     cmd.AddValue("state", "Output state JSON", statePath);
     cmd.AddValue("simTime", "Simulation time (s)", simTime);
     cmd.AddValue("rateScale", "Divide rates & capacities by this (speedup, util-preserving)", rateScale);
     cmd.Parse(argc, argv);
 
+    // "ecmp" = ns-3's NATIVE Ipv4GlobalRouting with RandomEcmpRouting, i.e. the routing
+    // layer picks among equal-cost next hops itself (per lookup, so per packet) instead of
+    // us installing an explicit path. Must be set before the stack is installed, because
+    // Ipv4GlobalRouting reads the attribute when it is constructed.
+    const bool nativeEcmp = (routing == "ecmp");
+    if (nativeEcmp)
+    {
+        Config::SetDefault("ns3::Ipv4GlobalRouting::RandomEcmpRouting", BooleanValue(true));
+        std::cout << "Validation run: routing=ecmp (ns-3 native RandomEcmpRouting)\n";
+    }
     const std::string pathKey = (routing == "gnn") ? "gnn_path" : "ospf_path";
-    std::cout << "Validation run: routing=" << routing << " (key=" << pathKey << ")\n";
+    if (!nativeEcmp)
+        std::cout << "Validation run: routing=" << routing << " (key=" << pathKey << ")\n";
 
     // --- topology ---
     std::ifstream f(topoPath);
@@ -137,25 +149,37 @@ main(int argc, char* argv[])
         std::vector<uint32_t> path = fl[pathKey].get<std::vector<uint32_t>>();
         if (path.size() < 2) { flowIdx++; continue; }
 
-        // unique /32 destination address for this flow (integer-based, safe for
-        // >255 flows: 10.200.0.1, 10.200.0.2, ... 10.200.1.0, ...).
-        uint32_t flowAddrInt = ((10u << 24) | (200u << 16)) + flowIdx + 1;
-        Ipv4Address flowAddr(flowAddrInt);
+        Ipv4Address flowAddr;
         Ptr<Ipv4> idst = nodes.Get(dst)->GetObject<Ipv4>();
-        idst->AddAddress(nodeIface[dst],
-                         Ipv4InterfaceAddress(flowAddr, Ipv4Mask("255.255.255.255")));
-
-        // install static host-routes along the path
-        for (size_t h = 0; h + 1 < path.size(); ++h)
+        if (nativeEcmp)
         {
-            auto key = std::make_pair(path[h], path[h + 1]);
-            NS_ABORT_MSG_IF(dir.find(key) == dir.end(),
-                            "No link " << path[h] << "->" << path[h + 1]);
-            uint32_t oif = dir[key].first;
-            Ipv4Address nh = dir[key].second;
-            Ptr<Ipv4StaticRouting> sr =
-                srh.GetStaticRouting(nodes.Get(path[h])->GetObject<Ipv4>());
-            sr->AddHostRouteTo(flowAddr, nh, oif);
+            // Global routing only advertises an interface's PRIMARY address, so the
+            // per-flow /32 aliases used below would never receive a route. Address the
+            // sink at the destination's real interface address instead; flows stay
+            // distinguishable to FlowMonitor by their unique port.
+            flowAddr = idst->GetAddress(nodeIface[dst], 0).GetLocal();
+        }
+        else
+        {
+            // unique /32 destination address for this flow (integer-based, safe for
+            // >255 flows: 10.200.0.1, 10.200.0.2, ... 10.200.1.0, ...).
+            uint32_t flowAddrInt = ((10u << 24) | (200u << 16)) + flowIdx + 1;
+            flowAddr = Ipv4Address(flowAddrInt);
+            idst->AddAddress(nodeIface[dst],
+                             Ipv4InterfaceAddress(flowAddr, Ipv4Mask("255.255.255.255")));
+
+            // install static host-routes along the path
+            for (size_t h = 0; h + 1 < path.size(); ++h)
+            {
+                auto key = std::make_pair(path[h], path[h + 1]);
+                NS_ABORT_MSG_IF(dir.find(key) == dir.end(),
+                                "No link " << path[h] << "->" << path[h + 1]);
+                uint32_t oif = dir[key].first;
+                Ipv4Address nh = dir[key].second;
+                Ptr<Ipv4StaticRouting> sr =
+                    srh.GetStaticRouting(nodes.Get(path[h])->GetObject<Ipv4>());
+                sr->AddHostRouteTo(flowAddr, nh, oif);
+            }
         }
 
         uint16_t port = basePort + (flowIdx % 60000);
@@ -170,6 +194,14 @@ main(int argc, char* argv[])
         ApplicationContainer capp = onoff.Install(nodes.Get(src));
         capp.Start(Seconds(start)); capp.Stop(Seconds(stop));
         flowIdx++;
+    }
+
+    if (nativeEcmp)
+    {
+        // Build shortest-path routes for every destination; with RandomEcmpRouting set,
+        // Ipv4GlobalRouting spreads traffic over equal-cost next hops itself.
+        Ipv4GlobalRoutingHelper::PopulateRoutingTables();
+        std::cout << "Populated global routing tables (ECMP enabled)\n";
     }
 
     FlowMonitorHelper fmHelper;
