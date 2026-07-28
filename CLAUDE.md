@@ -114,15 +114,15 @@ traffic. Five arms, all scored on identical matrices:
 OSPF | ECMP | single-agent GNN | MARL h32 | MARL h64 (hidden=64 = capacity-matched).
 Matched budget = 1.5M env steps each, 3 seeds each.
 
-**Headline results (all packet-level ns-3, 378 sims, 0 failures):**
-- MARL beats BOTH baselines on loss in EVERY overload cell:
-  abilene 7.19 -> 0.62%, geant 14.13 -> 3.65%, germany50 18.94 -> 11.60%.
-- germany50 feasible: MARL h64 frees 19pt of headroom (util 96.9 -> 77.9) at no QoS cost.
-- MARL is the STABLE method (seed spread ~4pt); the single-agent is seed-fragile
-  (spread up to 62pt; 2 of 3 seeds collapse to shortest-path). This REVERSES the old
-  "MARL miscoordinates at scale" finding, which was under-training.
-- ECMP is WORSE than OSPF on germany50 in both regimes (23.40% vs 18.94% loss).
-Grid: `results/matched_ns3_grid.json` (via `make_matched_grid.py`).
+**!! THIS BLOCK IS SUPERSEDED — see "FINAL PACKET-LEVEL GRID" below. !!**
+The numbers that used to sit here (abilene 7.19->0.62%, geant 14.13->3.65%, germany50
+18.94->11.60%, "germany50 headroom at NO QoS cost", "ECMP is WORSE than OSPF on germany50")
+came from `results/matched_ns3_grid.json`, which was measured with CAPACITY-BLIND learned
+paths and equal-HOP ECMP. Three of those four claims did not survive re-measurement.
+**Use `results/final_ns3_grid.json` for everything. Do not quote matched_ns3_grid.json.**
+What still holds from the old block: MARL is the STABLE method and the single agent is
+seed-fragile (germany50 spread +/-33.9 vs h32's +/-3.5) — and that now holds under
+IDENTICAL PPO hyperparameters, so the fragility is architectural, not a settings artifact.
 
 **!! RESULT REVERSAL 2026-07-28 — ABILENE IS A LOSS. Do not report the old abilene win. !!**
 Measured with a correctly configured OSPF (cost = refBW/linkBW), on all 18 abilene test
