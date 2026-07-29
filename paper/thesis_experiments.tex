@@ -1,53 +1,95 @@
-% =====================================================================
-%  EXPERIMENTS
-%  Revised version. Every number below was checked against the code /
-%  data files that produced the results:
-%    topologies/{abilene,geant,germany50}_sndlib.json
-%    marl_routing/real_traffic.py  (temporal 70/30 split)
-%    train_all_monaco.sh, eval_ns3_all_monaco.sh  (launchers)
-%    evaluate_ns3.py, run_ns3_phase2.py, aggregate_ns3_util.py
-%    ns-3-dev/scratch/abilene-validate/abilene-validate.cc
-%  Items still needing YOUR numbers are marked  % >>> TODO
-% =====================================================================
 \section{Experiments}
 
-This section defines the evaluation protocol used to compare the proposed
-decentralized MARL routing policy against OSPF and against a centralized
-single-agent GNN reference. The protocol is stated in full before any result is
-reported, so that every comparison in Section~\ref{sec:results} can be traced to
-a fixed set of held-out traffic matrices, a fixed baseline, and a fixed
-statistical test.
+% NOTE: this chapter describes the configuration that produced
+% results/final_ns3_grid.json (378 ns-3 simulations, 0 failures, dirs results/ns3f_*).
+% Launchers: train_matched_hparams.sh (training), run_ns3_final.sh (evaluation).
+
+This section describes how the multi-agent policy is trained, how it is evaluated
+zero-shot on networks it has never seen, and how it is compared against OSPF,
+ECMP, and a centralized single-agent controller.
+
+The central design decision is that \emph{training and evaluation use disjoint
+networks}. One policy is trained on seventeen SNDlib topologies with synthetic
+gravity-model traffic and is then evaluated, without any retraining or
+fine-tuning, on three backbones with real measured demand. This is a stricter
+test than the per-topology protocol usual in the literature, where a policy is
+trained and tested on the same graph, and it is what allows the resulting policy
+to be described as topology-agnostic.
 
 \subsection{Computing Environment and Reproducibility}
 \label{sec:setup-compute}
 
-All experiments were run on a single Linux server (Rocky~9) with four Intel Xeon
-E5-4620~v4 CPUs at $2.10$\,GHz ($40$ cores) and $512$\,GB of RAM. No GPU was
-used: the policy networks are small and both the analytical surrogate and the
-packet-level simulator are CPU-bound, so training and evaluation were
-parallelised across cores instead ($18$ concurrent jobs, each capped to two
-threads via \texttt{OMP\_NUM\_THREADS}). The software stack was Python~3.9,
-ns-3.42, PyTorch~2.6.0, PyTorch~Geometric~2.6.1, NetworkX, and
-Stable-Baselines3~2.7.1 (used only for the centralized PPO reference; the
-decentralized MAPPO learner is our own implementation).
+All experiments were conducted on a single Linux server (Rocky 9) with an AMD
+EPYC 7543 processor ($128$ hardware threads) and $512$\,GB of RAM. Training and
+evaluation are CPU-only; no GPU is used. Runs are parallelised across cores
+rather than within them, with nine concurrent jobs each pinned to a single thread
+via \texttt{OMP\_NUM\_THREADS=1}, \texttt{MKL\_NUM\_THREADS} and
+\texttt{OPENBLAS\_NUM\_THREADS}. Thread pinning is necessary rather than
+cosmetic: uncapped, each PyTorch process spawns one thread per core and the
+resulting oversubscription exhausts memory.
 
-Training and evaluation are driven by two launcher scripts
-(\texttt{train\_all\_monaco.sh}, \texttt{eval\_ns3\_all\_monaco.sh}) that fix
-the full configuration of every run and write one log file per run, so each of
-the $18$ trained models and each evaluation directory is traceable to the exact
-command line, seed, and hyperparameters that produced it. The complete
-configuration is reproduced in Tables~\ref{tab:setup} and~\ref{tab:hyper}; the
-code state used for all reported results is commit
-\texttt{3064d76}.  % >>> TODO: update to the final commit hash before submission
+The software stack is Python 3.9, ns-3.42, PyTorch 2.6.0, PyTorch Geometric
+2.6.1, NetworkX, and Stable-Baselines3 2.7.1. The pipeline is implemented as a
+set of versioned Python modules and shell launchers rather than a notebook, so
+that every reported figure traces to a recorded command: training is driven by
+\texttt{train\_matched\_hparams.sh} and packet-level evaluation by
+\texttt{run\_ns3\_final.sh}. Traffic matrices are generated from fixed seeds, and
+trained policies, routing tables, and per-simulation measurements are all
+persisted alongside the code.
 
-\subsection{Network Instances and Traffic}
+\subsection{Training Networks and Traffic}
+\label{sec:setup-train}
+
+Seventeen SNDlib topologies form the training set, chosen as those fitting the
+padding bounds of the observation encoding ($\leq 56$ nodes, $\leq 176$ directed
+arcs, maximum degree $\leq 12$). They are listed in Table~\ref{tab:train-topos}
+and span $10$ to $54$ nodes, giving the structural diversity a topology-agnostic
+policy requires. None of the three evaluation backbones appears among them.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lcc|lcc|lcc}
+\hline
+Instance & $N$ & $|E|$ & Instance & $N$ & $|E|$ & Instance & $N$ & $|E|$ \\
+\hline
+atlanta   & 15 & 22 & india35       & 35 & 80 & norway & 27 & 51 \\
+cost266   & 37 & 57 & janos-us      & 26 & 42 & pdh    & 11 & 34 \\
+dfn-bwin  & 10 & 45 & newyork       & 16 & 49 & polska & 12 & 18 \\
+dfn-gwin  & 11 & 47 & nobel-eu      & 28 & 41 & ta1    & 24 & 51 \\
+di-yuan   & 11 & 42 & nobel-germany & 17 & 26 & zib54  & 54 & 80 \\
+france    & 25 & 45 & nobel-us      & 14 & 21 &        &    &    \\
+\hline
+\end{tabular}
+\caption{The seventeen SNDlib training topologies, with node count $N$ and
+undirected link count $|E|$. Capacities and propagation delays are read from the
+instance files unchanged. All seventeen have uniform link capacities.}
+\label{tab:train-topos}
+\end{table}
+
+SNDlib does not ship measured dynamic traffic for most of these instances. Since
+the training set exists to supply \emph{structural} diversity rather than
+realistic demand, traffic for it is synthesised with the TMgen library using the
+modulated-gravity model \cite{internet-traffic}, which represents inter-node
+traffic by analogy with Newton's law of gravitation and is the standard
+generator for this purpose. Three independent spatial patterns are drawn per
+topology and each is swept over five volume scales
+$\{0.6, 0.8, 1.0, 1.2, 1.5\}$, where a pattern is normalised so that scale $1.0$
+places the OSPF bottleneck at exactly $100\%$. Each topology therefore
+contributes fifteen matrices spanning both congestion regimes. Matrices are
+truncated to their $500$ largest demands to keep episodes tractable.
+
+The reservation of measured data for testing is deliberate: demand realism
+matters least where the policy is fitted and most where it is judged.
+
+\subsection{Evaluation Networks and Traffic}
 \label{sec:setup-instances}
 
-Table~\ref{tab:setup} records the three SNDlib instances and the per-network
-quantities of the protocol. Topology, capacities, and propagation delays are
-taken from the instance files unchanged. Demands are the measured directed time
-series shipped with SNDlib: Abilene, $5$-minute matrices over six months;
-GEANT, $15$-minute over four months; Germany50, $5$-minute over one day.
+Three backbones with real measured demand serve as the held-out test set. The
+demands are the measured directed time series shipped with SNDlib: Abilene,
+$5$-minute matrices over six months; GEANT, $15$-minute over four months;
+Germany50, $5$-minute over one day. Table~\ref{tab:eval-setup} records their
+properties and the evaluation protocol.
 
 \begin{table}[h]
 \centering
@@ -64,19 +106,17 @@ Demand pairs $|\mathcal{D}|$ & $132$ & $462$ & $2450$ \\
 Pairs carried in ns-3 & all & all & top $200$ \\
 Demand granularity & $5$\,min & $15$\,min & $5$\,min \\
 \hline
-Training scales $\mathcal{Z}$ & $\{8,12,16\}$ & $\{3,5,7\}$ & $\{35,50,65\}$ \\
-Evaluation scale & $12$ & $5$ & $35$ \\
-Delay penalty $\beta$ & $0.5$ & $0.5$ & $0.1$ \\
-Hop cap $\sigma_{\max}$ & uncapped & uncapped & $4$ \\
-Candidate matrices per scale & $20$ & $20$ & $20$ \\
-Test matrices retained $|\mathcal{M}|$ & $5$ & $5$ & $5$ \\
+Demand scales $\mathcal{Z}$ (analytical) & $\{8,12,16\}$ & $\{3,5,7\}$ & $\{35,50,65\}$ \\
+Demand scales $\mathcal{Z}$ (packet-level) & $\{16,22,28\}$ & $\{3,5,7\}$ & $\{15,\dots,30\},\{35,50,65\}$ \\
+Candidate matrices per scale & $6$ & $6$ & $6$ \\
+Matrices retained per regime & $3$ & $3$ & $3$ \\
 \hline
 \end{tabular}
-\caption{Network instances and per-network protocol settings. Capacities and
-delays are read directly from the SNDlib instance files. The demand scales
-differ by network because the measured demands are light relative to these
-over-provisioned backbones (Section~\ref{sec:setup-scaling}).}
-\label{tab:setup}
+\caption{Evaluation instances and protocol. Capacities and delays are read
+directly from the SNDlib instance files. Abilene is the only network with
+heterogeneous link capacities, which proves decisive in
+Section~\ref{sec:res-abilene}.}
+\label{tab:eval-setup}
 \end{table}
 
 \paragraph{Demand scaling.}
@@ -90,91 +130,85 @@ $z\in\mathcal{Z}$ to set the operating point. Nothing in the demand pattern is
 synthetic; $z$ is a single scalar applied uniformly to every entry of a measured
 matrix.
 
-\paragraph{Train/test separation.}
-The demand time series of each network is split \emph{temporally}: the first
-$70\%$ of the timeline forms $\mathcal{T}_{\mathrm{train}}$ and the last $30\%$
-forms $\mathcal{T}_{\mathrm{test}}$. Within a split, candidate timestamps are
-sampled evenly spaced across the interval. A temporal rather than random split is
-used deliberately: randomly interleaved matrices five minutes apart are near
-duplicates, and a random split would leak train information into the test set.
+Two scale sets are recorded for Abilene because a correctly costed OSPF is never
+overloaded there at $\{8,12,16\}$: with the single $2.48$\,Gbps link priced at
+four times a $9.92$\,Gbps link, OSPF routes around it and the network absorbs the
+demand. Exercising the overload regime on Abilene therefore requires the higher
+set $\{16,22,28\}$. Germany50 has the converse problem, every measured matrix
+overloading OSPF at $\{35,50,65\}$, so its feasible regime is measured separately
+at $\{15,20,25,30\}$. Consequently the Abilene rows of the analytical and
+packet-level tables describe the same policies at different operating points and
+must not be read across.
 
-We state one limitation of this design plainly. The evaluation scale in
-Table~\ref{tab:setup} lies \emph{inside} the training set $\mathcal{Z}$ for every
-network. What is held out is therefore the \emph{traffic matrix}, not the load
-regime: we test generalisation to unseen measured demand, not extrapolation to
-unseen load magnitudes. Cross-scale and cross-topology generalisation are
-treated separately in Section~\ref{sec:results-transfer}.
-% >>> TODO: keep this pointer only if you keep the zero-shot transfer result.
+\paragraph{Train/test separation.}
+Separation here is by \emph{network}, not merely by time: no evaluation topology
+and no measured matrix is seen during training. Within each evaluation network the
+demand time series is additionally split temporally, the last $30\%$ of the
+timeline forming the test interval, with candidate timestamps sampled evenly
+across it. A temporal rather than random split is used deliberately: matrices five
+minutes apart are near duplicates, and random interleaving would make the retained
+matrices mutual near-copies.
 
 \subsection{Methods Compared}
 \label{sec:setup-methods}
 
-Four routing methods are evaluated on identical inputs.
+Five routing methods are evaluated on identical inputs.
 
 \begin{enumerate}
-  \item \textbf{OSPF} (deployed baseline). The shortest path between each pair
-        under the standard inverse-capacity link metric, with deterministic
-        tie-breaking. On GEANT and Germany50 all links are $40$\,Gb/s, so this
-        coincides with minimum-hop routing; on Abilene the single $2.48$\,Gb/s
-        link receives a proportionally higher weight, which is the fair
-        comparison, since a minimum-hop baseline would be penalised by a
-        configuration choice no operator would make.
-        % >>> IMPORTANT: your draft said "minimum-hop". Confirm which metric the
-        % >>> exported ospf_path actually uses (marl_routing/*_routing_env.py calls
-        % >>> nx.shortest_path with no weight => minimum-hop). If it is minimum-hop,
-        % >>> either change the code to weight="inv_capacity" and re-export, or
-        % >>> replace this paragraph with the minimum-hop wording AND report the
-        % >>> inverse-capacity variant on Abilene as a robustness check.
-  \item \textbf{Greedy best-response} (achievable reference). Each demand is
-        placed, in turn, on the admissible path that minimises the resulting
-        maximum link utilisation, using the same admissible set~\eqref{eq:mask}
-        as the learned policies. This is not a global optimum, but it is a
-        strong myopic reference that bounds how much of the available gain a
-        learned policy actually captures.
-  \item \textbf{Single-agent GNN} (architecture ablation). A centralized policy
-        with full-network observability, trained with PPO. Comparing against it
-        isolates the cost of decentralisation: it shares the MARL policy's
-        backbone and reward, and differs only in observability and in being a
-        single decision-maker.
-  \item \textbf{MARL} (proposed). The decentralized per-node policy trained with
-        MAPPO.
+    \item \textbf{OSPF.} Shortest-path routing under the standard OSPF cost
+    metric, $\text{cost}(e) = \text{refBW}/\text{cap}(e)$, with the reference
+    bandwidth set to the fastest link in the network. This is the configuration
+    deployed in practice, and it is materially stronger than a hop-count
+    baseline on any network with heterogeneous capacities.
+    \item \textbf{ECMP.} Equal-cost multipath over the paths that the same cost
+    metric makes tied, splitting each demand equally at every branch point.
+    Because the tie is on \emph{cost} rather than hop count, ECMP inherits
+    OSPF's capacity awareness.
+    \item \textbf{Single-agent GNN.} A centralized policy with full-network
+    observability, trained with PPO, which selects one of $k=3$ candidate paths
+    for each demand in turn.
+    \item[4.--5.] \textbf{MARL} at hidden widths $32$ and $64$. An agent at each
+    node observes local link state and chooses the next hop, so a route is
+    constructed hop by hop rather than selected whole. Both widths are reported
+    because the wider policy is parameter-matched to the centralized controller
+    while the narrower is not.
 \end{enumerate}
 
-The controlled variable is the path, and only the path. All four methods are
-installed in ns-3 through the identical static-route mechanism, over the same
-topology, the same demand matrix, the same flow set, and the same simulator
-configuration; the routing tables are the sole difference between runs. Where a
-flow cap is applied (top $200$ demands by rate on Germany50, needed to keep the
-packet-level simulation tractable), the cap is computed once per matrix and the
-resulting flow set is used identically by every method, so no method is
-evaluated on a different workload from another.
+\paragraph{Capacity-aware path construction.} All learned methods choose among
+paths derived from the same OSPF cost metric as the baselines: the single-agent
+controller's $k=3$ candidates are cost-shortest rather than hop-shortest, and the
+MARL agents' progress test and detour limit are expressed in cost units rather
+than hops. This matters on networks with heterogeneous capacities. Under a
+hop-based construction, every candidate path for a given demand may traverse the
+one slow link, leaving the policy no capacity-avoiding route to select; on
+Abilene this affected $112$ of $396$ candidate paths, a figure the cost-based
+construction reduces to $50$. Without this alignment the learned methods would be
+compared against a capacity-aware baseline while themselves being capacity-blind.
 
-\subsection{Simulation Configuration}
-\label{sec:setup-ns3}
+\paragraph{Controlled comparison.} The controlled variable is the path, and only
+the path. All five methods are installed in ns-3 through the identical
+static-route mechanism, over the same topology, the same demand matrix, the same
+flow set, and the same simulator configuration; the routing tables are the sole
+difference between runs. Where a flow cap is applied (top $200$ demands by rate
+on Germany50, needed to keep packet-level simulation tractable), the cap is
+computed once per matrix and the resulting flow set is used identically by every
+method.
 
-Every reported quality-of-service number is measured in ns-3 at packet level,
-not by the analytical model used to shape the training reward. Each link is a
-\texttt{PointToPointNetDevice} whose transmit queue is the default DropTail
-queue of $100$ packets; no active queue management, shaping, or congestion
-control is configured, so reported loss is pure buffer overflow. Traffic is
-one-way UDP: each demand is a constant-rate \texttt{OnOff} application with a
-$1400$-byte payload, so that loss and delay are attributable to the routing
-decision and not to a transport-layer feedback loop. Propagation delays are
-installed at nanosecond resolution, which matters on Germany50 where several
-links are below $1$\,ms and would otherwise truncate to zero.
+\subsection{Learner Configuration and Budget Matching}
+\label{sec:setup-hyper}
 
-Each simulation covers $8$\,s of simulated time with all flows active over the
-window $[2\,\mathrm{s},\,9\,\mathrm{s}]$, leaving a $2$\,s start-up margin before
-measurement-relevant traffic begins. Because the byte counters run over the full
-$8$\,s window while flows are active for $7$\,s, all utilisation figures are
-divided by the exact, uniform factor $7/8$ to recover true utilisation; the
-correction is identical for every method and every run. Demand rates and link
-capacities are both divided by a common scale factor of $20$, which leaves every
-utilisation, loss, and delay ratio invariant while reducing packet count enough
-to make the full $18$-model evaluation feasible in wall-clock time.
-% >>> TODO: state total wall-clock cost, e.g. "the full evaluation is N ns-3 runs
-% >>> and completes in about H hours at 10-way concurrency". You can read this off
-% >>> the timestamps in logs/ .
+Table~\ref{tab:hyper} records the learner settings. Every optimiser
+hyperparameter is identical between the two architectures, so a difference in
+outcome is attributable to decentralisation rather than to tuning.
+
+The direction in which they were equalised is deliberate. The centralized
+controller is the \emph{baseline}, and reducing a baseline's optimisation effort
+to match one's own method would amount to handicapping it. Its settings are
+therefore Stable-Baselines3's defaults, left untouched, and the MAPPO
+implementation was moved onto them: the discount was raised from $0.99$ to
+$0.995$, epochs per update from $6$ to $10$, and the minibatch reduced from $512$
+to $256$, with the rollout buffer set to $2048$ so that both methods perform the
+same $732$ updates.
 
 \begin{table}[h]
 \centering
@@ -183,41 +217,52 @@ to make the full $18$-model evaluation feasible in wall-clock time.
 \hline
 & MARL (MAPPO) & Single-agent GNN (PPO) \\
 \hline
-Training steps & $600{,}000$ & $500{,}000$ \\
+Environment steps & $1.5\times10^{6}$ & $1.5\times10^{6}$ \\
+Rollout buffer & $2048$ & $2048$ ($8\times256$) \\
+Policy updates & $732$ & $732$ \\
 Learning rate & $3\times10^{-4}$ & $3\times10^{-4}$ \\
-Discount $\gamma$ & $0.99$ & $0.995$ \\
+Discount $\gamma$ & $0.995$ & $0.995$ \\
 GAE $\lambda$ & $0.95$ & $0.95$ \\
 Clip range & $0.2$ & $0.2$ \\
 Epochs per update & $10$ & $10$ \\
-Minibatch & $512$ & $256$ \\
+Minibatch & $256$ & $256$ \\
 Entropy coefficient & $0.01$ & $0.01$ \\
 Value coefficient & $0.5$ & $0.5$ \\
 Gradient-norm clip & $0.5$ & $0.5$ \\
-Hidden width & $128$ & $128$ \\
-Candidate paths per pair $k$ & $3$ & $3$ \\
+Message-passing rounds & $3$ & $3$ \\
+Hidden width & $32$ / $64$ & $64$ \\
+Candidate paths per pair $k$ & --- (hop-by-hop) & $3$ \\
+Seeds & $0,1,2$ & $0,1,2$ \\
 \hline
 \end{tabular}
-\caption{Learner hyperparameters. Values shared between the two methods were
-deliberately held equal so that the comparison in
-Section~\ref{sec:setup-methods} isolates decentralisation rather than tuning.}
+\caption{Learner hyperparameters. All optimiser settings are held equal between
+the two methods so that the comparison isolates decentralisation rather than
+tuning. The architectures necessarily differ in action space: the centralized
+policy selects among $k$ whole paths, the decentralized one chooses a next hop.}
 \label{tab:hyper}
 \end{table}
 
-The per-network settings that do differ ($\beta$ and $\sigma_{\max}$ in
-Table~\ref{tab:setup}) were selected on training matrices only and then frozen:
-they are identical across all seeds and all test matrices, and no test matrix
-influenced their choice.
-% >>> TODO: if beta/sigma_max were in fact chosen by looking at test results,
-% >>> say so honestly instead, or re-select them on a validation slice of the
-% >>> train split. An examiner will ask.
+Environment settings are likewise shared: delay penalty $\beta = 0.5$, detour
+allowance $\sigma = 2$ and maximum stretch $\sigma_{\max} = 4$ cost units, reward
+normalisation by the episode's OSPF bottleneck, and a $500$-demand cap on
+training matrices, for both architectures and every network.
+
+\paragraph{An unmatchable axis.} One budget dimension cannot be equalised, and is
+reported rather than concealed. A single step of the centralized environment
+routes an entire demand, whereas a single MARL step advances one hop. At a matched
+$1.5$M environment steps the centralized controller therefore routes roughly six
+times as many demands, since paths on these networks average about six hops. The
+budget is matched on environment steps, the conventional unit, but not on routing
+work, and the mismatch favours the centralized method. Where the decentralized
+policy nonetheless wins, under-training of the baseline cannot be the explanation.
 
 \subsection{Congestion Regimes}
 \label{sec:setup-regimes}
 
-Results are reported separately for two congestion regimes, because the
-routing problem is qualitatively different in each: when demand fits, OSPF is
-already close to optimal and the achievable gain is small; when it does not,
-path choice determines how much traffic is lost.
+Results are reported separately for two congestion regimes, because the routing
+problem is qualitatively different in each: when demand fits, OSPF is already
+close to optimal and the achievable gain is small; when it does not, path choice
+determines how much traffic is lost.
 
 Let $G=(V,E)$ be the network with arc capacities $c_e$ (Mb/s), and let
 $\mathcal{D}=\{(s,d)\}$ be the set of source--destination pairs with demands
@@ -256,77 +301,72 @@ incur, $U^{\mathrm{off}}_{\mathrm{OSPF}}$:
 The label is a property of the traffic matrix under the baseline alone. It is
 assigned before any learned policy is evaluated and does not depend on the
 learned routing, so the stratification cannot favour the proposed method. From
-the $20$ candidate matrices per network we retain the three most congested
-overloaded matrices and the two most stressed feasible matrices
-($|\mathcal{M}|=5$), i.e.\ the hardest instance of each regime rather than an
-average one.
+the $18$ candidate matrices per network ($6$ per demand scale) we retain the
+three most congested overloaded matrices and the three most stressed feasible
+matrices, that is, the hardest instance of each regime rather than an average
+one. With three seeds this gives nine measurements per learned arm, per network
+and regime.
+
+\subsection{Packet-Level Simulation}
+\label{sec:setup-ns3}
+
+Every reported loss, delay, and utilisation figure is measured in ns-3 at packet
+level, not by the analytical model used to shape the training reward. Each link
+is a \texttt{PointToPointNetDevice} whose transmit queue is the default DropTail
+queue of $100$ packets; no active queue management, shaping, or congestion
+control is configured, so reported loss is pure buffer overflow. Traffic is
+one-way UDP: each demand is a constant-rate \texttt{OnOff} application with a
+$1400$-byte payload, so that loss and delay are attributable to the routing
+decision and not to a transport-layer feedback loop. Propagation delays are
+installed at nanosecond resolution, which matters on Germany50 where several
+links are below $1$\,ms and would otherwise truncate to zero.
+
+Each simulation covers $8$\,s of simulated time with all flows active over the
+window $[2\,\mathrm{s},\,9\,\mathrm{s}]$. Because the byte counters run over the
+full $8$\,s window while flows are active for $7$\,s, all utilisation figures are
+divided by the exact, uniform factor $7/8$ to recover true utilisation; the
+correction is identical for every method and every run. Demand rates and link
+capacities are both divided by a common scale factor of $20$, which leaves every
+utilisation, loss, and delay ratio invariant while reducing packet count enough to
+make the full evaluation feasible in wall-clock time. The complete grid comprises
+$378$ simulations, all of which completed successfully.
+
+A consequence of installing exact per-flow routes should be stated: these are
+source-specific paths, expressible in a deployed network through MPLS or segment
+routing but not through plain destination-based IP forwarding. The mechanism is a
+faithful way to measure what a learned routing achieves, not a claim that it
+drops into an existing IP control plane unchanged.
 
 \subsection{Performance Metrics}
 \label{sec:setup-metrics}
 
-Three metrics are reported, all measured in ns-3.
+Four quantities are reported. The first is analytical; the remaining three are
+measured in ns-3.
 
 \begin{enumerate}
-  \item \textbf{Maximum link utilisation} $U^{\mathrm{ns\text{-}3}}$: the largest
-        per-link utilisation observed in the simulation, computed from bytes
-        enqueued per device and corrected by the $7/8$ active-window factor of
-        Section~\ref{sec:setup-ns3}. It is the standard traffic-engineering
-        objective and summarises how close the network is driven to its
-        bottleneck.
-  \item \textbf{Packet loss}: the fraction of offered packets not delivered to
-        their destination, aggregated over all flows and expressed as a
-        percentage. With DropTail queues and no congestion control, this is
-        exactly buffer overflow caused by the routing decision.
-  \item \textbf{Mean end-to-end delay}: the mean one-way delay of
-        \emph{delivered} packets, in milliseconds.
+  \item \textbf{Maximum offered load}, Equation~\eqref{eq:maxutil}. The training
+    objective, and the only quantity that can express how far past capacity a
+    routing pushes its worst link.
+  \item \textbf{Maximum link utilisation.} The highest per-device utilisation
+    observed in simulation, saturating at $100\%$. Informative in the feasible
+    regime, where it measures the headroom a routing leaves.
+  \item \textbf{Packet loss.} The proportion of dropped packets, as a percentage.
+    The decisive metric in the overload regime, where every method saturates its
+    bottleneck and the difference between them is what happens to the excess.
+  \item \textbf{Delay.} Mean end-to-end packet transmission time, in
+    milliseconds.
 \end{enumerate}
 
 Delay must be read jointly with loss and never in isolation. Dropped packets
 contribute no delay sample, so a routing that loses more traffic can report a
-lower mean delay purely as an artefact of survivorship. We therefore report
-loss and delay side by side and treat a delay reduction as meaningful only when
-loss is equal or lower.
+lower mean delay purely as an artefact of survivorship. We therefore report loss
+and delay side by side and treat a delay reduction as meaningful only when loss is
+equal or lower.
 
-\subsection{Statistical Protocol}
-\label{sec:setup-stats}
-
-Every configuration is trained from three independent seeds ($0,1,2$), giving
-$3\ \text{networks}\times 2\ \text{learned methods}\times 3\ \text{seeds}=18$
-models. Each model is evaluated on the same $|\mathcal{M}|=5$ held-out matrices,
-so a network--method cell contains $3\times5=15$ measurements per metric.
-
-Two sources of variation are distinguished. The \emph{seed} varies only policy
-initialisation and rollout sampling; it does not change the topology, the
-demands, or the baseline. The \emph{matrix} varies the workload and is shared
-across methods. OSPF and greedy best-response are deterministic and
-routing-seed-independent, and are therefore evaluated once per matrix and
-pooled, not re-seeded.
-
-Because all methods are evaluated on the same matrices, every comparison is
-\textbf{paired}, and we exploit that. For each metric we report:
-\begin{enumerate}
-  \item the mean $\pm$ standard deviation over the three seeds, per network and
-        regime, which conveys the run-to-run stability of the learned policies;
-  \item the paired per-matrix difference $\Delta = m_{\mathrm{MARL}} -
-        m_{\mathrm{OSPF}}$ over the $15$ (seed, matrix) observations, summarised
-        by its median and a $95\%$ bias-corrected bootstrap confidence interval
-        ($10^{4}$ resamples, resampled at the matrix level to respect the
-        pairing);
-  \item a two-sided Wilcoxon signed-rank test on the same paired differences,
-        with the exact $p$-value and the matched-pairs rank-biserial effect
-        size.
-\end{enumerate}
-A bootstrap interval is preferred to a $t$-interval because $15$ observations
-of a bounded, skewed quantity such as loss are not plausibly normal, and a
-rank-based test is preferred for the same reason.
-
-We do not run a significance test across seeds: $n=3$ is far too small to
-support one, and reporting a $p$-value over three points would be misleading.
-Seed variation is reported descriptively as a spread, and a result is described
-as robust only when its sign is consistent across all three seeds. Where a
-confidence interval crosses zero, or where the sign is inconsistent across
-seeds, the result is reported as inconclusive rather than as a win.
-% >>> TODO: these tests are DESCRIBED but not yet COMPUTED. Add a script that
-% >>> loads results/*/summary.json, forms the 15 paired differences per
-% >>> (network, regime, metric), and emits median, 95% BCa CI, Wilcoxon p, and
-% >>> rank-biserial r. Then cite the numbers in Section~\ref{sec:results}.
+Results are summarised as mean $\pm$ standard deviation across the three model
+seeds, each seed contributing its own mean over the retained matrices. OSPF and
+ECMP are deterministic given a matrix; ECMP retains a seed index only because its
+per-flow assignment among tied paths is hashed. No significance test is reported
+across seeds: $n=3$ is far too small to support one, and a $p$-value over three
+points would be misleading. Seed variation is reported descriptively, and a result
+is described as robust only when its sign is consistent across all three seeds.
