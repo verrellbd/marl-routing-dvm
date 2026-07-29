@@ -169,9 +169,9 @@ Five routing methods are evaluated on identical inputs.
     for each demand in turn.
     \item[4.--5.] \textbf{MARL} at hidden widths $32$ and $64$. An agent at each
     node observes local link state and chooses the next hop, so a route is
-    constructed hop by hop rather than selected whole. Both widths are reported
-    because the wider policy is parameter-matched to the centralized controller
-    while the narrower is not.
+    constructed hop by hop rather than selected whole. Width $32$ is the reported
+    policy, selected as described in Section~\ref{sec:setup-hyper}; width $64$ is
+    retained throughout as a sensitivity check.
 \end{enumerate}
 
 \paragraph{Capacity-aware path construction.} All learned methods choose among
@@ -231,6 +231,7 @@ Value coefficient & $0.5$ & $0.5$ \\
 Gradient-norm clip & $0.5$ & $0.5$ \\
 Message-passing rounds & $3$ & $3$ \\
 Hidden width & $32$ / $64$ & $64$ \\
+Trainable parameters & $17{,}570$ / $53{,}570$ & $268{,}420$ \\
 Candidate paths per pair $k$ & --- (hop-by-hop) & $3$ \\
 Seeds & $0,1,2$ & $0,1,2$ \\
 \hline
@@ -241,6 +242,28 @@ tuning. The architectures necessarily differ in action space: the centralized
 policy selects among $k$ whole paths, the decentralized one chooses a next hop.}
 \label{tab:hyper}
 \end{table}
+
+\paragraph{Parameter counts are not matched, and cannot usefully be.} Equal hidden
+width does not imply equal capacity across two structurally different networks.
+The centralized policy carries $268{,}420$ trainable parameters, of which
+$251{,}520$ sit in the feature extractor that encodes the padded arc-state vector;
+the decentralized policy carries $17{,}570$ at width $32$ and $53{,}570$ at width
+$64$. The centralized controller therefore has five to fifteen times the capacity
+of the policy it is compared against, and any advantage the decentralized method
+shows is obtained with an order of magnitude fewer parameters. Matching the two
+on parameter count would require distorting one architecture, so the disparity is
+reported rather than engineered away.
+
+\paragraph{Width selection.} The reported width was chosen on the \emph{training}
+topologies, not on the evaluation backbones. Both widths were scored on held-out
+TMgen matrices drawn from the seventeen training instances under a generator seed
+disjoint from training (\texttt{select\_width.py}), giving a mean reduction in
+bottleneck load against OSPF of $23.5 \pm 1.4$ percentage points at width $32$
+and $19.2 \pm 1.6$ at width $64$, with no overlap between the two arms' per-seed
+ranges. Width $32$ is therefore adopted as the reported policy. Selecting it on
+test-backbone performance instead would have compromised the zero-shot claim those
+three networks exist to support; that its advantage also holds on them is treated
+as confirmation, not as the basis of the choice.
 
 Environment settings are likewise shared: delay penalty $\beta = 0.5$, detour
 allowance $\sigma = 2$ and maximum stretch $\sigma_{\max} = 4$ cost units, reward

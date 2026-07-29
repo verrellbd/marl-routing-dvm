@@ -1,0 +1,72 @@
+{
+  "gen_seed": 777,
+  "topos": [
+    "atlanta_sndlib",
+    "cost266_sndlib",
+    "dfn-bwin_sndlib",
+    "dfn-gwin_sndlib",
+    "di-yuan_sndlib",
+    "france_sndlib",
+    "india35_sndlib",
+    "janos-us_sndlib",
+    "newyork_sndlib",
+    "nobel-eu_sndlib",
+    "nobel-germany_sndlib",
+    "nobel-us_sndlib",
+    "norway_sndlib",
+    "pdh_sndlib",
+    "polska_sndlib",
+    "ta1_sndlib",
+    "zib54_sndlib"
+  ],
+  "per_arm": {
+    "h32": {
+      "per_seed": [
+        {
+          "seed": 0,
+          "mean_delta_pt": 24.296423311982693,
+          "mean_ratio": 0.7580285696760509,
+          "n": 102
+        },
+        {
+          "seed": 1,
+          "mean_delta_pt": 21.505247752548588,
+          "mean_ratio": 0.7737420429256742,
+          "n": 102
+        },
+        {
+          "seed": 2,
+          "mean_delta_pt": 24.769918396320836,
+          "mean_ratio": 0.7499056191289547,
+          "n": 102
+        }
+      ],
+      "mean_delta_pt": 23.52386315361737,
+      "std_delta_pt": 1.4404063088349215
+    },
+    "h64": {
+      "per_seed": [
+        {
+          "seed": 0,
+          "mean_delta_pt": 20.28507653333659,
+          "mean_ratio": 0.8014705449074805,
+          "n": 102
+        },
+        {
+          "seed": 1,
+          "mean_delta_pt": 20.479090629935946,
+          "mean_ratio": 0.8032148419955217,
+          "n": 102
+        },
+        {
+          "seed": 2,
+          "mean_delta_pt": 16.940108042051637,
+          "mean_ratio": 0.8364069549022697,
+          "n": 102
+        }
+      ],
+      "mean_delta_pt": 19.234758401774723,
+      "std_delta_pt": 1.624494910724107
+    }
+  }
+}

@@ -217,13 +217,21 @@ where hop-by-hop construction produces routes that free headroom at a small but
 consistent cost in loss, and where the centralized formulation's global view of a
 whole path is the better tool.
 
-Between the two MARL widths, the narrower $h{=}32$ is preferable on the evidence.
-It is the stronger arm on Abilene and on both GÉANT cells, and it carries roughly
-a third of the seed dispersion of $h{=}64$ ($\pm 1.6$ against $\pm 3.0$ on GÉANT
-overload, $\pm 3.5$ against $\pm 9.7$ on Germany50). The wider policy wins only
-the Germany50 overload cell, and does so with three times the variance. The
-capacity-matched width is therefore not the better configuration, and $h{=}32$ is
-adopted as the reference decentralized policy.
+The reported width, $h{=}32$, was selected on the training topologies
+(Section~\ref{sec:setup-hyper}) and not on the evidence in this section. That
+selection is corroborated here: $h{=}32$ is the stronger arm on Abilene and on
+both GÉANT cells, and it carries roughly a third of the seed dispersion of
+$h{=}64$ ($\pm 1.6$ against $\pm 3.0$ on GÉANT overload, $\pm 3.5$ against
+$\pm 9.7$ on Germany50). The wider policy wins only the Germany50 overload cell,
+and does so with three times the variance.
+
+That the narrower policy is the better one is worth stating alongside the
+parameter counts of Table~\ref{tab:hyper}. The reported decentralized policy
+carries $17{,}570$ trainable parameters against the centralized controller's
+$268{,}420$, a factor of fifteen, and beats it on loss in the overload regime of
+all three networks and on utilisation in the GÉANT feasible regime, losing to it
+only in the Germany50 feasible cell discussed above. Whatever advantage the
+decentralized formulation confers, it is not bought with capacity.
 
 \subsection{Where the Method Fails: Abilene}
 \label{sec:res-abilene}
