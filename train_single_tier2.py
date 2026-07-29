@@ -51,6 +51,12 @@ ap.add_argument("--raw-reward", action="store_true",
                      "config; normalisation shrinks the congestion signal below the delay "
                      "penalty -> shortest-path collapse)")
 ap.add_argument("--max-flows", type=int, default=500)
+ap.add_argument("--reward-form", choices=["whole", "marl"], default="whole",
+                help="'whole' normalises congestion AND delay by the episode's OSPF "
+                     "bottleneck (this env's own design, introduced to stop shortest-path "
+                     "collapse); 'marl' matches the MARL env exactly -- congestion "
+                     "normalised, flat 0.5 per DETOUR hop unnormalised. Ablation for the "
+                     "last unmatched axis between the two arms.")
 ap.add_argument("--metric", choices=["hop", "weighted"], default="hop",
                 help="path-cost metric. 'weighted' = OSPF cost refBW/linkBW, making the\n"
                      "candidate paths and detour limits CAPACITY-AWARE; 'hop' is the\n"
@@ -138,7 +144,7 @@ def main():
     def mk(rank):
         return lambda: GraphSeqRoutingEnv(train_specs, k_paths=A.k_paths,
                                           seed=A.seed * 100 + rank, normalize_reward=not A.raw_reward,
-                                          metric=A.metric)
+                                          metric=A.metric, reward_form=A.reward_form)
     venv = DummyVecEnv([mk(i) for i in range(A.n_envs)])
     print(f"[single] train 17 SNDlib ({A.traffic}); zero-shot {TEST_TOPOS}; seed={A.seed} "
           f"buffer={A.n_steps*A.n_envs} -> {A.timesteps//(A.n_steps*A.n_envs)} updates", flush=True)
@@ -161,7 +167,8 @@ def main():
         p = pairs_of(t)
         mats = real_matrices(t, p, TEST_LOADS[t], n_per_scale=6, split="test")
         ev = GraphSeqRoutingEnv([(t, p, mats)], k_paths=A.k_paths, seed=A.seed + 1,
-                                normalize_reward=not A.raw_reward, metric=A.metric)
+                                normalize_reward=not A.raw_reward, metric=A.metric,
+                                reward_form=A.reward_form)
         print(f"[{t}]", flush=True)
         results["zero_shot"][t] = evaluate(ev, mats, model)
     (out / "summary.json").write_text(json.dumps(results, indent=2))

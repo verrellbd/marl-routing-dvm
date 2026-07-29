@@ -63,9 +63,13 @@ class _TopoBundle:
                             dtype=np.float64)
         # candidate arc-paths per node-pair
         self.pair_arc_paths: List[List[List[int]]] = []
+        self._pair_node_paths: List[List[List[int]]] = []
         for (s, d) in self.pairs:
             g = self.W if metric == "weighted" else self.topo.graph
             paths = compute_ksp(g, s, d, k=k_paths, weight=wt)
+            while len(paths) < k_paths:
+                paths.append(paths[-1])
+            self._pair_node_paths.append(paths)
             ap = [[self.arc_index[(p[i], p[i + 1])] for i in range(len(p) - 1)]
                   for p in paths]
             while len(ap) < k_paths:
@@ -92,6 +96,21 @@ class _TopoBundle:
             p = ospf_shortest_path(self.topo.graph, self.W, s, d, metric)
             self.ospf_arc_paths.append(
                 [self.arc_index[(p[j], p[j + 1])] for j in range(len(p) - 1)])
+        # Detour-hop count per candidate, using the SAME test the MARL env applies per hop
+        # (a hop is a detour if it does not reduce cost-distance to the destination).
+        # Needed only for reward_form="marl"; cheap enough to precompute unconditionally.
+        dist = dist_to_all(self.topo.graph, self.W, metric)
+        self.pair_detour_hops: List[List[int]] = []
+        for pi, (s, d) in enumerate(self.pairs):
+            g = self.W if metric == "weighted" else self.topo.graph
+            counts = []
+            for path in self._pair_node_paths[pi]:
+                c = 0
+                for j in range(len(path) - 1):
+                    if dist[d].get(path[j + 1], 1e18) >= dist[d].get(path[j], 0.0):
+                        c += 1
+                counts.append(c)
+            self.pair_detour_hops.append(counts)
 
     def ospf_max_util(self, rates) -> float:
         load = np.zeros(self.n_arcs)
@@ -139,7 +158,8 @@ class GraphSeqRoutingEnv(gym.Env):
 
     def __init__(self, topo_specs: Sequence[Tuple[str, object, object]],
                  k_paths: int = 3, seed: int = 0, delay_penalty: float = 0.5,
-                 normalize_reward: bool = True, metric: str = "hop"):
+                 normalize_reward: bool = True, metric: str = "hop",
+                 reward_form: str = "whole"):
         """topo_specs: list of (topo_name, pairs, matrices).
 
         metric: "hop" (legacy) or "weighted" (OSPF cost = refBW/linkBW). Governs the
@@ -159,6 +179,7 @@ class GraphSeqRoutingEnv(gym.Env):
         self.normalize_reward = normalize_reward
         self._rng = np.random.RandomState(seed)
         self.metric = metric
+        self.reward_form = reward_form
         self.bundles = [_TopoBundle(n, p, m, k_paths, metric) for (n, p, m) in topo_specs]
         self.action_space = spaces.Discrete(k_paths)
         self.observation_space = spaces.Box(-1e6, 1e6, (obs_size(k_paths),),
@@ -252,7 +273,15 @@ class GraphSeqRoutingEnv(gym.Env):
         # networks -> the policy collapses to shortest-path. scale=1 when not normalising,
         # recovering the raw reward exactly.)
         scale = 100.0 / self.ospf_ref if self.normalize_reward else 1.0
-        reward = float(-((new_max - self.cur_max) + self.delay_penalty * extra_hops) * scale)
+        if self.reward_form == "marl":
+            # MARL's form: normalise the CONGESTION term only, and charge a flat penalty
+            # per detour hop rather than per extra hop. Makes the two arms face the
+            # identical reward; kept behind a flag because it undoes the whole-reward
+            # normalisation that was introduced here to stop shortest-path collapse.
+            nd = self.b.pair_detour_hops[pair_i][k]
+            reward = float(-(new_max - self.cur_max) * scale - self.delay_penalty * nd)
+        else:
+            reward = float(-((new_max - self.cur_max) + self.delay_penalty * extra_hops) * scale)
         self.cur_max = new_max
         self.pos += 1
         terminated = self.pos >= len(self.order)
