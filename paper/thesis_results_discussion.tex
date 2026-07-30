@@ -34,19 +34,23 @@ Section~\ref{sec:setup-regimes} that this quantity is uncapped and may exceed
 $100\%$, denoting demand no queueing discipline can serve; its consequence is
 quantified in Section~\ref{sec:res-qos}.
 
-Only four of the six network--regime cells exist at the evaluation loads. Under a
-correctly weighted OSPF, Abilene has no overload regime at these loads: its
-fourteen $9.92$\,Gbps links absorb the measured demand once the single
-$2.48$\,Gbps link is correctly costed. Germany50 conversely has no feasible
-regime, every measured matrix driving OSPF beyond capacity.
+Both regimes are reported for all three networks. Doing so requires two demand
+scales per network rather than one, because no single scale exercises both regimes
+everywhere: a correctly costed OSPF is never overloaded on Abilene below a scale of
+about $16$, and never feasible on Germany50 above about $30$
+(Section~\ref{sec:setup-scaling}). Each cell is therefore measured at the scale set
+that produces it, and cells are comparable down columns but not across regimes
+within a network.
 
 \begin{table}[htbp]
   \centering
   \small
   \caption{Maximum offered load on the bottleneck link, as a percentage of link
   capacity (lower is better; $>100\%$ denotes infeasible demand). Mean $\pm$
-  standard deviation over three model seeds. Best per row in bold. Abilene has no
-  overload regime and Germany50 no feasible regime at the evaluation loads.}
+  standard deviation over three model seeds; OSPF and ECMP are deterministic
+  given a matrix. Best per row in bold. Abilene's overload row and Germany50's
+  feasible row are measured at the alternate demand scales of
+  Table~\ref{tab:eval-setup}.}
   \label{tab:offered-util}
   \setlength{\tabcolsep}{4.5pt}
   \begin{tabular}{lccccc}
@@ -55,13 +59,15 @@ regime, every measured matrix driving OSPF beyond capacity.
     \midrule
     \multicolumn{6}{l}{\emph{Overload regime (OSPF drives a link $\geq$ capacity)}} \\
     \midrule
-    GÉANT     & 145.5\% & 106.3\% & 133.9 $\pm$ 10.8\% & \textbf{96.7 $\pm$ 1.6\%}  & 102.2 $\pm$ 3.0\% \\
-    Germany50 & 252.1\% & 183.8\% & 178.6 $\pm$ 51.4\% & 117.8 $\pm$ 3.5\%          & \textbf{114.4 $\pm$ 9.7\%} \\
+    Abilene   & 129.3\% & 129.6\% & \textbf{116.3 $\pm$ 2.8\%} & 124.9 $\pm$ 3.3\%         & 130.3 $\pm$ 3.3\% \\
+    GÉANT     & 145.2\% & 106.1\% & 133.7 $\pm$ 10.7\%         & \textbf{96.6 $\pm$ 1.6\%} & 102.1 $\pm$ 3.0\% \\
+    Germany50 & 249.2\% & 181.5\% & 176.3 $\pm$ 51.0\%         & 117.0 $\pm$ 3.5\%         & \textbf{113.7 $\pm$ 9.7\%} \\
     \midrule
     \multicolumn{6}{l}{\emph{Feasible regime (traffic fits under OSPF)}} \\
     \midrule
-    Abilene   & 57.2\% & 57.4\% & \textbf{54.2 $\pm$ 1.6\%} & 56.1 $\pm$ 1.9\% & 61.6 $\pm$ 6.5\% \\
-    GÉANT     & 71.2\% & 54.2\% & 70.1 $\pm$ 6.0\% & \textbf{48.3 $\pm$ 1.1\%} & 55.0 $\pm$ 2.9\% \\
+    Abilene   & 57.2\% & 57.4\% & \textbf{54.2 $\pm$ 1.6\%} & 56.1 $\pm$ 1.9\%          & 61.6 $\pm$ 6.5\% \\
+    GÉANT     & 71.1\% & 54.1\% & 70.0 $\pm$ 5.9\%          & \textbf{48.2 $\pm$ 1.1\%} & 55.0 $\pm$ 2.9\% \\
+    Germany50 & 81.0\% & 59.3\% & 52.3 $\pm$ 11.3\%         & 40.9 $\pm$ 2.4\%          & \textbf{40.8 $\pm$ 1.5\%} \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -75,24 +81,37 @@ regime, every measured matrix driving OSPF beyond capacity.
   \label{fig:link-utilization}
 \end{figure}
 
-The decentralized policy at $h{=}32$ is the strongest arm in the two overload
-cells and on GÉANT feasible. On GÉANT it moves the bottleneck from $145.5\%$ to
-$96.7\%$, restoring feasibility, while the centralized policy reaches only
-$133.9\%$ and remains infeasible. On the $50$-node Germany50 both learned
-architectures reduce a $252.1\%$ bottleneck, MARL to $114.4\%$ and the
-centralized policy to $178.6\%$. Abilene is the exception: it is the one cell the
-centralized controller wins, at $54.2\%$ against MARL's $56.1\%$, and the only
-network on which a learned method beats both baselines there.
+Every learned arm improves on OSPF in every cell but one, and the size of the
+improvement tracks network scale. On GÉANT, MARL at $h{=}32$ moves the bottleneck
+from $145.2\%$ to $96.6\%$, restoring feasibility, while the centralized policy
+reaches only $133.7\%$ and remains infeasible. On the $50$-node Germany50 the gap
+is wider still: MARL reduces a $249.2\%$ bottleneck to $117.0\%$ and the
+centralized policy only to $176.3\%$. Abilene reverses the ordering. There the
+centralized controller is the best arm in both regimes, at $116.3\%$ against
+OSPF's $129.3\%$ under overload and $54.2\%$ against $57.2\%$ when feasible,
+while MARL at $h{=}64$ is the single cell in which any learned method is worse
+than OSPF ($130.3\%$ against $129.3\%$).
 
-Two observations qualify this. First, ECMP is a far stronger baseline than
-shortest-path OSPF and must be cleared before any claim of improvement: it
-reaches $106.3\%$ on GÉANT and $183.8\%$ on Germany50, so on GÉANT the
-centralized policy is beaten not only by MARL but by a routing mechanism already
-deployed in every operator network. Second, the centralized policy's Germany50
-standard deviation of $\pm 51.4$ percentage points, against $\pm 3.5$ for MARL at
-the same width and under identical hyperparameters and reward, is an order of
-magnitude larger than any other entry in the table. This is examined in
-Section~\ref{sec:res-stability}.
+Three observations qualify the table. First, ECMP is a far stronger baseline than
+shortest-path OSPF wherever the topology offers equal-cost alternatives: it
+reaches $106.1\%$ on GÉANT and $181.5\%$ on Germany50, so on GÉANT the
+centralized policy is beaten not only by MARL but by a mechanism already deployed
+in every operator network. On Abilene, whose fifteen links leave few ties to split
+over, ECMP is indistinguishable from OSPF ($129.6\%$ against $129.3\%$) and both
+learned architectures beat it.
+
+Second, the centralized policy's Germany50 dispersion --- $\pm 51.0$ percentage
+points under overload, against $\pm 3.5$ for MARL at the same width and under
+identical hyperparameters and reward --- is an order of magnitude larger than any
+other entry in the table. This is examined in Section~\ref{sec:res-stability}.
+
+Third, the objective and the packet-level measurement rank the Germany50 feasible
+cell differently. Here MARL holds the bottleneck at $40.9\%$ against the
+centralized policy's $52.3\%$; Section~\ref{sec:res-qos} shows the centralized
+policy nonetheless delivering the better service in that cell, because MARL's
+additional headroom is obtained at a cost in loss the surrogate does not model.
+The disagreement is the clearest illustration of why the packet-level evaluation
+is necessary rather than confirmatory.
 
 \subsection{Packet-Level Quality of Service}
 \label{sec:res-qos}
