@@ -20,6 +20,7 @@ from stable_baselines3 import PPO
 
 from marl_routing.graph_routing_env import GraphSeqRoutingEnv
 from marl_routing.marl_gnn import GNNMAPPO
+from marl_routing.ospf_metric import all_shortest_paths
 from marl_routing.real_traffic import real_matrices
 from marl_routing.topo_agnostic_marl_env import TopoAgnosticMARLEnv
 from marl_routing.topology import load as load_topology
@@ -65,7 +66,28 @@ def main():
         ref = GraphSeqRoutingEnv([(topo, p, mats)], k_paths=3, seed=0, metric="weighted",
                                  reward_form="marl")
         ospf = np.array([ref.ospf_max_util(m, 0) for m in mats])
-        ecmp = np.array([ref.ecmp_max_util(m, 0) for m in mats])
+        # ECMP at FLOW granularity (one tied path per demand, chosen by a hash seed),
+        # matching what is installed in ns-3. The fluid ecmp_max_util() splits each
+        # demand fractionally and is a different, stronger policy -- using it here would
+        # make the analytical and packet-level tables describe different mechanisms.
+        b = ref.bundles[0]
+        allsp = [all_shortest_paths(b.topo.graph, b.W, s, d, "weighted") for (s, d) in p]
+        ecmp_seeds = []
+        for hseed in (0, 1, 2):
+            rng = np.random.RandomState(hseed)
+            arcp = []
+            for ps in allsp:
+                path = ps[rng.randint(len(ps))] if len(ps) > 1 else ps[0]
+                arcp.append([b.arc_index[(path[j], path[j + 1])] for j in range(len(path) - 1)])
+            vals = []
+            for m in mats:
+                load = np.zeros(b.n_arcs)
+                for i, ap in enumerate(arcp):
+                    if m[i] > 0:
+                        load[ap] += m[i]
+                vals.append(float((100.0 * load / b.cap).max()))
+            ecmp_seeds.append(np.array(vals))
+        ecmp = np.mean(ecmp_seeds, axis=0)
         short = topo.replace("_sndlib", "")
         for regime, sel in [("overload", ospf >= 100), ("feasible", ospf < 100)]:
             if want not in (regime, "both") or sel.sum() == 0:

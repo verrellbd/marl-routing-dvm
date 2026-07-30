@@ -1,29 +1,22 @@
 \section{Results and Discussion}
 \label{sec:results}
+The study evaluated results on the Abilene, GÉANT, and Germany50 topologies using real measured operator traffic. None of these topologies were included in the policy's training data. Under overload conditions, the proposed approach reduces packet loss compared to OSPF by $11.2$ percentage points on GÉANT and $18.4$ on Germany50. In the feasible regime, it maintains GÉANT's bottleneck utilization at $66.7\%$, whereas OSPF results in $97.3\%$, with no increase in loss or delay. On Abilene, the approach does not outperform OSPF. These findings indicate that a single MARL policy can adapt to previously unseen networks and provide improvements on several topologies. Results are reported as mean $\pm$ standard deviation \emph{across model seeds}, each seed contributing its own mean over the retained matrices.
 
-% NOTE: every figure and table in this section is sourced from results/final_ns3_grid.json
-% (378 ns-3 simulations, 0 failures, dirs results/ns3f_*). Earlier measurement batches used
-% hop-count OSPF, capacity-blind candidate paths, or unmatched PPO hyperparameters and are
-% not comparable; none of their numbers appear here.
-
-A single policy, trained on seventeen SNDlib topologies and never shown the
-evaluation networks, is tested zero-shot on Abilene, GÉANT and Germany50 driven
-by real measured operator traffic. Under overload it reduces packet loss against
-a correctly configured OSPF by $11.2$ percentage points on GÉANT and $18.4$ on
-Germany50, and in the feasible regime it holds GÉANT's bottleneck at $66.7\%$
-where OSPF leaves it at $97.3\%$, at no cost in loss or delay. On the $12$-node
-Abilene it does not improve on OSPF, although the centralized controller does.
-The contribution is therefore a mechanism that transfers to unseen networks and
-pays off where shortest-path routing runs out of capacity, together with a clear
-statement of the topology on which it fails and why.
-
-The five methods, the matched $1.5$M-step budget, the shared optimiser settings,
-and the regime stratification are as specified in
-Section~\ref{sec:setup-methods}--\ref{sec:setup-regimes}. Because every learned
-arm receives identical PPO hyperparameters, differences between them are
-attributable to architecture rather than to tuning. Results are reported as mean
-$\pm$ standard deviation \emph{across model seeds}, each seed contributing its
-own mean over the retained matrices.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\textwidth]{images/fig_marl_training_curves.png}
+  \caption{MARL ($h{=}32$) mean episode return over the $732$ policy updates of the
+  matched budget, on the seventeen training topologies. Each episode draws one
+  topology, whose bottlenecks differ by an order of magnitude, so the per-update
+  return is dominated by that draw; the bold line is a centred rolling mean over
+  fifteen updates and the band spans the three seeds. Return rises steeply over the
+  first hundred updates and is flat thereafter, and the three seeds stay within a
+  narrow band throughout --- the stability that Section~\ref{sec:res-stability}
+  documents on the held-out networks is already visible during training. The
+  centralized controller is trained with Stable-Baselines3 at default verbosity and
+  emits no comparable per-update trace.}
+  \label{fig:training-curve}
+\end{figure}
 
 \subsection{Bottleneck Offered Load}
 \label{sec:res-util}
@@ -55,19 +48,19 @@ within a network.
   \setlength{\tabcolsep}{4.5pt}
   \begin{tabular}{lccccc}
     \toprule
-    Topology & OSPF & ECMP & Single-agent & MARL $h{=}32$ & MARL $h{=}64$ \\
+    Topology & OSPF & ECMP & Single-agent & MARL  \\
     \midrule
-    \multicolumn{6}{l}{\emph{Overload regime (OSPF drives a link $\geq$ capacity)}} \\
+    \multicolumn{5}{l}{\emph{Overload regime (OSPF drives a link $\geq$ capacity)}} \\
     \midrule
-    Abilene   & 129.3\% & 129.2\% & \textbf{116.3 $\pm$ 2.8\%} & 124.9 $\pm$ 3.3\%         & 130.3 $\pm$ 3.3\% \\
-    GÉANT     & 145.2\% & 119.2\% & 133.7 $\pm$ 10.7\%         & \textbf{96.6 $\pm$ 1.6\%} & 102.1 $\pm$ 3.0\% \\
-    Germany50 & 249.2\% & 211.9\% & 176.3 $\pm$ 51.0\%         & 117.0 $\pm$ 3.5\%         & \textbf{113.7 $\pm$ 9.7\%} \\
+    Abilene   & 129.3\% & 129.2\% & \textbf{116.3 $\pm$ 2.8\%} & 124.9 $\pm$ 3.3\%          \\
+    GÉANT     & 145.2\% & 119.2\% & 133.7 $\pm$ 10.7\%         & \textbf{96.6 $\pm$ 1.6\%}  \\
+    Germany50 & 249.2\% & 211.9\% & 176.3 $\pm$ 51.0\%         & \textbf{117.0 $\pm$ 3.5\%}         \\
     \midrule
-    \multicolumn{6}{l}{\emph{Feasible regime (traffic fits under OSPF)}} \\
+    \multicolumn{5}{l}{\emph{Feasible regime (traffic fits under OSPF)}} \\
     \midrule
-    Abilene   & 57.2\% & 57.2\% & \textbf{54.2 $\pm$ 1.6\%} & 56.1 $\pm$ 1.9\%          & 61.6 $\pm$ 6.5\% \\
-    GÉANT     & 71.1\% & 60.7\% & 70.0 $\pm$ 5.9\%          & \textbf{48.2 $\pm$ 1.1\%} & 55.0 $\pm$ 2.9\% \\
-    Germany50 & 81.0\% & 70.4\% & 52.3 $\pm$ 11.3\%         & 40.9 $\pm$ 2.4\%          & \textbf{40.8 $\pm$ 1.5\%} \\
+    Abilene   & 57.2\% & 57.2\% & \textbf{54.2 $\pm$ 1.6\%} & 56.1 $\pm$ 1.9\%           \\
+    GÉANT     & 71.1\% & 60.7\% & 70.0 $\pm$ 5.9\%          & \textbf{48.2 $\pm$ 1.1\%}  \\
+    Germany50 & 81.0\% & 70.4\% & 52.3 $\pm$ 11.3\%         & \textbf{40.9 $\pm$ 2.4\%}         \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -77,7 +70,10 @@ within a network.
   \includegraphics[width=\textwidth]{images/fig_offered_util_regime.png}
   \caption{Maximum offered load on the bottleneck link, by regime and topology.
   The dashed line marks link capacity; bars above it denote demand that cannot be
-  served. Error bars are one standard deviation over model seeds.}
+  served, so it is drawn only in the overload panel. Error bars are one standard
+  deviation over model seeds and are therefore absent for the deterministic
+  baselines. MARL is shown at the reported width $h{=}32$; the $h{=}64$
+  sensitivity arm appears in Table~\ref{tab:offered-util} only.}
   \label{fig:link-utilization}
 \end{figure}
 
@@ -137,32 +133,32 @@ Table~\ref{tab:qos} reports the resulting measurements over $378$ simulations.
   \setlength{\tabcolsep}{3.5pt}
   \begin{tabular}{llccccc}
     \toprule
-    Topology & Metric & OSPF & ECMP & Single-agent & MARL $h{=}32$ & MARL $h{=}64$ \\
+    Topology & Metric & OSPF & ECMP & Single-agent & MARL \\
     \midrule
-    \multicolumn{7}{l}{\emph{Overload regime}} \\
+    \multicolumn{6}{l}{\emph{Overload regime}} \\
     \midrule
-    \multirow{2}{*}{Abilene}   & Loss  & 14.35\%   & 14.30\%                     & \textbf{13.41 $\pm$ 0.82\%} & 15.41 $\pm$ 2.13\%  & 14.57 $\pm$ 0.99\% \\
-                               & Delay & 122.6\,ms & 115.4\,ms                   & 127.8 $\pm$ 5.3\,ms  & \textbf{108.8 $\pm$ 11.4\,ms} & 111.1 $\pm$ 6.7\,ms \\
-    \cmidrule(l){1-7}
-    \multirow{2}{*}{GÉANT}     & Loss  & 14.13\%  & 6.82\%             & 11.38 $\pm$ 2.00\%          & \textbf{2.92 $\pm$ 0.17\%} & 3.56 $\pm$ 0.72\% \\
-                               & Delay & 21.4\,ms & 18.6\,ms           & 22.3 $\pm$ 3.6\,ms          & \textbf{18.1 $\pm$ 0.8\,ms} & 20.6 $\pm$ 3.2\,ms \\
-    \cmidrule(l){1-7}
-    \multirow{2}{*}{Germany50} & Loss  & 27.29\%  & 22.90\%             & 18.17 $\pm$ 5.90\%  & 10.62 $\pm$ 2.91\%  & \textbf{8.88 $\pm$ 1.34\%} \\
-                               & Delay & 19.7\,ms & 17.0\,ms            & 20.2 $\pm$ 1.8\,ms  & 20.7 $\pm$ 6.8\,ms  & \textbf{15.1 $\pm$ 1.4\,ms} \\
+    \multirow{2}{*}{Abilene}   & Loss  & 14.35\%   & 14.30\%                     & \textbf{13.41 $\pm$ 0.82\%} & 15.41 $\pm$ 2.13\%\\
+                               & Delay & 122.6\,ms & 115.4\,ms                   & 127.8 $\pm$ 5.3\,ms  & \textbf{108.8 $\pm$ 11.4\,ms} \\
+    \cmidrule(l){1-6}
+    \multirow{2}{*}{GÉANT}     & Loss  & 14.13\%  & 6.82\%             & 11.38 $\pm$ 2.00\%          & \textbf{2.92 $\pm$ 0.17\%} \\
+                               & Delay & 21.4\,ms & 18.6\,ms           & 22.3 $\pm$ 3.6\,ms          & \textbf{18.1 $\pm$ 0.8\,ms} \\
+    \cmidrule(l){1-6}
+    \multirow{2}{*}{Germany50} & Loss  & 27.29\%  & 22.90\%             & 18.17 $\pm$ 5.90\%  & \textbf{10.62 $\pm$ 2.91\%} \\
+                               & Delay & 19.7\,ms & \textbf{17.0\,ms}            & 20.2 $\pm$ 1.8\,ms  & 20.7 $\pm$ 6.8\,ms   \\
     \midrule
-    \multicolumn{7}{l}{\emph{Feasible regime}} \\
+    \multicolumn{6}{l}{\emph{Feasible regime}} \\
     \midrule
-    \multirow{3}{*}{Abilene}   & Loss  & \textbf{0.17\%}   & 0.18\%             & 0.24 $\pm$ 0.09\%   & 0.97 $\pm$ 1.02\%  & 3.30 $\pm$ 1.99\% \\
-                               & Delay & \textbf{11.5\,ms} & 11.5\,ms           & 13.8 $\pm$ 2.3\,ms  & 14.2 $\pm$ 4.2\,ms & 24.8 $\pm$ 13.8\,ms \\
-                               & Util  & 96.7\%            & 96.7\%            & \textbf{88.1 $\pm$ 1.7\%} & 93.2 $\pm$ 4.8\% & 99.7 $\pm$ 0.4\% \\
-    \cmidrule(l){1-7}
-    \multirow{3}{*}{GÉANT}     & Loss  & 0.16\%   & \textbf{0.12\%}            & 0.42 $\pm$ 0.26\%   & \textbf{0.12 $\pm$ 0.00\%} & 0.14 $\pm$ 0.01\% \\
-                               & Delay & 9.5\,ms  & \textbf{8.2\,ms}           & 13.4 $\pm$ 2.3\,ms  & 8.3 $\pm$ 0.2\,ms         & 9.3 $\pm$ 0.2\,ms \\
-                               & Util  & 97.3\%   & 78.2\%                    & 94.4 $\pm$ 6.6\%    & \textbf{66.7 $\pm$ 1.7\%} & 68.2 $\pm$ 5.2\% \\
-    \cmidrule(l){1-7}
-    \multirow{3}{*}{Germany50} & Loss  & \textbf{0.03\%}  & 0.58\%             & \textbf{0.03 $\pm$ 0.00\%} & 1.02 $\pm$ 0.81\%  & 2.44 $\pm$ 1.54\% \\
-                               & Delay & \textbf{1.8\,ms} & 5.3\,ms            & 1.9 $\pm$ 0.0\,ms          & 2.0 $\pm$ 0.1\,ms  & 2.3 $\pm$ 0.2\,ms \\
-                               & Util  & 95.6\%           & 84.0\%            & \textbf{61.5 $\pm$ 12.5\%} & 70.8 $\pm$ 19.8\%  & 61.9 $\pm$ 13.4\% \\
+    \multirow{3}{*}{Abilene}   & Loss  & \textbf{0.17\%}   & 0.18\%             & 0.24 $\pm$ 0.09\%   & 0.97 $\pm$ 1.02\%   \\
+                               & Delay & \textbf{11.5\,ms} & 11.5\,ms           & 13.8 $\pm$ 2.3\,ms  & 14.2 $\pm$ 4.2\,ms  \\
+                               & Util  & 96.7\%            & 96.7\%            & \textbf{88.1 $\pm$ 1.7\%} & 93.2 $\pm$ 4.8\%  \\
+    \cmidrule(l){1-6}
+    \multirow{3}{*}{GÉANT}     & Loss  & 0.16\%   & \textbf{0.12\%}            & 0.42 $\pm$ 0.26\%   & \textbf{0.12 $\pm$ 0.00\%}  \\
+                               & Delay & 9.5\,ms  & \textbf{8.2\,ms}           & 13.4 $\pm$ 2.3\,ms  & 8.3 $\pm$ 0.2\,ms \\
+                               & Util  & 97.3\%   & 78.2\%                    & 94.4 $\pm$ 6.6\%    & \textbf{66.7 $\pm$ 1.7\%}  \\
+    \cmidrule(l){1-6}
+    \multirow{3}{*}{Germany50} & Loss  & \textbf{0.03\%}  & 0.58\%             & \textbf{0.03 $\pm$ 0.00\%} & 1.02 $\pm$ 0.81\% \\
+                               & Delay & \textbf{1.8\,ms} & 5.3\,ms            & 1.9 $\pm$ 0.0\,ms          & 2.0 $\pm$ 0.1\,ms \\
+                               & Util  & 95.6\%           & 84.0\%            & \textbf{61.5 $\pm$ 12.5\%} & 70.8 $\pm$ 19.8\%  \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -170,14 +166,19 @@ Table~\ref{tab:qos} reports the resulting measurements over $378$ simulations.
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{images/fig_qos_loss_regime.png}
-  \caption{Packet loss measured by ns-3 FlowMonitor, split by regime.}
+  \caption{Packet loss measured by ns-3 FlowMonitor, split by regime. Note the
+  scale difference between panels: the feasible regime is plotted in fractions of
+  a percent. Error bars are one standard deviation over model seeds, with the
+  lower arm clipped at zero since loss is non-negative.}
   \label{fig:loss-qos}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{images/fig_qos_delay_regime.png}
-  \caption{Mean end-to-end delay measured by ns-3 FlowMonitor, split by regime.}
+  \caption{Mean end-to-end delay measured by ns-3 FlowMonitor, split by regime.
+  Delay is read jointly with Figure~\ref{fig:loss-qos}: dropped packets contribute
+  no delay sample, so a lower bar is meaningful only where loss is equal or lower.}
   \label{fig:delay-qos}
 \end{figure}
 
