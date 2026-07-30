@@ -265,10 +265,30 @@ test-backbone performance instead would have compromised the zero-shot claim tho
 three networks exist to support; that its advantage also holds on them is treated
 as confirmation, not as the basis of the choice.
 
-Environment settings are likewise shared: delay penalty $\beta = 0.5$, detour
-allowance $\sigma = 2$ and maximum stretch $\sigma_{\max} = 4$ cost units, reward
-normalisation by the episode's OSPF bottleneck, and a $500$-demand cap on
-training matrices, for both architectures and every network.
+\paragraph{Reward.} Environment settings are shared: delay penalty
+$\beta = 0.5$, detour allowance $\sigma = 2$ and maximum stretch
+$\sigma_{\max} = 4$ cost units, reward normalisation by the episode's OSPF
+bottleneck, and a $500$-demand cap on training matrices, for both architectures
+and every network.
+
+The reward function itself is also identical, which required a change. The
+centralized environment originally charged $\beta$ per \emph{extra hop} relative
+to the shortest candidate and normalised that penalty together with the
+congestion term, whereas the decentralized environment charges a flat $\beta$ per
+\emph{detour hop} --- a hop that does not reduce cost-distance to the destination
+--- and leaves it unnormalised. Both arms now use the latter. Per demand the two
+are then exactly equal: because arc loads only increase, the decentralized
+environment's per-hop congestion increments telescope to the same
+$\max$-utilisation difference the centralized environment charges once for the
+whole path, and that difference does not depend on the order in which a path's
+arcs are added. Section~\ref{sec:res-reward} reports what the change was worth;
+the original form is retained as an ablation.
+
+What cannot be equalised, and is not, is how that reward is \emph{delivered}. The
+decentralized policy receives it spread across the hops of a demand and the
+centralized policy as a single terminal quantity, so under a common discount the
+two face different value targets and different effective horizons. That is a
+property of the action granularity being compared, not a residual mismatch.
 
 \paragraph{An unmatchable axis.} One budget dimension cannot be equalised, and is
 reported rather than concealed. A single step of the centralized environment

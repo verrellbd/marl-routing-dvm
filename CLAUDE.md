@@ -201,6 +201,34 @@ STILL TO DO: re-run geant/germany50 with `--metric weighted` env candidates and 
 `results/matched_ns3_grid.json`. Expect NO change there (uniform 40G -> weighted == hop),
 but verify rather than assume.
 
+## !! SINGLE-AGENT REWARD FORM PROMOTED (2026-07-30) — READ BEFORE QUOTING ANY SINGLE NUMBER
+The reported single agent is now `results/single_singleH64gRM_seed*` (`--reward-form marl`),
+NOT `_singleH64gcap`. The old arm is kept in the grid as `single_whole_ablation`.
+WHY: the two arms' delay penalties differed in MEANING though not in value (both beta=0.5).
+Single charged beta per EXTRA HOP and normalised it with the congestion term; MARL charges a
+flat beta per DETOUR HOP unnormalised. Measured consequence: under the old form the
+cost-shortest candidate was myopically optimal for 95.2% of geant / 97.2% of germany50
+demands (median congestion benefit of deviating = 0.000, median penalty 1.011), and the
+policy reproduced OSPF on 90.3% of geant demands.
+PACKET-LEVEL EFFECT (54 sims, 0 fails, `results/ns3f_singleRM_*`), old -> new:
+  abilene FEASIBLE loss 3.69 -> **0.24** | delay 37.84 -> **13.77**ms | util 92.5 -> **88.1**
+  abilene OVERLOAD loss 21.64 -> **13.41** (now BEST in cell: OSPF 14.35, ECMP 14.30, h32 15.41)
+  geant   OVERLOAD loss 13.29 -> 11.38 | g50 FEASIBLE util 74.8 -> **61.5** at OSPF's 0.03 loss
+  REGRESSION: g50 OVERLOAD loss 16.73 -> 18.17 (the one cell it loses)
+CONSEQUENCES FOR THE WRITE-UP (already applied to paper/):
+- **ABILENE IS NO LONGER A BLANKET NEGATIVE.** The single agent BEATS OSPF in both abilene
+  regimes. MARL still does not. Correct claim: "learned routing wins at 12 nodes, the
+  hop-by-hop decentralised formulation does not". Section renamed accordingly.
+- **h32 vs single is now an EVEN 3-3 SPLIT** across the 6 cells (was 5-1). MARL takes both
+  geant cells + g50 overload; single takes both abilene cells + g50 feasible. Do not claim
+  MARL dominates.
+- Seed fragility STILL holds and is stronger: single g50 analytical +/-51.4 vs h32 +/-3.5.
+  But on abilene the single agent is the TIGHTER arm (+/-0.82 vs +/-2.13) — state both.
+- MARL's advantage SURVIVES the identical reward: geant overload +8.5pt, geant feasible
+  +27.7pt util, g50 overload +7.6pt. The architecture conclusion does not reduce to reward.
+NOT TESTED (stated as a limitation): whether MARL would also improve under the single
+agent's whole-reward form. Only the centralized arm was re-run.
+
 ## FINAL PACKET-LEVEL GRID (2026-07-28) — `results/final_ns3_grid.json`
 378 ns-3 sims, 0 failures, `results/ns3f_*`. Capacity-aware (`--metric weighted` in the ENV)
 + matched hyperparameters. Arms: single `_singleH64gcap`, h32 `_tier2m15cm`, h64
