@@ -406,10 +406,21 @@ lower mean delay purely as an artefact of survivorship. We therefore report loss
 and delay side by side and treat a delay reduction as meaningful only when loss is
 equal or lower.
 
-Results are summarised as mean $\pm$ standard deviation across the three model
-seeds, each seed contributing its own mean over the retained matrices. OSPF and
-ECMP are deterministic given a matrix; ECMP retains a seed index only because its
-per-flow assignment among tied paths is hashed. No significance test is reported
-across seeds: $n=3$ is far too small to support one, and a $p$-value over three
-points would be misleading. Seed variation is reported descriptively, and a result
-is described as robust only when its sign is consistent across all three seeds.
+Results for the learned methods are summarised as mean $\pm$ standard deviation
+across the three model seeds, each seed contributing its own mean over the
+retained matrices. Deviations are quoted for those arms only. OSPF is
+deterministic given a matrix and has nothing to vary over. ECMP does make a
+choice --- when several paths tie on cost, one is selected per flow, as a real
+router selects by hashing the flow's header --- and we reproduce that with a
+seeded draw, but the resulting spread measures tie-breaking rather than training
+and is not commensurable with a spread over model seeds. ECMP is therefore
+reported as the mean over three hash seeds, without a deviation, so that the
+$\pm$ symbol carries one meaning throughout. The tie-breaking spread is not
+negligible and is worth recording separately: on GÉANT it moves bottleneck
+utilisation by up to $4.4$ percentage points, which is variation a deployed
+network would actually experience between routers.
+
+No significance test is reported across seeds: $n=3$ is far too small to support
+one, and a $p$-value over three points would be misleading. Seed variation is
+reported descriptively, and a result is described as robust only when its sign is
+consistent across all three seeds.

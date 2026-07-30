@@ -127,9 +127,12 @@ Table~\ref{tab:qos} reports the resulting measurements over $378$ simulations.
   \centering
   \small
   \caption{Packet-level performance under ns-3 on real traffic matrices
-  (Abilene/Zhang, GÉANT/Uhlig-TOTEM, Germany50/DFN), mean $\pm$ standard
-  deviation over three model seeds. Best per row in bold, \emph{including the rows
-  where a baseline wins}.}
+  (Abilene/Zhang, GÉANT/Uhlig-TOTEM, Germany50/DFN). Deviations are over the three
+  model seeds and are therefore quoted for the learned arms only: OSPF is
+  deterministic, and ECMP is reported as the mean over three hash seeds, whose
+  spread measures tie-breaking rather than training and is not comparable with it
+  (Section~\ref{sec:setup-metrics}). Best per row in bold, \emph{including the
+  rows where a baseline wins}.}
   \label{tab:qos}
   \setlength{\tabcolsep}{3.5pt}
   \begin{tabular}{llccccc}
@@ -138,28 +141,28 @@ Table~\ref{tab:qos} reports the resulting measurements over $378$ simulations.
     \midrule
     \multicolumn{7}{l}{\emph{Overload regime}} \\
     \midrule
-    \multirow{2}{*}{Abilene}   & Loss  & 14.35\%   & 14.30 $\pm$ 0.03\%          & \textbf{13.41 $\pm$ 0.82\%} & 15.41 $\pm$ 2.13\%  & 14.57 $\pm$ 0.99\% \\
-                               & Delay & 122.6\,ms & 115.4 $\pm$ 4.3\,ms         & 127.8 $\pm$ 5.3\,ms  & \textbf{108.8 $\pm$ 11.4\,ms} & 111.1 $\pm$ 6.7\,ms \\
+    \multirow{2}{*}{Abilene}   & Loss  & 14.35\%   & 14.30\%                     & \textbf{13.41 $\pm$ 0.82\%} & 15.41 $\pm$ 2.13\%  & 14.57 $\pm$ 0.99\% \\
+                               & Delay & 122.6\,ms & 115.4\,ms                   & 127.8 $\pm$ 5.3\,ms  & \textbf{108.8 $\pm$ 11.4\,ms} & 111.1 $\pm$ 6.7\,ms \\
     \cmidrule(l){1-7}
-    \multirow{2}{*}{GÉANT}     & Loss  & 14.13\%  & 6.82 $\pm$ 0.51\%  & 11.38 $\pm$ 2.00\%          & \textbf{2.92 $\pm$ 0.17\%} & 3.56 $\pm$ 0.72\% \\
-                               & Delay & 21.4\,ms & 18.6 $\pm$ 1.5\,ms & 22.3 $\pm$ 3.6\,ms          & \textbf{18.1 $\pm$ 0.8\,ms} & 20.6 $\pm$ 3.2\,ms \\
+    \multirow{2}{*}{GÉANT}     & Loss  & 14.13\%  & 6.82\%             & 11.38 $\pm$ 2.00\%          & \textbf{2.92 $\pm$ 0.17\%} & 3.56 $\pm$ 0.72\% \\
+                               & Delay & 21.4\,ms & 18.6\,ms           & 22.3 $\pm$ 3.6\,ms          & \textbf{18.1 $\pm$ 0.8\,ms} & 20.6 $\pm$ 3.2\,ms \\
     \cmidrule(l){1-7}
-    \multirow{2}{*}{Germany50} & Loss  & 27.29\%  & 22.90 $\pm$ 2.46\%  & 18.17 $\pm$ 5.90\%  & 10.62 $\pm$ 2.91\%  & \textbf{8.88 $\pm$ 1.34\%} \\
-                               & Delay & 19.7\,ms & 17.0 $\pm$ 3.4\,ms  & 20.2 $\pm$ 1.8\,ms  & 20.7 $\pm$ 6.8\,ms  & \textbf{15.1 $\pm$ 1.4\,ms} \\
+    \multirow{2}{*}{Germany50} & Loss  & 27.29\%  & 22.90\%             & 18.17 $\pm$ 5.90\%  & 10.62 $\pm$ 2.91\%  & \textbf{8.88 $\pm$ 1.34\%} \\
+                               & Delay & 19.7\,ms & 17.0\,ms            & 20.2 $\pm$ 1.8\,ms  & 20.7 $\pm$ 6.8\,ms  & \textbf{15.1 $\pm$ 1.4\,ms} \\
     \midrule
     \multicolumn{7}{l}{\emph{Feasible regime}} \\
     \midrule
-    \multirow{3}{*}{Abilene}   & Loss  & \textbf{0.17\%}   & 0.18 $\pm$ 0.00\%  & 0.24 $\pm$ 0.09\%   & 0.97 $\pm$ 1.02\%  & 3.30 $\pm$ 1.99\% \\
-                               & Delay & \textbf{11.5\,ms} & 11.5 $\pm$ 0.0\,ms & 13.8 $\pm$ 2.3\,ms  & 14.2 $\pm$ 4.2\,ms & 24.8 $\pm$ 13.8\,ms \\
-                               & Util  & 96.7\%            & 96.7 $\pm$ 0.0\%   & \textbf{88.1 $\pm$ 1.7\%} & 93.2 $\pm$ 4.8\% & 99.7 $\pm$ 0.4\% \\
+    \multirow{3}{*}{Abilene}   & Loss  & \textbf{0.17\%}   & 0.18\%             & 0.24 $\pm$ 0.09\%   & 0.97 $\pm$ 1.02\%  & 3.30 $\pm$ 1.99\% \\
+                               & Delay & \textbf{11.5\,ms} & 11.5\,ms           & 13.8 $\pm$ 2.3\,ms  & 14.2 $\pm$ 4.2\,ms & 24.8 $\pm$ 13.8\,ms \\
+                               & Util  & 96.7\%            & 96.7\%            & \textbf{88.1 $\pm$ 1.7\%} & 93.2 $\pm$ 4.8\% & 99.7 $\pm$ 0.4\% \\
     \cmidrule(l){1-7}
-    \multirow{3}{*}{GÉANT}     & Loss  & 0.16\%   & \textbf{0.12 $\pm$ 0.00\%} & 0.42 $\pm$ 0.26\%   & \textbf{0.12 $\pm$ 0.00\%} & 0.14 $\pm$ 0.01\% \\
-                               & Delay & 9.5\,ms  & \textbf{8.2 $\pm$ 0.1\,ms} & 13.4 $\pm$ 2.3\,ms  & 8.3 $\pm$ 0.2\,ms         & 9.3 $\pm$ 0.2\,ms \\
-                               & Util  & 97.3\%   & 78.2 $\pm$ 4.4\%           & 94.4 $\pm$ 6.6\%    & \textbf{66.7 $\pm$ 1.7\%} & 68.2 $\pm$ 5.2\% \\
+    \multirow{3}{*}{GÉANT}     & Loss  & 0.16\%   & \textbf{0.12\%}            & 0.42 $\pm$ 0.26\%   & \textbf{0.12 $\pm$ 0.00\%} & 0.14 $\pm$ 0.01\% \\
+                               & Delay & 9.5\,ms  & \textbf{8.2\,ms}           & 13.4 $\pm$ 2.3\,ms  & 8.3 $\pm$ 0.2\,ms         & 9.3 $\pm$ 0.2\,ms \\
+                               & Util  & 97.3\%   & 78.2\%                    & 94.4 $\pm$ 6.6\%    & \textbf{66.7 $\pm$ 1.7\%} & 68.2 $\pm$ 5.2\% \\
     \cmidrule(l){1-7}
-    \multirow{3}{*}{Germany50} & Loss  & \textbf{0.03\%}  & 0.58 $\pm$ 0.37\%  & \textbf{0.03 $\pm$ 0.00\%} & 1.02 $\pm$ 0.81\%  & 2.44 $\pm$ 1.54\% \\
-                               & Delay & \textbf{1.8\,ms} & 5.3 $\pm$ 1.9\,ms  & 1.9 $\pm$ 0.0\,ms          & 2.0 $\pm$ 0.1\,ms  & 2.3 $\pm$ 0.2\,ms \\
-                               & Util  & 95.6\%           & 84.0 $\pm$ 2.9\%   & \textbf{61.5 $\pm$ 12.5\%} & 70.8 $\pm$ 19.8\%  & 61.9 $\pm$ 13.4\% \\
+    \multirow{3}{*}{Germany50} & Loss  & \textbf{0.03\%}  & 0.58\%             & \textbf{0.03 $\pm$ 0.00\%} & 1.02 $\pm$ 0.81\%  & 2.44 $\pm$ 1.54\% \\
+                               & Delay & \textbf{1.8\,ms} & 5.3\,ms            & 1.9 $\pm$ 0.0\,ms          & 2.0 $\pm$ 0.1\,ms  & 2.3 $\pm$ 0.2\,ms \\
+                               & Util  & 95.6\%           & 84.0\%            & \textbf{61.5 $\pm$ 12.5\%} & 70.8 $\pm$ 19.8\%  & 61.9 $\pm$ 13.4\% \\
     \bottomrule
   \end{tabular}
 \end{table}
