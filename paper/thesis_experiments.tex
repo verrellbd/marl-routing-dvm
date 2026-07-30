@@ -161,9 +161,12 @@ Five routing methods are evaluated on identical inputs.
     deployed in practice, and it is materially stronger than a hop-count
     baseline on any network with heterogeneous capacities.
     \item \textbf{ECMP.} Equal-cost multipath over the paths that the same cost
-    metric makes tied, splitting each demand equally at every branch point.
-    Because the tie is on \emph{cost} rather than hop count, ECMP inherits
-    OSPF's capacity awareness.
+    metric makes tied. Because the tie is on \emph{cost} rather than hop count,
+    ECMP inherits OSPF's capacity awareness. Splitting is at \emph{flow}
+    granularity: each demand is assigned one of its tied paths, as a router
+    assigns by hashing the flow's header, rather than divided fractionally across
+    all of them. The same assignment is used for the analytical and the
+    packet-level results, so ECMP denotes one policy throughout.
     \item \textbf{Single-agent GNN.} A centralized policy with full-network
     observability, trained with PPO, which selects one of $k=3$ candidate paths
     for each demand in turn.
@@ -416,9 +419,19 @@ seeded draw, but the resulting spread measures tie-breaking rather than training
 and is not commensurable with a spread over model seeds. ECMP is therefore
 reported as the mean over three hash seeds, without a deviation, so that the
 $\pm$ symbol carries one meaning throughout. The tie-breaking spread is not
-negligible and is worth recording separately: on GÉANT it moves bottleneck
-utilisation by up to $4.4$ percentage points, which is variation a deployed
-network would actually experience between routers.
+negligible and is worth recording separately: on GÉANT the hash choice alone
+moves bottleneck offered load between $57.5\%$ and $63.1\%$, and on Germany50
+between $198.9\%$ and $219.4\%$, which is variation a deployed network would
+actually experience between routers.
+
+Flow-level assignment is the conservative choice for ECMP but not the flattering
+one. An idealised variant that divided each demand fractionally across all its
+tied paths --- unimplementable at flow granularity, and approximated in practice
+only by per-packet spraying at the cost of reordering --- would be considerably
+stronger, reaching $106.1\%$ rather than $119.2\%$ on GÉANT and $181.5\%$ rather
+than $211.9\%$ on Germany50. The flow-level figure is reported because it is the
+policy actually installed in the simulator and the one operators run; the fluid
+figure is quoted here so that the gap between them is on record.
 
 No significance test is reported across seeds: $n=3$ is far too small to support
 one, and a $p$-value over three points would be misleading. Seed variation is

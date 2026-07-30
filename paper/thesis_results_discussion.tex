@@ -59,15 +59,15 @@ within a network.
     \midrule
     \multicolumn{6}{l}{\emph{Overload regime (OSPF drives a link $\geq$ capacity)}} \\
     \midrule
-    Abilene   & 129.3\% & 129.6\% & \textbf{116.3 $\pm$ 2.8\%} & 124.9 $\pm$ 3.3\%         & 130.3 $\pm$ 3.3\% \\
-    GÉANT     & 145.2\% & 106.1\% & 133.7 $\pm$ 10.7\%         & \textbf{96.6 $\pm$ 1.6\%} & 102.1 $\pm$ 3.0\% \\
-    Germany50 & 249.2\% & 181.5\% & 176.3 $\pm$ 51.0\%         & 117.0 $\pm$ 3.5\%         & \textbf{113.7 $\pm$ 9.7\%} \\
+    Abilene   & 129.3\% & 129.2\% & \textbf{116.3 $\pm$ 2.8\%} & 124.9 $\pm$ 3.3\%         & 130.3 $\pm$ 3.3\% \\
+    GÉANT     & 145.2\% & 119.2\% & 133.7 $\pm$ 10.7\%         & \textbf{96.6 $\pm$ 1.6\%} & 102.1 $\pm$ 3.0\% \\
+    Germany50 & 249.2\% & 211.9\% & 176.3 $\pm$ 51.0\%         & 117.0 $\pm$ 3.5\%         & \textbf{113.7 $\pm$ 9.7\%} \\
     \midrule
     \multicolumn{6}{l}{\emph{Feasible regime (traffic fits under OSPF)}} \\
     \midrule
-    Abilene   & 57.2\% & 57.4\% & \textbf{54.2 $\pm$ 1.6\%} & 56.1 $\pm$ 1.9\%          & 61.6 $\pm$ 6.5\% \\
-    GÉANT     & 71.1\% & 54.1\% & 70.0 $\pm$ 5.9\%          & \textbf{48.2 $\pm$ 1.1\%} & 55.0 $\pm$ 2.9\% \\
-    Germany50 & 81.0\% & 59.3\% & 52.3 $\pm$ 11.3\%         & 40.9 $\pm$ 2.4\%          & \textbf{40.8 $\pm$ 1.5\%} \\
+    Abilene   & 57.2\% & 57.2\% & \textbf{54.2 $\pm$ 1.6\%} & 56.1 $\pm$ 1.9\%          & 61.6 $\pm$ 6.5\% \\
+    GÉANT     & 71.1\% & 60.7\% & 70.0 $\pm$ 5.9\%          & \textbf{48.2 $\pm$ 1.1\%} & 55.0 $\pm$ 2.9\% \\
+    Germany50 & 81.0\% & 70.4\% & 52.3 $\pm$ 11.3\%         & 40.9 $\pm$ 2.4\%          & \textbf{40.8 $\pm$ 1.5\%} \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -92,13 +92,13 @@ OSPF's $129.3\%$ under overload and $54.2\%$ against $57.2\%$ when feasible,
 while MARL at $h{=}64$ is the single cell in which any learned method is worse
 than OSPF ($130.3\%$ against $129.3\%$).
 
-Three observations qualify the table. First, ECMP is a far stronger baseline than
-shortest-path OSPF wherever the topology offers equal-cost alternatives: it
-reaches $106.1\%$ on GÉANT and $181.5\%$ on Germany50, so on GÉANT the
-centralized policy is beaten not only by MARL but by a mechanism already deployed
-in every operator network. On Abilene, whose fifteen links leave few ties to split
-over, ECMP is indistinguishable from OSPF ($129.6\%$ against $129.3\%$) and both
-learned architectures beat it.
+Three observations qualify the table. First, ECMP is a materially stronger
+baseline than shortest-path OSPF wherever the topology offers equal-cost
+alternatives: it reaches $119.2\%$ on GÉANT and $211.9\%$ on Germany50, so on
+GÉANT the centralized policy is beaten not only by MARL but by a mechanism
+already deployed in every operator network. On Abilene, whose fifteen links leave
+few ties to split over, ECMP is indistinguishable from OSPF ($129.2\%$ against
+$129.3\%$) and every learned arm but one beats both.
 
 Second, the centralized policy's Germany50 dispersion --- $\pm 51.0$ percentage
 points under overload, against $\pm 3.5$ for MARL at the same width and under
