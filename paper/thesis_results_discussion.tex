@@ -109,6 +109,64 @@ additional headroom is obtained at a cost in loss the surrogate does not model.
 The disagreement is the clearest illustration of why the packet-level evaluation
 is necessary rather than confirmatory.
 
+\subsection{Greedy References}
+\label{sec:res-greedy}
+
+Neither learned policy should be credited with what a simple heuristic on the same
+action space already achieves. Table~\ref{tab:greedy} scores the two greedy
+best-responses of Section~\ref{sec:setup-hyper} on the identical matrices. Both
+require global link state after every decision and the path-level variant requires
+the demand matrix in advance, so neither is deployable; they are bounds, not
+competitors.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Greedy best-responses against OSPF and the reported learned arms, as
+  maximum offered load (\%). The path-level greedy shares the centralized action
+  space, the hop-level greedy the decentralized one.}
+  \label{tab:greedy}
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{lccccc}
+    \toprule
+    Cell & OSPF & Greedy (hop) & Greedy (path) & Single-agent & MARL $h{=}32$ \\
+    \midrule
+    Abilene overload   & 129.3 & 403.8 & \textbf{111.3} & 116.3 & 124.9 \\
+    GÉANT overload     & 145.2 & 148.8 & \textbf{87.9}  & 133.7 & 96.6  \\
+    Germany50 overload & 249.2 & 168.5 & \textbf{116.4} & 176.3 & 117.0 \\
+    \midrule
+    Abilene feasible   & 57.2  & 182.2 & \textbf{49.4}  & 54.2  & 56.1  \\
+    GÉANT feasible     & 71.1  & 72.4  & \textbf{45.7}  & 70.0  & 48.2  \\
+    Germany50 feasible & 81.0  & 56.8  & \textbf{37.7}  & 52.3  & 40.9  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The two references separate sharply, and the separation is informative.
+
+\emph{Acting greedily hop by hop is far worse than not trying at all.} The
+hop-level best-response is beaten by OSPF on four of six cells and is
+catastrophic on Abilene, reaching $403.8\%$ where OSPF sits at $129.3\%$: choosing
+the locally least-congested next hop repeatedly walks a demand into a long path
+that loads links no single decision was accountable for. That the decentralized
+policy, acting in exactly this space, instead reaches $124.9\%$ and $96.6\%$ is
+the clearest evidence in this chapter that it has learned something beyond
+greed --- on GÉANT overload it improves on greedy by $52$ percentage points, and
+on Abilene by $279$.
+
+\emph{Acting greedily over whole paths is very strong.} The path-level
+best-response is the best arm in every cell, and by margins that are not small on
+GÉANT ($87.9$ against MARL's $96.6$) and Abilene ($111.3$ against the centralized
+policy's $116.3$). Only on Germany50 does a learned policy match it, MARL reaching
+$117.0$ against $116.4$. This bounds the contribution honestly: at $50$ nodes the
+learned policy is at the ceiling that its action space permits, while at $22$ and
+$12$ nodes a clairvoyant heuristic still does better. The gap is not evidence that
+the policies are under-trained --- they are at a matched budget and their seeds
+agree --- but that a policy acting on local observations, without the demand matrix
+and without recomputing global state per decision, pays something for that
+restriction. What it buys in exchange is the ability to run at all in a real
+network, where neither greedy reference could.
+
 \subsection{Packet-Level Quality of Service}
 \label{sec:res-qos}
 

@@ -37,12 +37,13 @@ U=\max_{e\in\mathcal{E}} u_e .
 The traffic-engineering objective is to route all flows so as to minimize
 congestion, while preferring short paths to limit end-to-end delay:
 \begin{equation}\label{eq:objective}
-\min_{\,p_f,\;\forall f}\;\; U \;+\; \beta \sum_{f\in\mathcal{F}}
-\bigl(|p_f|-h^{\star}_f\bigr),
+\min_{\,p_f,\;\forall f}\;\; U \;+\; \beta \sum_{f\in\mathcal{F}} \eta(p_f),
 \end{equation}
-where $|p_f|$ is the hop count of the chosen path, $h^{\star}_f$ the
-shortest-path hop count for the same flow, and $\beta\ge0$ weights the delay
-term. When $U>1$ a link is overloaded, and the excess offered load manifests at
+where $\eta(p_f)$ counts the \emph{detour hops} of the chosen path --- those that
+do not reduce the OSPF-cost distance to the destination --- and $\beta\ge0$
+weights the delay term. Costing the detour rather than the raw excess hop count
+matters on networks with heterogeneous capacities, where the cheapest path in
+hops and the cheapest in OSPF cost differ. When $U>1$ a link is overloaded, and the excess offered load manifests at
 the packet level as loss and queueing delay; keeping $U<1$ preserves Quality of
 Service (QoS).
 
@@ -79,19 +80,23 @@ aggregates network-wide state without requiring full observability.
 
 \subsubsection{Loop-Free Action Masking}\label{sec:mask}
 Principle 2 is enforced structurally rather than learned. Let $h_d(i)$ denote
-the shortest-path hop distance from node $i$ to destination $d$, let
-$\mathcal{V}_f$ be the set of nodes already visited by flow $f$, and let $t$ be
-the number of hops taken so far. The admissible next hops at node $i$ for
+the shortest-path distance from node $i$ to destination $d$ \emph{under the OSPF
+cost metric} $w_e=\mathrm{refBW}/c_e$, let $\mathcal{V}_f$ be the set of nodes
+already visited by flow $f$, and let $\omega_t$ be the accumulated cost of the
+path so far. The admissible next hops at node $i$ for
 destination $d$ are
 \begin{equation}\label{eq:mask}
 \mathcal{A}^{\mathrm{ok}}_i(d)=\bigl\{\,j\in\mathcal{A}_i \;:\;
 j\notin\mathcal{V}_f,\;\; h_d(j)<h_d(i)+\sigma,\;\;
-t+1+h_d(j)\le h^{\star}_f+\sigma_{\max}\bigr\},
+\omega_t+w_{ij}+h_d(j)\le h^{\star}_f+\sigma_{\max}\bigr\},
 \end{equation}
-where the \emph{stretch} $\sigma$ bounds how far a single hop may move away
-from the destination ($\sigma=1$ confines the agent to the destination-oriented
-shortest-path DAG) and $\sigma_{\max}$ caps the excess length of the completed
-path. The visited set together with the finite node count guarantees that every
+where the \emph{stretch} $\sigma$ bounds how far a single hop may move away from
+the destination ($\sigma=1$ would confine the agent to the destination-oriented
+shortest-path DAG; $\sigma=2$ is used) and $\sigma_{\max}$ caps the excess cost of
+the completed path. Both budgets are in cost units, not hops. This is what makes
+the admissible set capacity-aware: under a hop-based budget a detour around a slow
+link is charged the same as one around a fast link, and on a network with a single
+low-capacity link every admissible path may be forced through it. The visited set together with the finite node count guarantees that every
 trace is simple and terminates, so no emitted path can contain a loop. The
 constraint is applied to the policy as a binary mask
 $m\in\{0,1\}^{|\mathcal{A}_i|}$, with $m_j=1$ iff
@@ -103,17 +108,24 @@ Flows are placed sequentially; let $U_t$ denote the bottleneck utilization
 \eqref{eq:bottleneck} after the $t$-th flow is routed on path $p_t$, with
 $U_0=0$. The reward couples congestion relief with a delay penalty:
 \begin{equation}\label{eq:reward}
-r_t=-\bigl(U_t-U_{t-1}\bigr)\;-\;\beta\bigl(|p_t|-h^{\star}_t\bigr),
+r_t=-\frac{U_t-U_{t-1}}{U^{\mathrm{OSPF}}}\;-\;\beta\,\mathbb{1}\!\left[\text{hop
+$t$ is a detour}\right],
 \end{equation}
-where $\beta\ge 0$ weights the delay penalty. The first term is a
-potential-based shaping on the bottleneck: because it telescopes over an
-episode,
+where $\beta\ge 0$ weights the delay penalty and a hop is a \emph{detour} when it
+does not reduce the OSPF-cost distance to the destination. The congestion term is
+normalised by $U^{\mathrm{OSPF}}$, the bottleneck OSPF would incur on the same
+matrix: networks sit at very different absolute utilisations, and without this a
+single shared policy over-weights the congested ones. The first term is a
+potential-based shaping on the bottleneck: because it telescopes over an episode,
 \begin{equation}\label{eq:telescope}
-\sum_{t} r_t=-\,U_T\;-\;\beta\sum_{t}\bigl(|p_t|-h^{\star}_t\bigr),
+\sum_{t} r_t=-\,\frac{U_T}{U^{\mathrm{OSPF}}}\;-\;\beta\sum_{t}
+\mathbb{1}\!\left[\text{hop $t$ is a detour}\right],
 \end{equation}
 so maximizing the return is equivalent to minimizing the final bottleneck
-utilization $U_T$ plus the total excess path length, i.e.\ the objective
-\eqref{eq:objective}. The delay term makes the policy prefer shortest paths
+utilization $U_T$ plus the total detour count, i.e.\ the objective
+\eqref{eq:objective}. Both the centralized and the decentralized learner optimise
+this identical reward; Section~\ref{sec:res-reward} reports what the choice is
+worth. The delay term makes the policy prefer shortest paths
 when the network is uncongested, matching OSPF, and detour only when
 detouring relieves the bottleneck.
 
@@ -133,9 +145,11 @@ bounds the scope of the reported results:
 \eqref{eq:load}; traffic is not split across multiple paths.
 \item \emph{Static topology.} Capacities and propagation delays are
 time-invariant and no link or node failures occur during an episode.
-\item \emph{Matrix-granular decisions.} A routing is computed per demand
-matrix rather than per packet; forwarding is therefore destination-based and
-stable between matrices.
+\item \emph{Matrix-granular decisions.} A routing is computed per demand matrix
+rather than per packet, and is stable between matrices. The resulting paths are
+\emph{source-specific}: two flows to the same destination may be routed
+differently, which plain destination-based IP forwarding cannot express and which
+a deployment would realise through MPLS or segment routing.
 \item \emph{Open-loop traffic.} Demands are offered as constant-rate UDP, so
 sources do not react to congestion and loss reflects queue overflow alone.
 \item \emph{Surrogate fidelity.} Training uses the analytical load model
@@ -202,17 +216,18 @@ required and the trained quantity is the one on which OSPF is scored:
 J(\theta) = \mathbb{E}_{\mathbf{r} \sim \mathcal{D}_{\mathrm{train}}}
 \mathbb{E}_{\tau \sim \pi_\theta}\!\left[\sum_{t} \gamma^{t} r_t\right].
 \end{equation}
-The expectation is taken over a \emph{distribution} of demand matrices,
-$\mathcal{D}_{\mathrm{train}} = \{\alpha\,\mathbf{r}^{(\nu)} : \alpha \in \mathcal{Z},\,
-\nu \in \mathcal{T}_{\mathrm{train}}\}$, where $\mathcal{T}_{\mathrm{train}}$ is the earlier window
-of the measured SNDlib series (the first $70\%$ of the archive timeline) and $\mathcal{Z}$ is a
-per-network set of magnitude scales, listed in Table~\ref{tab:setup}, that places the demand in
-the congested regime in which routing decisions matter. Because the backbones are
-over-provisioned relative to the measured demand, the scales differ by network. Within a split,
-timestamps are selected as evenly spaced samples of the timeline rather than at random, so the
-matrix set is a deterministic function of the data alone. All evaluation draws from the disjoint
-later window $\mathcal{T}_{\mathrm{test}}$ (the last $30\%$), so results measure temporal
-generalization.
+The expectation is taken over a distribution of \emph{networks} as well as of demand
+matrices. $\mathcal{D}_{\mathrm{train}}$ ranges over seventeen SNDlib topologies, none of
+which is an evaluation network, each carrying synthetic modulated-gravity traffic swept
+over five volume scales. The three evaluation backbones and their measured demand are held
+out entirely, so the policy is judged on graphs it has never seen: the separation is
+\emph{topological}, not merely temporal, and the generalization measured is zero-shot
+transfer to unseen networks. Within each evaluation network the measured series is
+additionally split in time, the last $30\%$ forming the test window, with evenly spaced
+timestamps so the matrix set is a deterministic function of the data alone. Section
+\ref{sec:setup-train} gives the training instances and the traffic generator; Section
+\ref{sec:setup-instances} the evaluation instances and the magnitude scales
+$\mathcal{Z}$.
 
 Each iteration collects $T$ decision steps under $\pi_{\theta_{\mathrm{old}}}$, resetting to a
 newly drawn matrix at every episode end. Advantages use generalized advantage estimation with a
@@ -249,18 +264,23 @@ $T/N$ per-agent trajectories.
 \centering
 \begin{tabular}{llll}
 \hline
-Steps $N_{\mathrm{steps}}$ & $6\times10^{5}$ & Discount $\gamma$ & $0.99$ \\
-Rollout $T$ & $4096$ & GAE trace $\lambda$ & $0.95$ \\
-Epochs $E$ & $8$ & Clip $\varepsilon$ & $0.2$ \\
-Minibatch $B_{\mathrm{mb}}$ & $512$ & Value coeff.\ $c_v$ & $0.5$ \\
+Steps $N_{\mathrm{steps}}$ & $1.5\times10^{6}$ & Discount $\gamma$ & $0.995$ \\
+Rollout $T$ & $2048$ & GAE trace $\lambda$ & $0.95$ \\
+Epochs $E$ & $10$ & Clip $\varepsilon$ & $0.2$ \\
+Minibatch $B_{\mathrm{mb}}$ & $256$ & Value coeff.\ $c_v$ & $0.5$ \\
 Learning rate $\alpha_{\mathrm{lr}}$ & $3\times10^{-4}$ & Entropy coeff.\ $c_e$ & $0.01$ \\
-Embedding width $F$ & $128$ & Grad clip $g_{\max}$ & $0.5$ \\
-Stretch $\sigma$ & $1$ & Torch threads & $2$ \\
+Embedding width $F$ & $32$ & Grad clip $g_{\max}$ & $0.5$ \\
+Stretch $\sigma$ & $2$ & Max stretch $\sigma_{\max}$ & $4$ \\
+Delay penalty $\beta$ & $0.5$ & Message rounds $L$ & $3$ \\
 \hline
 \end{tabular}
-\caption{MAPPO training hyperparameters, common to all three networks. The
-delay penalty $\beta$, the hop cap $\sigma_{\max}$ and the load scales
-$\mathcal{Z}$ are network-specific and are given in Table~\ref{tab:setup}.}
+\caption{MAPPO training hyperparameters. Unlike the per-network protocol of
+earlier work, a single configuration is used for every training topology and
+carried unchanged to every evaluation network --- the policy is topology-agnostic,
+so per-network tuning would defeat its purpose. $\sigma$ and $\sigma_{\max}$ are
+in OSPF-cost units. The centralized reference is trained with the identical
+optimiser settings; Table~\ref{tab:hyper} records both and the reasoning behind
+equalising them.}
 \label{tab:hyperparams}
 \end{table}
 
@@ -269,10 +289,15 @@ under the deterministic policy $a = \arg\max_a \pi_\theta(a\mid o,m)$, using the
 bottleneck improvement over OSPF,
 $\overline{\Delta} = |\mathcal{M}|^{-1}\sum_{\mathbf{r}\in\mathcal{M}}
 (U^{\mathrm{OSPF}}(\mathbf{r}) - U^{\pi_\theta}(\mathbf{r}))$, together with the
-fraction of matrices on which the policy wins by more than $0.5$ percentage points. A myopic
-greedy best-response, which at each hop takes the admissible neighbor of \eqref{eq:mask}
-minimizing the resulting bottleneck, is scored on the same matrices as an intermediate reference
-between OSPF and the learned policy.
+fraction of matrices on which the policy wins by more than $0.5$ percentage points. Two greedy references are scored on the same matrices and bracket the learned
+policies rather than sitting between them and OSPF. The \emph{hop-level} best-response takes,
+at each hop, the admissible neighbour of \eqref{eq:mask} minimising the resulting bottleneck;
+it shares the decentralized action space exactly. The \emph{path-level} best-response assigns
+each demand, in decreasing order of rate, whichever of its $k$ candidate paths minimises the
+resulting bottleneck; it shares the centralized action space. Neither is deployable --- both
+require the global link state after every decision, and the path-level variant additionally
+requires the whole demand matrix in advance --- so they are reported as references, not as
+competing methods.
 
 Final evaluation replaces this analytical judge with \mbox{ns-3} (v3.42) in
 \emph{export--simulate} form. The same deterministic rollout emits an explicit node path per
@@ -318,51 +343,11 @@ parameters, differing only in the installed paths, and every metric is averaged 
 matrices and independent training seeds and reported as $\mu \pm \sigma_{\mathrm{sd}}$.
 
 \subsubsection{Experimental Setup}
-Table~\ref{tab:setup} records the three SNDlib instances and the per-network
-quantities of the protocol. Capacities and propagation delays are taken from the
-instance files unchanged; the demand archives are the measured
-directed time series shipped with SNDlib (Abilene, $5$-minute matrices over six
-months; GEANT, $15$-minute over four months; Germany50, $5$-minute over one
-day).
-
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{lccc}
-\hline
-& Abilene & GEANT & Germany50 \\
-\hline
-Nodes $N$ & $12$ & $22$ & $50$ \\
-Links $|\mathcal{E}|$ (undirected) & $15$ & $36$ & $88$ \\
-Link capacities (Gb/s) & $2.48,\ 9.92$ & $40$ & $40$ \\
-Demand pairs & $132$ & $462$ & $2450$ \\
-Demand granularity & $5$\,min & $15$\,min & $5$\,min \\
-\hline
-Training scales $\mathcal{Z}$ & $\{8,12,16\}$ & $\{3,5,7\}$ & $\{35,50,65\}$ \\
-Evaluation scale & $12$ & $5$ & $35$ \\
-Delay penalty $\beta$ & $0.5$ & $0.5$ & $0.1$ \\
-Hop cap $\sigma_{\max}$ & uncapped & uncapped & $4$ \\
-Matrices per scale & $20$ & $20$ & $20$ \\
-Flow cap $N_f$ & all & all & $200$ \\
-\hline
-\end{tabular}
-\caption{Network instances and per-network protocol settings. A dash denotes an
-uncapped quantity. The demand scales differ by network because the measured
-demands are light relative to these over-provisioned backbones.}
-\label{tab:setup}
-\end{table}
-
-Every configuration is trained from three independent seeds ($0,1,2$), giving
-$3\ \text{networks}\times 2\ \text{methods}\times 3\ \text{seeds}=18$ models,
-where the two methods are the proposed decentralized MARL policy and the
-centralized single-agent GNN reference. Held-out evaluation uses
-$|\mathcal{M}|=5$ unseen matrices per network and seed, drawn from
-$\mathcal{T}_{\mathrm{test}}$ and selected to span both congestion regimes.
-The OSPF baseline is the minimum-hop shortest path between each pair, computed
-on the same graph with deterministic tie-breaking, and is installed in ns-3 by
-the identical static-route mechanism used for the learned paths, so the two
-differ only in the path chosen. The greedy best-response uses the same
-admissible set \eqref{eq:mask} as the learned policy.
+The instances, demand scales, methods compared and learner configuration are
+specified in Section~\ref{sec:setup-instances}--\ref{sec:setup-hyper} and are not
+repeated here. Three seeds are trained per configuration, and every arm is scored
+on the identical held-out matrices, stratified into congestion regimes by the
+offered load OSPF alone would incur (Section~\ref{sec:setup-regimes}).
 
 In ns-3, each link is a \texttt{PointToPointNetDevice} whose transmit queue is
 the default DropTail queue of $100$ packets; no active queue management or
@@ -372,7 +357,6 @@ links are below $1$\,ms and would otherwise truncate to zero.
 
 The software stack is ns-3.42, PyTorch 2.6.0, NetworkX, and Stable-Baselines3
 2.7.1 for the centralized reference, on Python 3.9; all training and evaluation
-are CPU-only. Training and evaluation are driven by two launcher scripts that
-record the exact command line, seed, and configuration of every run to a log
-file, so each of the 18 models and its evaluation directory can be traced back
-to the invocation that produced it.
+are CPU-only. Training and evaluation are driven by launcher scripts that record the exact
+command line, seed, and configuration of every run, so each trained policy and its
+evaluation directory traces back to the invocation that produced it.

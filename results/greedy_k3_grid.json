@@ -1,0 +1,20 @@
+{
+  "abilene/feasible": {
+    "greedy_k3": 49.4
+  },
+  "abilene/overload": {
+    "greedy_k3": 111.3
+  },
+  "geant/overload": {
+    "greedy_k3": 87.9
+  },
+  "geant/feasible": {
+    "greedy_k3": 45.7
+  },
+  "germany50/overload": {
+    "greedy_k3": 116.4
+  },
+  "germany50/feasible": {
+    "greedy_k3": 37.7
+  }
+}
