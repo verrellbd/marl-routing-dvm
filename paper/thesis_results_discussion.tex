@@ -46,7 +46,7 @@ within a network.
   Table~\ref{tab:eval-setup}.}
   \label{tab:offered-util}
   \setlength{\tabcolsep}{4.5pt}
-  \begin{tabular}{lccccc}
+  \begin{tabular}{lcccc}
     \toprule
     Topology & OSPF & ECMP & Single-agent & MARL  \\
     \midrule
@@ -72,21 +72,20 @@ within a network.
   The dashed line marks link capacity; bars above it denote demand that cannot be
   served, so it is drawn only in the overload panel. Error bars are one standard
   deviation over model seeds and are therefore absent for the deterministic
-  baselines. MARL is shown at the reported width $h{=}32$; the $h{=}64$
-  sensitivity arm appears in Table~\ref{tab:offered-util} only.}
+  baselines. MARL is the reported policy at width $h{=}32$
+  (Section~\ref{sec:setup-hyper}).}
   \label{fig:link-utilization}
 \end{figure}
 
-Every learned arm improves on OSPF in every cell but one, and the size of the
-improvement tracks network scale. On GÉANT, MARL at $h{=}32$ moves the bottleneck
+Every learned arm improves on OSPF in every cell, and the size of the improvement
+tracks network scale. On GÉANT, MARL at $h{=}32$ moves the bottleneck
 from $145.2\%$ to $96.6\%$, restoring feasibility, while the centralized policy
 reaches only $133.7\%$ and remains infeasible. On the $50$-node Germany50 the gap
 is wider still: MARL reduces a $249.2\%$ bottleneck to $117.0\%$ and the
 centralized policy only to $176.3\%$. Abilene reverses the ordering. There the
 centralized controller is the best arm in both regimes, at $116.3\%$ against
 OSPF's $129.3\%$ under overload and $54.2\%$ against $57.2\%$ when feasible,
-while MARL at $h{=}64$ is the single cell in which any learned method is worse
-than OSPF ($130.3\%$ against $129.3\%$).
+with MARL second in both.
 
 Three observations qualify the table. First, ECMP is a materially stronger
 baseline than shortest-path OSPF wherever the topology offers equal-cost
@@ -94,7 +93,7 @@ alternatives: it reaches $119.2\%$ on GÉANT and $211.9\%$ on Germany50, so on
 GÉANT the centralized policy is beaten not only by MARL but by a mechanism
 already deployed in every operator network. On Abilene, whose fifteen links leave
 few ties to split over, ECMP is indistinguishable from OSPF ($129.2\%$ against
-$129.3\%$) and every learned arm but one beats both.
+$129.3\%$) and both learned arms beat it.
 
 Second, the centralized policy's Germany50 dispersion --- $\pm 51.0$ percentage
 points under overload, against $\pm 3.5$ for MARL at the same width and under
@@ -189,7 +188,7 @@ Table~\ref{tab:qos} reports the resulting measurements over $378$ simulations.
   rows where a baseline wins}.}
   \label{tab:qos}
   \setlength{\tabcolsep}{3.5pt}
-  \begin{tabular}{llccccc}
+  \begin{tabular}{llcccc}
     \toprule
     Topology & Metric & OSPF & ECMP & Single-agent & MARL \\
     \midrule
@@ -248,9 +247,10 @@ $6.82\%$. The delay result is the
 more informative: the learned policy uses longer paths, so a naive expectation is
 higher delay, and that it falls instead shows the dominant contribution under
 OSPF was queueing at the saturated bottleneck rather than propagation. On
-Germany50 the $h{=}64$ policy reduces loss from $27.29\%$ to $8.88\%$ and
-simultaneously records the lowest delay in the cell, $15.1$\,ms against
-$19.7$\,ms. The operational reading is direct: a link dropping one packet in
+Germany50 MARL reduces loss from $27.29\%$ to $10.62\%$, roughly a factor of
+three, at a delay of $20.7$\,ms against OSPF's $19.7$ --- here the diversification
+is paid for in queueing rather than free, and ECMP records the lowest delay in the
+cell at $17.0$\,ms while still losing more than twice as many packets. The operational reading is direct: a link dropping one packet in
 four, at which interactive and real-time traffic is unusable, is brought to a
 loss rate an order of magnitude lower by changing route selection alone, with no
 additional capacity provisioned.
@@ -315,13 +315,14 @@ where hop-by-hop construction produces routes that free headroom at a small but
 consistent cost in loss, and where the centralized formulation's global view of a
 whole path is the better tool.
 
-The reported width, $h{=}32$, was selected on the training topologies
-(Section~\ref{sec:setup-hyper}) and not on the evidence in this section. That
-selection is corroborated here: $h{=}32$ is the stronger arm on Abilene and on
-both GÉANT cells, and it carries roughly a third of the seed dispersion of
-$h{=}64$ ($\pm 1.6$ against $\pm 3.0$ on GÉANT overload, $\pm 3.5$ against
-$\pm 9.7$ on Germany50). The wider policy wins only the Germany50 overload cell,
-and does so with three times the variance.
+The reported width, $h{=}32$, was selected on the \emph{training} topologies
+(Section~\ref{sec:setup-hyper}) and not on any evidence in this chapter. A wider
+$h{=}64$ variant was trained and evaluated identically as the alternative
+candidate; it was not selected and is not reported. Its behaviour is consistent
+with the choice: it carries roughly three times the seed dispersion of $h{=}32$
+($\pm 3.0$ against $\pm 1.6$ on GÉANT overload, $\pm 9.7$ against $\pm 3.5$ on
+Germany50) and is the only configuration tested that is worse than OSPF on any
+cell.
 
 Against the centralized controller the two architectures split the six cells
 evenly. MARL takes both GÉANT cells and Germany50 overload --- the three in which
@@ -345,8 +346,8 @@ wins, it is not bought with capacity.
 Abilene is where the decentralized formulation loses, and it is the one network on
 which the ranking of the two learned architectures inverts. MARL at $h{=}32$
 records $0.97\%$ loss and $14.2$\,ms delay in the feasible regime against OSPF's
-$0.17\%$ and $11.5$\,ms, and $15.41\%$ loss in overload against OSPF's $14.35\%$;
-at $h{=}64$ it is worse still, $3.30\%$ and $24.8$\,ms. The centralized
+$0.17\%$ and $11.5$\,ms, and $15.41\%$ loss in overload against OSPF's $14.35\%$.
+The centralized
 controller, by contrast, matches OSPF's service in the feasible regime ($0.24\%$
 loss, $13.8$\,ms) while holding the bottleneck $8.5$ points lower at $88.1\%$,
 and takes the lowest loss in the cell under overload, $13.41\%$ against OSPF's
