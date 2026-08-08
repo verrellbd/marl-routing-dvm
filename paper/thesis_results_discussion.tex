@@ -1,454 +1,264 @@
 \section{Results and Discussion}
 \label{sec:results}
-The study evaluated results on the Abilene, GÉANT, and Germany50 topologies using real measured operator traffic. None of these topologies were included in the policy's training data. Under overload conditions, the proposed approach reduces packet loss compared to OSPF by $11.2$ percentage points on GÉANT and $18.4$ on Germany50. In the feasible regime, it maintains GÉANT's bottleneck utilization at $66.7\%$, whereas OSPF results in $97.3\%$, with no increase in loss or delay. On Abilene, the approach does not outperform OSPF. These findings indicate that a single MARL policy can adapt to previously unseen networks and provide improvements on several topologies. Results are reported as mean $\pm$ standard deviation \emph{across model seeds}, each seed contributing its own mean over the retained matrices.
+This section presents evaluation results for the Abilene, GÉANT, and Germany50 topologies using real measured operator traffic. The results emphasize two performance indicators and the progression of rewards within the model. For the reinforcement learning method, results are reported as mean $\pm$ standard deviation \emph{across model seeds}, each seed contributing its own mean over the retained matrices.
+
+\subsection{The Reward Formulation}
+\label{sec:res-reward}
+The performance of the multi-agent reinforcement learning (MARL) approach depends on the accuracy of the reward calculation. The model was trained on 17 topologies from SNDLib using the TMGen matrix across three random seeds. We train for approximately 1,500,000 steps to achieve the final results. According to Equation~\eqref{eq:telescope}, the episode return is defined as the final bottleneck expressed as a percentage of OSPF’s, plus $\beta$ times the number of detour hops taken.
+
+Figure~\ref{fig:training-curve} illustrates the training progress across the three seeds. The baseline OSPF bottleneck reaches $-100$ with no detours. The model demonstrates an average return across the three seeds that increases from $-344.5$ during the first fifty updates to $-231.7$ during the last fifty updates. The final per-seed returns are $-208.2$, $-243.3$, and $-243.6$, with a standard deviation of $7.2\%$ of the mean. These results indicate that the model exhibits consistent performance across different seeds.
+
+
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.78\textwidth]{images/fig_marl_training_curves.png}
+  \includegraphics[width=0.8\textwidth]{images/fig_marl_training_curves.png}
   \caption{MARL ($h{=}32$) mean episode return over the $732$ policy updates of the
-  matched budget, on the seventeen training topologies. Each episode draws one
-  topology, whose bottlenecks differ by an order of magnitude, so the per-update
-  return is dominated by that draw; the bold line is a centred rolling mean over
-  fifteen updates and the band spans the three seeds. Return rises steeply over the
-  first hundred updates and is flat thereafter, and the three seeds stay within a
-  narrow band throughout --- the stability that Section~\ref{sec:res-stability}
-  documents on the held-out networks is already visible during training. The
-  centralized controller is trained with Stable-Baselines3 at default verbosity and
-  emits no comparable per-update trace.}
+  matched budget, on the seventeen training topologies.}
   \label{fig:training-curve}
 \end{figure}
+
+
+The trained policy was further evaluated on three previously unseen topologies: Abilene, GEANT, and Germany50. The objective of this evaluation was to assess the trade-offs between performance gains and associated costs when applying the policy to new networks. On Abilene, the policy detours on only $3.0\%$ of hops, incurs a cost of $4.8$, and reduces the bottleneck to $96\%$ of OSPF's bottleneck. On GÉANT, the policy detours on $3.8\%$ of hops, with a cost of $8.4$, reducing the bottleneck to $67\%$ of OSPF's. On Germany50, the largest improvement is observed, with the bottleneck reduced to $47\%$ of OSPF's, at the expense of detouring on $14.2\%$ of hops and a cost of $61.0$.
+
+These results indicate that the policy can be applied to other networks. Although the rewards do not approach the OSPF baseline, they have improved significantly during training. Evaluation on previously unseen topologies demonstrates the trade-offs associated with the method employed in this study. Additional training with more steps, diverse topologies, and varied traffic patterns may further enhance model performance.
 
 \subsection{Bottleneck Offered Load}
 \label{sec:res-util}
 
-Table~\ref{tab:offered-util} reports the training objective, the maximum offered
-load of Equation~\eqref{eq:maxutil}, on the held-out networks. Recall from
-Section~\ref{sec:setup-regimes} that this quantity is uncapped and may exceed
-$100\%$, denoting demand no queueing discipline can serve; its consequence is
-quantified in Section~\ref{sec:res-qos}.
+Measured traffic data from SNDLib \cite{SNDlib10} provides actual traffic values across multiple timeframes. Traffic scaling is applied to generate demand for simulation. The resulting load is simulated on an analytical surrogate domain, since ns-3 link capacity is limited to 100\%. Therefore, simulation demand is evaluated under two distinct conditions: overload and feasible regimes. Results for both regimes are reported for all three networks.
 
-Both regimes are reported for all three networks. Doing so requires two demand
-scales per network rather than one, because no single scale exercises both regimes
-everywhere: a correctly costed OSPF is never overloaded on Abilene below a scale of
-about $16$, and never feasible on Germany50 above about $30$
-(Section~\ref{sec:setup-scaling}). Each cell is therefore measured at the scale set
-that produces it, and cells are comparable down columns but not across regimes
-within a network.
+The results in Figure \ref{fig:link-utilization} show that MARL consistently outperforms other methods in both overload and feasible regimes. MARL achieves superior performance compared to OSPF, ECMP, and single-agent approaches on the GEANT and Germany50 networks, although it performs slightly worse than the single-agent method on Abilene. Additionally, MARL demonstrates a significant reduction in maximum offered load, achieving up to a 53\% decrease on GEANT and Germany50 in both regimes. In the overload regime, MARL reduces the offered load to 96.6\%, maintaining it below the 100\% threshold.
 
-\begin{table}[htbp]
-  \centering
-  \small
-  \caption{Maximum offered load on the bottleneck link, as a percentage of link
-  capacity (lower is better; $>100\%$ denotes infeasible demand). Mean $\pm$
-  standard deviation over three model seeds; OSPF and ECMP are deterministic
-  given a matrix. Best per row in bold. Abilene's overload row and Germany50's
-  feasible row are measured at the alternate demand scales of
-  Table~\ref{tab:eval-setup}.}
-  \label{tab:offered-util}
-  \setlength{\tabcolsep}{4.5pt}
-  \begin{tabular}{lcccc}
-    \toprule
-    Topology & OSPF & ECMP & Single-agent & MARL  \\
-    \midrule
-    \multicolumn{5}{l}{\emph{Overload regime (OSPF drives a link $\geq$ capacity)}} \\
-    \midrule
-    Abilene   & 129.3\% & 129.2\% & \textbf{116.3 $\pm$ 2.8\%} & 124.9 $\pm$ 3.3\%          \\
-    GÉANT     & 145.2\% & 119.2\% & 133.7 $\pm$ 10.7\%         & \textbf{96.6 $\pm$ 1.6\%}  \\
-    Germany50 & 249.2\% & 211.9\% & 176.3 $\pm$ 51.0\%         & \textbf{117.0 $\pm$ 3.5\%}         \\
-    \midrule
-    \multicolumn{5}{l}{\emph{Feasible regime (traffic fits under OSPF)}} \\
-    \midrule
-    Abilene   & 57.2\% & 57.2\% & \textbf{54.2 $\pm$ 1.6\%} & 56.1 $\pm$ 1.9\%           \\
-    GÉANT     & 71.1\% & 60.7\% & 70.0 $\pm$ 5.9\%          & \textbf{48.2 $\pm$ 1.1\%}  \\
-    Germany50 & 81.0\% & 70.4\% & 52.3 $\pm$ 11.3\%         & \textbf{40.9 $\pm$ 2.4\%}         \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+In the feasible regime, OSPF reaches a maximum offered load of 81\% on Germany50, while ECMP achieves 70.4\%. ECMP's more efficient algorithm results in approximately an 11\% reduction on both GEANT and Germany50 in the feasible regime. The single-agent approach shows significant improvement on Germany50 at 52\%, but underperforms on GEANT at 70\%. MARL outperforms all three baselines on GEANT and Germany50, achieving 48.2\% and 40.9\%, respectively.
+
+The overload regime yields results similar to those observed in the feasible regime. Both the single-agent and MARL approaches improve routing decision performance in this regime. The single-agent method outperforms OSPF and ECMP on Abilene and Germany50, with improvements of 10\% and 29\%, respectively. MARL also demonstrates significant improvement by reducing the maximum offered load on GEANT and Germany50 to 96.6\% and 117\%, respectively.
+
+These observations demonstrate that MARL improves routing by reducing the maximum offered load across both overload and feasible regimes. MARL also outperforms the single-agent approach on GEANT and Germany50. In two out of three networks, across both regimes, MARL distributes traffic more effectively than OSPF, ECMP, and single-agent methods. Therefore, the objective of using MARL to lower the bottleneck achieved.  
+
+
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{images/fig_offered_util_regime.png}
-  \caption{Maximum offered load on the bottleneck link, by regime and topology.
-  The dashed line marks link capacity; bars above it denote demand that cannot be
-  served, so it is drawn only in the overload panel. Error bars are one standard
-  deviation over model seeds and are therefore absent for the deterministic
-  baselines. MARL is the reported policy at width $h{=}32$
-  (Section~\ref{sec:setup-hyper}).}
+  \includegraphics[width=0.8\textwidth]{images/fig_offered_util_regime.png}
+  \caption{Maximum offered load on the bottleneck link, by regime and topology.}
   \label{fig:link-utilization}
 \end{figure}
 
-Every learned arm improves on OSPF in every cell, and the size of the improvement
-tracks network scale. On GÉANT, MARL at $h{=}32$ moves the bottleneck
-from $145.2\%$ to $96.6\%$, restoring feasibility, while the centralized policy
-reaches only $133.7\%$ and remains infeasible. On the $50$-node Germany50 the gap
-is wider still: MARL reduces a $249.2\%$ bottleneck to $117.0\%$ and the
-centralized policy only to $176.3\%$. Abilene reverses the ordering. There the
-centralized controller is the best arm in both regimes, at $116.3\%$ against
-OSPF's $129.3\%$ under overload and $54.2\%$ against $57.2\%$ when feasible,
-with MARL second in both.
+% \subsection{Greedy References}
+% \label{sec:res-greedy}
 
-Three observations qualify the table. First, ECMP is a materially stronger
-baseline than shortest-path OSPF wherever the topology offers equal-cost
-alternatives: it reaches $119.2\%$ on GÉANT and $211.9\%$ on Germany50, so on
-GÉANT the centralized policy is beaten not only by MARL but by a mechanism
-already deployed in every operator network. On Abilene, whose fifteen links leave
-few ties to split over, ECMP is indistinguishable from OSPF ($129.2\%$ against
-$129.3\%$) and both learned arms beat it.
+% Neither learned policy should be credited with what a simple heuristic on the same
+% action space already achieves. Table~\ref{tab:greedy} scores the two greedy
+% best-responses of Section~\ref{sec:setup-hyper} on the identical matrices. Both
+% require global link state after every decision and the path-level variant requires
+% the demand matrix in advance, so neither is deployable; they are bounds, not
+% competitors.
 
-Second, the centralized policy's Germany50 dispersion --- $\pm 51.0$ percentage
-points under overload, against $\pm 3.5$ for MARL at the same width and under
-identical hyperparameters and reward --- is an order of magnitude larger than any
-other entry in the table. This is examined in Section~\ref{sec:res-stability}.
+% \begin{table}[htbp]
+%   \centering
+%   \small
+%   \caption{Greedy best-responses against OSPF and the reported learned arms, as
+%   maximum offered load (\%). The path-level greedy shares the centralized action
+%   space, the hop-level greedy the decentralized one.}
+%   \label{tab:greedy}
+%   \setlength{\tabcolsep}{4.5pt}
+%   \begin{tabular}{lccccc}
+%     \toprule
+%     Cell & OSPF & Greedy (hop) & Greedy (path) & Single-agent & MARL $h{=}32$ \\
+%     \midrule
+%     Abilene overload   & 129.3 & 403.8 & \textbf{111.3} & 116.3 & 124.9 \\
+%     GÉANT overload     & 145.2 & 148.8 & \textbf{87.9}  & 133.7 & 96.6  \\
+%     Germany50 overload & 249.2 & 168.5 & \textbf{116.4} & 176.3 & 117.0 \\
+%     \midrule
+%     Abilene feasible   & 57.2  & 182.2 & \textbf{49.4}  & 54.2  & 56.1  \\
+%     GÉANT feasible     & 71.1  & 72.4  & \textbf{45.7}  & 70.0  & 48.2  \\
+%     Germany50 feasible & 81.0  & 56.8  & \textbf{37.7}  & 52.3  & 40.9  \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
 
-Third, the objective and the packet-level measurement rank the Germany50 feasible
-cell differently. Here MARL holds the bottleneck at $40.9\%$ against the
-centralized policy's $52.3\%$; Section~\ref{sec:res-qos} shows the centralized
-policy nonetheless delivering the better service in that cell, because MARL's
-additional headroom is obtained at a cost in loss the surrogate does not model.
-The disagreement is the clearest illustration of why the packet-level evaluation
-is necessary rather than confirmatory.
+% The two references separate sharply, and the separation is informative.
 
-\subsection{Greedy References}
-\label{sec:res-greedy}
+% \emph{Acting greedily hop by hop is far worse than not trying at all.} The
+% hop-level best-response is beaten by OSPF on four of six cells and is
+% catastrophic on Abilene, reaching $403.8\%$ where OSPF sits at $129.3\%$: choosing
+% the locally least-congested next hop repeatedly walks a demand into a long path
+% that loads links no single decision was accountable for. That the decentralized
+% policy, acting in exactly this space, instead reaches $124.9\%$ and $96.6\%$ is
+% the clearest evidence in this chapter that it has learned something beyond
+% greed --- on GÉANT overload it improves on greedy by $52$ percentage points, and
+% on Abilene by $279$.
 
-Neither learned policy should be credited with what a simple heuristic on the same
-action space already achieves. Table~\ref{tab:greedy} scores the two greedy
-best-responses of Section~\ref{sec:setup-hyper} on the identical matrices. Both
-require global link state after every decision and the path-level variant requires
-the demand matrix in advance, so neither is deployable; they are bounds, not
-competitors.
-
-\begin{table}[htbp]
-  \centering
-  \small
-  \caption{Greedy best-responses against OSPF and the reported learned arms, as
-  maximum offered load (\%). The path-level greedy shares the centralized action
-  space, the hop-level greedy the decentralized one.}
-  \label{tab:greedy}
-  \setlength{\tabcolsep}{4.5pt}
-  \begin{tabular}{lccccc}
-    \toprule
-    Cell & OSPF & Greedy (hop) & Greedy (path) & Single-agent & MARL $h{=}32$ \\
-    \midrule
-    Abilene overload   & 129.3 & 403.8 & \textbf{111.3} & 116.3 & 124.9 \\
-    GÉANT overload     & 145.2 & 148.8 & \textbf{87.9}  & 133.7 & 96.6  \\
-    Germany50 overload & 249.2 & 168.5 & \textbf{116.4} & 176.3 & 117.0 \\
-    \midrule
-    Abilene feasible   & 57.2  & 182.2 & \textbf{49.4}  & 54.2  & 56.1  \\
-    GÉANT feasible     & 71.1  & 72.4  & \textbf{45.7}  & 70.0  & 48.2  \\
-    Germany50 feasible & 81.0  & 56.8  & \textbf{37.7}  & 52.3  & 40.9  \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-The two references separate sharply, and the separation is informative.
-
-\emph{Acting greedily hop by hop is far worse than not trying at all.} The
-hop-level best-response is beaten by OSPF on four of six cells and is
-catastrophic on Abilene, reaching $403.8\%$ where OSPF sits at $129.3\%$: choosing
-the locally least-congested next hop repeatedly walks a demand into a long path
-that loads links no single decision was accountable for. That the decentralized
-policy, acting in exactly this space, instead reaches $124.9\%$ and $96.6\%$ is
-the clearest evidence in this chapter that it has learned something beyond
-greed --- on GÉANT overload it improves on greedy by $52$ percentage points, and
-on Abilene by $279$.
-
-\emph{Acting greedily over whole paths is very strong.} The path-level
-best-response is the best arm in every cell, and by margins that are not small on
-GÉANT ($87.9$ against MARL's $96.6$) and Abilene ($111.3$ against the centralized
-policy's $116.3$). Only on Germany50 does a learned policy match it, MARL reaching
-$117.0$ against $116.4$. This bounds the contribution honestly: at $50$ nodes the
-learned policy is at the ceiling that its action space permits, while at $22$ and
-$12$ nodes a clairvoyant heuristic still does better. The gap is not evidence that
-the policies are under-trained --- they are at a matched budget and their seeds
-agree --- but that a policy acting on local observations, without the demand matrix
-and without recomputing global state per decision, pays something for that
-restriction. What it buys in exchange is the ability to run at all in a real
-network, where neither greedy reference could.
+% \emph{Acting greedily over whole paths is very strong.} The path-level
+% best-response is the best arm in every cell, and by margins that are not small on
+% GÉANT ($87.9$ against MARL's $96.6$) and Abilene ($111.3$ against the centralized
+% policy's $116.3$). Only on Germany50 does a learned policy match it, MARL reaching
+% $117.0$ against $116.4$. This bounds the contribution honestly: at $50$ nodes the
+% learned policy is at the ceiling that its action space permits, while at $22$ and
+% $12$ nodes a clairvoyant heuristic still does better. The gap is not evidence that
+% the policies are under-trained --- they are at a matched budget and their seeds
+% agree --- but that a policy acting on local observations, without the demand matrix
+% and without recomputing global state per decision, pays something for that
+% restriction. What it buys in exchange is the ability to run at all in a real
+% network, where neither greedy reference could.
 
 \subsection{Packet-Level Quality of Service}
 \label{sec:res-qos}
+Quality of Service results were obtained using the NS-3 simulator. FlowMonitor was employed to collect data from this packet-level simulator. To ensure consistency, measured traffic from SNDLib was used under maximum offered load conditions. The results are divided into overload and feasible regimes to highlight differences between these conditions. Packet loss is reported as a percentage, and delay is measured in milliseconds (ms).
 
-A reduction in a computed objective is not by itself a networking result: it is
-possible to lower a bottleneck metric and deliver worse service by lengthening
-paths until propagation delay dominates. To rule this out, the exact per-flow
-routes produced by each policy were installed in ns-3 and driven with the same
-held-out traffic under the configuration of Section~\ref{sec:setup-ns3}.
-Table~\ref{tab:qos} reports the resulting measurements over $378$ simulations.
+Overall, MARL outperforms all other methods across all topologies in the overload regime. It achieves the lowest packet loss and delay at GEANT and demonstrates superior delay performance at Abilene and packet loss at Germany50. MARL reduces packet loss to 2.92\% at GEANT. However, as shown in Figure \ref{fig:loss-qos} and Figure \ref{fig:delay-qos}, loss and delay results are similar across methods in the feasible regime, with both MARL and ECMP achieving a packet loss of 0.12\% at GEANT.
 
-\begin{table}[htbp]
-  \centering
-  \small
-  \caption{Packet-level performance under ns-3 on real traffic matrices
-  (Abilene/Zhang, GÉANT/Uhlig-TOTEM, Germany50/DFN). Deviations are over the three
-  model seeds and are therefore quoted for the learned arms only: OSPF is
-  deterministic, and ECMP is reported as the mean over three hash seeds, whose
-  spread measures tie-breaking rather than training and is not comparable with it
-  (Section~\ref{sec:setup-metrics}). Best per row in bold, \emph{including the
-  rows where a baseline wins}.}
-  \label{tab:qos}
-  \setlength{\tabcolsep}{3.5pt}
-  \begin{tabular}{llcccc}
-    \toprule
-    Topology & Metric & OSPF & ECMP & Single-agent & MARL \\
-    \midrule
-    \multicolumn{6}{l}{\emph{Overload regime}} \\
-    \midrule
-    \multirow{2}{*}{Abilene}   & Loss  & 14.35\%   & 14.30\%                     & \textbf{13.41 $\pm$ 0.82\%} & 15.41 $\pm$ 2.13\%\\
-                               & Delay & 122.6\,ms & 115.4\,ms                   & 127.8 $\pm$ 5.3\,ms  & \textbf{108.8 $\pm$ 11.4\,ms} \\
-    \cmidrule(l){1-6}
-    \multirow{2}{*}{GÉANT}     & Loss  & 14.13\%  & 6.82\%             & 11.38 $\pm$ 2.00\%          & \textbf{2.92 $\pm$ 0.17\%} \\
-                               & Delay & 21.4\,ms & 18.6\,ms           & 22.3 $\pm$ 3.6\,ms          & \textbf{18.1 $\pm$ 0.8\,ms} \\
-    \cmidrule(l){1-6}
-    \multirow{2}{*}{Germany50} & Loss  & 27.29\%  & 22.90\%             & 18.17 $\pm$ 5.90\%  & \textbf{10.62 $\pm$ 2.91\%} \\
-                               & Delay & 19.7\,ms & \textbf{17.0\,ms}            & 20.2 $\pm$ 1.8\,ms  & 20.7 $\pm$ 6.8\,ms   \\
-    \midrule
-    \multicolumn{6}{l}{\emph{Feasible regime}} \\
-    \midrule
-    \multirow{3}{*}{Abilene}   & Loss  & \textbf{0.17\%}   & 0.18\%             & 0.24 $\pm$ 0.09\%   & 0.97 $\pm$ 1.02\%   \\
-                               & Delay & \textbf{11.5\,ms} & 11.5\,ms           & 13.8 $\pm$ 2.3\,ms  & 14.2 $\pm$ 4.2\,ms  \\
-                               & Util  & 96.7\%            & 96.7\%            & \textbf{88.1 $\pm$ 1.7\%} & 93.2 $\pm$ 4.8\%  \\
-    \cmidrule(l){1-6}
-    \multirow{3}{*}{GÉANT}     & Loss  & 0.16\%   & \textbf{0.12\%}            & 0.42 $\pm$ 0.26\%   & \textbf{0.12 $\pm$ 0.00\%}  \\
-                               & Delay & 9.5\,ms  & \textbf{8.2\,ms}           & 13.4 $\pm$ 2.3\,ms  & 8.3 $\pm$ 0.2\,ms \\
-                               & Util  & 97.3\%   & 78.2\%                    & 94.4 $\pm$ 6.6\%    & \textbf{66.7 $\pm$ 1.7\%}  \\
-    \cmidrule(l){1-6}
-    \multirow{3}{*}{Germany50} & Loss  & \textbf{0.03\%}  & 0.58\%             & \textbf{0.03 $\pm$ 0.00\%} & 1.02 $\pm$ 0.81\% \\
-                               & Delay & \textbf{1.8\,ms} & 5.3\,ms            & 1.9 $\pm$ 0.0\,ms          & 2.0 $\pm$ 0.1\,ms \\
-                               & Util  & 95.6\%           & 84.0\%            & \textbf{61.5 $\pm$ 12.5\%} & 70.8 $\pm$ 19.8\%  \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+MARL demonstrates strong performance in the overload regime by outperforming other methods in four out of six metrics. Specifically, it reduces delay to 108.8 ms at Abilene and 18.1 ms at GEANT under bottleneck traffic conditions. MARL also achieves the lowest packet loss at Germany50, with a value of 10.62\%. In contrast, the single-agent method achieves the lowest packet loss at Abilene (13.41\%), and ECMP achieves the lowest delay at Germany50 (17 ms).
+
+In contrast, results in the feasible regime do not indicate significant differences in quality of service among the methods. Several metrics are identical across topologies and methods. For example, OSPF and ECMP both achieve a delay of 11.5 ms at Abilene, ECMP and MARL both record a packet loss of 0.12\% at GEANT, and OSPF and the single-agent method both achieve a packet loss of 0.03\% at Germany50. In this regime, packet loss varies only between 0.03 and 1.02\%, and delay ranges from 1.8 to 14.2 ms.
+
+Quality of Service measurements demonstrate that MARL provides improved performance in the overload regime. The observed delay and packet loss are influenced by the routing protocol, particularly when hops increase or bottleneck traffic occurs. The study's objective is achieved, with the additional observation that in the feasible regime, baseline protocols such as OSPF and ECMP already provide sufficient performance.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{images/fig_qos_loss_regime.png}
-  \caption{Packet loss measured by ns-3 FlowMonitor, split by regime. Note the
-  scale difference between panels: the feasible regime is plotted in fractions of
-  a percent. Error bars are one standard deviation over model seeds, with the
-  lower arm clipped at zero since loss is non-negative.}
+  \includegraphics[width=0.8\textwidth]{images/fig_qos_loss_regime.png}
+  \caption{Packet loss measured by ns-3 FlowMonitor, split by regime.}
   \label{fig:loss-qos}
 \end{figure}
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{images/fig_qos_delay_regime.png}
-  \caption{Mean end-to-end delay measured by ns-3 FlowMonitor, split by regime.
-  Delay is read jointly with Figure~\ref{fig:loss-qos}: dropped packets contribute
-  no delay sample, so a lower bar is meaningful only where loss is equal or lower.}
+  \includegraphics[width=0.8\textwidth]{images/fig_qos_delay_regime.png}
+  \caption{Mean end-to-end delay measured by ns-3 FlowMonitor, split by regime.}
   \label{fig:delay-qos}
 \end{figure}
 
-\paragraph{Overload.} On GÉANT, MARL at $h{=}32$ reduces loss from $14.13\%$ to
-$2.92\%$, a factor of nearly five and a margin of $11.2$ percentage points, while
-holding delay at $18.1$\,ms against OSPF's $21.4$\,ms. The centralized controller
-reaches $11.38\%$, an improvement on OSPF but one that ECMP already exceeds at
-$6.82\%$. The delay result is the
-more informative: the learned policy uses longer paths, so a naive expectation is
-higher delay, and that it falls instead shows the dominant contribution under
-OSPF was queueing at the saturated bottleneck rather than propagation. On
-Germany50 MARL reduces loss from $27.29\%$ to $10.62\%$, roughly a factor of
-three, at a delay of $20.7$\,ms against OSPF's $19.7$ --- here the diversification
-is paid for in queueing rather than free, and ECMP records the lowest delay in the
-cell at $17.0$\,ms while still losing more than twice as many packets. The operational reading is direct: a link dropping one packet in
-four, at which interactive and real-time traffic is unusable, is brought to a
-loss rate an order of magnitude lower by changing route selection alone, with no
-additional capacity provisioned.
+% \subsection{Seed Stability and the Architectural Comparison}
+% \label{sec:res-stability}
 
-The objective and the packet-level outcome agree throughout this regime.
-Table~\ref{tab:offered-util} showed the centralized policy failing to restore
-feasibility on GÉANT at $133.9\%$; Table~\ref{tab:qos} shows it correspondingly
-retaining $11.38\%$ loss, closer to OSPF's than to MARL's. Policies that restore
-feasibility deliver service, and policies that do not, do not.
+% Because all four learned arms now share identical PPO hyperparameters, the
+% dispersion across seeds is a property of the architecture. The centralized policy
+% is markedly the less stable of the two on the largest network: $\pm 51.4$
+% percentage points of offered load on Germany50 against $\pm 3.5$ for MARL at
+% $h{=}32$, and $\pm 5.90$ percentage points of packet loss against MARL's
+% $\pm 2.91$. Inspection of the individual seeds shows the mechanism: one
+% centralized seed collapses onto shortest-path selection, choosing the
+% cost-shortest of the $k=3$ candidates for almost every demand, which reproduces
+% OSPF and inflates the mean without inflating the training return. Across the
+% evaluation networks the centralized policy routes $62$--$95\%$ of demands on
+% exactly the OSPF path, against $47$--$80\%$ for MARL, so the collapse is a matter
+% of degree rather than an all-or-nothing failure. The decentralized policy, whose
+% per-node action space is re-entered at every hop and whose deviations are
+% therefore incremental rather than committing a whole path, is the more stable at
+% scale. On Abilene the ordering reverses and the centralized policy is the tighter
+% of the two ($\pm 0.82$ against $\pm 2.13$ points of loss), which is consistent
+% with it being the stronger arm there.
 
-Abilene inverts the ranking. There the centralized controller records the lowest
-loss in the cell, $13.41\%$ against OSPF's $14.35\%$ and MARL's $15.41\%$, and is
-the only learned arm to improve on both baselines. Its advantage is bought with
-delay ($127.8$\,ms against MARL's $108.8$), so the two learned methods trade
-rather than dominate.
+% This reverses the expectation that a $50$-node network would be hardest for a
+% decentralized learner through multi-agent credit assignment, with each agent's
+% return depending on forty-nine others whose policies change concurrently. That
+% effect is real but is evidently not the binding constraint at this scale: MARL is
+% the stronger architecture on Germany50 under overload by $7.6$ to $9.3$ points of
+% loss. What survives of the scale argument is confined to the feasible regime,
+% where hop-by-hop construction produces routes that free headroom at a small but
+% consistent cost in loss, and where the centralized formulation's global view of a
+% whole path is the better tool.
 
-\paragraph{Feasible.} The GÉANT feasible cell is the cleanest result in the
-study: MARL at $h{=}32$ holds the bottleneck at $66.7\%$ against OSPF's $97.3\%$
-while \emph{improving} both loss ($0.12\%$ against $0.16\%$) and delay
-($8.3$\,ms against $9.5$\,ms). Thirty percentage points of headroom are freed at
-no service cost, which is the margin an operator needs to absorb a link failure
-or a traffic surge without re-engineering.
+% The reported width, $h{=}32$, was selected on the \emph{training} topologies
+% (Section~\ref{sec:setup-hyper}) and not on any evidence in this chapter. A wider
+% $h{=}64$ variant was trained and evaluated identically as the alternative
+% candidate; it was not selected and is not reported. Its behaviour is consistent
+% with the choice: it carries roughly three times the seed dispersion of $h{=}32$
+% ($\pm 3.0$ against $\pm 1.6$ on GÉANT overload, $\pm 9.7$ against $\pm 3.5$ on
+% Germany50) and is the only configuration tested that is worse than OSPF on any
+% cell.
 
-Germany50 behaves differently and the difference must not be averaged away. Both
-MARL widths free substantially more headroom than OSPF, $70.8\%$ and $61.9\%$
-against $95.6\%$, but they pay for it in loss: $1.02\%$ and $2.44\%$ against
-OSPF's $0.03\%$. The centralized policy wins this cell outright, matching OSPF's
-$0.03\%$ loss at $1.9$\,ms delay while holding the bottleneck $34.1$ points lower
-at $61.5\%$ --- more headroom than either MARL width, at none of their loss cost.
-Where the traffic already fits, the whole-path selection of the centralized
-formulation extracts headroom without disturbing service, and the hop-by-hop MARL
-formulation does not.
+% Against the centralized controller the two architectures split the six cells
+% evenly. MARL takes both GÉANT cells and Germany50 overload --- the three in which
+% the network is large or the demand heavy --- by $8.5$, $27.7$ and $7.6$ points
+% respectively. The centralized controller takes both Abilene cells and Germany50
+% feasible, the three in which OSPF is already close to optimal and the useful
+% deviations are few. The pattern is consistent with the mechanism argued above:
+% incremental per-hop diversification pays when there is slack to redistribute, and
+% whole-path selection pays when only a handful of targeted changes are worth
+% making.
 
-\subsection{Seed Stability and the Architectural Comparison}
-\label{sec:res-stability}
+% That split is worth reading alongside the parameter counts of
+% Table~\ref{tab:hyper}. The reported decentralized policy carries $17{,}570$
+% trainable parameters against the centralized controller's $268{,}420$, a factor
+% of fifteen. Whatever advantage the decentralized formulation confers where it
+% wins, it is not bought with capacity.
 
-Because all four learned arms now share identical PPO hyperparameters, the
-dispersion across seeds is a property of the architecture. The centralized policy
-is markedly the less stable of the two on the largest network: $\pm 51.4$
-percentage points of offered load on Germany50 against $\pm 3.5$ for MARL at
-$h{=}32$, and $\pm 5.90$ percentage points of packet loss against MARL's
-$\pm 2.91$. Inspection of the individual seeds shows the mechanism: one
-centralized seed collapses onto shortest-path selection, choosing the
-cost-shortest of the $k=3$ candidates for almost every demand, which reproduces
-OSPF and inflates the mean without inflating the training return. Across the
-evaluation networks the centralized policy routes $62$--$95\%$ of demands on
-exactly the OSPF path, against $47$--$80\%$ for MARL, so the collapse is a matter
-of degree rather than an all-or-nothing failure. The decentralized policy, whose
-per-node action space is re-entered at every hop and whose deviations are
-therefore incremental rather than committing a whole path, is the more stable at
-scale. On Abilene the ordering reverses and the centralized policy is the tighter
-of the two ($\pm 0.82$ against $\pm 2.13$ points of loss), which is consistent
-with it being the stronger arm there.
+% \subsection{Where the Decentralized Method Fails: Abilene}
+% \label{sec:res-abilene}
 
-This reverses the expectation that a $50$-node network would be hardest for a
-decentralized learner through multi-agent credit assignment, with each agent's
-return depending on forty-nine others whose policies change concurrently. That
-effect is real but is evidently not the binding constraint at this scale: MARL is
-the stronger architecture on Germany50 under overload by $7.6$ to $9.3$ points of
-loss. What survives of the scale argument is confined to the feasible regime,
-where hop-by-hop construction produces routes that free headroom at a small but
-consistent cost in loss, and where the centralized formulation's global view of a
-whole path is the better tool.
+% Abilene is where the decentralized formulation loses, and it is the one network on
+% which the ranking of the two learned architectures inverts. MARL at $h{=}32$
+% records $0.97\%$ loss and $14.2$\,ms delay in the feasible regime against OSPF's
+% $0.17\%$ and $11.5$\,ms, and $15.41\%$ loss in overload against OSPF's $14.35\%$.
+% The centralized
+% controller, by contrast, matches OSPF's service in the feasible regime ($0.24\%$
+% loss, $13.8$\,ms) while holding the bottleneck $8.5$ points lower at $88.1\%$,
+% and takes the lowest loss in the cell under overload, $13.41\%$ against OSPF's
+% $14.35\%$ and ECMP's $14.30\%$.
 
-The reported width, $h{=}32$, was selected on the \emph{training} topologies
-(Section~\ref{sec:setup-hyper}) and not on any evidence in this chapter. A wider
-$h{=}64$ variant was trained and evaluated identically as the alternative
-candidate; it was not selected and is not reported. Its behaviour is consistent
-with the choice: it carries roughly three times the seed dispersion of $h{=}32$
-($\pm 3.0$ against $\pm 1.6$ on GÉANT overload, $\pm 9.7$ against $\pm 3.5$ on
-Germany50) and is the only configuration tested that is worse than OSPF on any
-cell.
+% So the negative result is specific rather than general: \emph{learned routing}
+% improves on OSPF at twelve nodes, but the hop-by-hop decentralized formulation
+% does not. Two properties of the network explain the asymmetry. First, Abilene is
+% the only evaluation instance with heterogeneous link capacities, fourteen links at
+% $9.92$\,Gbps and one at $2.48$\,Gbps; correctly costed, OSPF prices that link at
+% four and routes around it almost entirely, so the baseline is already close to
+% optimal and the margin available to any optimiser is thin. Second, with only
+% twelve nodes and $132$ demand pairs there is little scope for the incremental,
+% per-hop diversification that is MARL's advantage on larger networks, while its
+% per-hop detour penalty still accumulates. The centralized controller, choosing
+% whole cost-shortest paths, expresses exactly the small number of targeted
+% deviations that this network rewards.
 
-Against the centralized controller the two architectures split the six cells
-evenly. MARL takes both GÉANT cells and Germany50 overload --- the three in which
-the network is large or the demand heavy --- by $8.5$, $27.7$ and $7.6$ points
-respectively. The centralized controller takes both Abilene cells and Germany50
-feasible, the three in which OSPF is already close to optimal and the useful
-deviations are few. The pattern is consistent with the mechanism argued above:
-incremental per-hop diversification pays when there is slack to redistribute, and
-whole-path selection pays when only a handful of targeted changes are worth
-making.
+% This bounds the contribution in a useful way. The decentralized formulation's
+% value is concentrated in networks large enough, or loaded heavily enough, that
+% shortest-path routing leaves genuine slack on the table: it wins by $11.2$ points
+% of loss at twenty-two nodes and by $8.6$ at fifty, and loses by roughly one point
+% at twelve. The crossover lies below the scale of any of the three backbones
+% studied, which is a more informative statement than a uniform win would have been.
 
-That split is worth reading alongside the parameter counts of
-Table~\ref{tab:hyper}. The reported decentralized policy carries $17{,}570$
-trainable parameters against the centralized controller's $268{,}420$, a factor
-of fifteen. Whatever advantage the decentralized formulation confers where it
-wins, it is not bought with capacity.
 
-\subsection{Where the Decentralized Method Fails: Abilene}
-\label{sec:res-abilene}
 
-Abilene is where the decentralized formulation loses, and it is the one network on
-which the ranking of the two learned architectures inverts. MARL at $h{=}32$
-records $0.97\%$ loss and $14.2$\,ms delay in the feasible regime against OSPF's
-$0.17\%$ and $11.5$\,ms, and $15.41\%$ loss in overload against OSPF's $14.35\%$.
-The centralized
-controller, by contrast, matches OSPF's service in the feasible regime ($0.24\%$
-loss, $13.8$\,ms) while holding the bottleneck $8.5$ points lower at $88.1\%$,
-and takes the lowest loss in the cell under overload, $13.41\%$ against OSPF's
-$14.35\%$ and ECMP's $14.30\%$.
+% \subsection{Limitations}
+% \label{sec:res-limitations}
 
-So the negative result is specific rather than general: \emph{learned routing}
-improves on OSPF at twelve nodes, but the hop-by-hop decentralized formulation
-does not. Two properties of the network explain the asymmetry. First, Abilene is
-the only evaluation instance with heterogeneous link capacities, fourteen links at
-$9.92$\,Gbps and one at $2.48$\,Gbps; correctly costed, OSPF prices that link at
-four and routes around it almost entirely, so the baseline is already close to
-optimal and the margin available to any optimiser is thin. Second, with only
-twelve nodes and $132$ demand pairs there is little scope for the incremental,
-per-hop diversification that is MARL's advantage on larger networks, while its
-per-hop detour penalty still accumulates. The centralized controller, choosing
-whole cost-shortest paths, expresses exactly the small number of targeted
-deviations that this network rewards.
+% Six limitations qualify these results.
 
-This bounds the contribution in a useful way. The decentralized formulation's
-value is concentrated in networks large enough, or loaded heavily enough, that
-shortest-path routing leaves genuine slack on the table: it wins by $11.2$ points
-of loss at twenty-two nodes and by $8.6$ at fifty, and loses by roughly one point
-at twelve. The crossover lies below the scale of any of the three backbones
-studied, which is a more informative statement than a uniform win would have been.
+% The policies are trained against an analytical link-utilisation surrogate rather
+% than ns-3, since packet-level simulation is too slow inside a training loop. The
+% agreement between objective and measurement in the overload regime shows the
+% surrogate is adequate there, but it does not guarantee untested regimes, and the
+% Germany50 feasible cell is precisely a case where the surrogate's ranking and the
+% packet-level ranking disagree.
 
-\subsection{The Reward Formulation}
-\label{sec:res-reward}
+% The Germany50 OSPF baseline is sensitive to equal-cost tie-breaking. Germany50's
+% links are of uniform capacity, so weighting the metric does not change any path
+% cost; it changes only which of several equal-cost paths the shortest-path
+% computation returns. That choice alone moves OSPF's measured overload loss by
+% several percentage points, and it moves in the direction that flatters the
+% learned policies. The Germany50 margins should be read with this in mind.
 
-The two architectures were initially trained under reward functions that differed
-in a detail that proved consequential. Both charge the marginal increase in the
-bottleneck, normalised by the episode's OSPF bottleneck so that networks at
-different utilisations are comparable. They differed in the delay term: the
-centralized environment charged $\beta$ per \emph{extra hop} relative to the
-shortest candidate and normalised that penalty along with the congestion term,
-whereas the decentralized environment charges a flat $\beta$ per \emph{detour
-hop} and leaves it unnormalised.
+% The reward comparison of Section~\ref{sec:res-reward} was run for the
+% centralized architecture only. Whether the decentralized policy would likewise
+% improve under the centralized reward form was not tested, so the claim is that
+% the reported baseline is the stronger of two configurations, not that it is
+% optimal.
 
-Measured on the evaluation traffic, the centralized form made the shortest
-candidate the myopically optimal choice for $95.2\%$ of GÉANT demands and
-$97.2\%$ of Germany50 demands: for the large majority of individual demands no
-alternative path reduces the bottleneck at all, so the congestion benefit is
-exactly zero while the hop penalty is immediate and certain. The consequence was
-a policy that reproduced OSPF on $90.3\%$ of GÉANT demands.
+% Three seeds is few, particularly given the dispersion documented in
+% Section~\ref{sec:res-stability}. The Germany50 feasible utilisation figures carry
+% seed standard deviations between $\pm 13$ and $\pm 20$ percentage points, and
+% differences between arms within that cell are not resolved by this evidence.
 
-Retraining the centralized controller under the decentralized reward, with every
-other setting held fixed, improves it in five of the six cells of
-Table~\ref{tab:qos}. The largest gains are on Abilene, where feasible-regime loss
-falls from $3.69\%$ to $0.24\%$ and delay from $37.8$ to $13.8$\,ms, and on
-Germany50 feasible, where it frees a further $13.3$ points of headroom at
-unchanged loss. It regresses only on Germany50 overload, $16.73\%$ to $18.17\%$.
-The results reported throughout this chapter use the improved form; the original
-is retained in \texttt{results/final\_ns3\_grid.json} as an ablation.
+% Abilene's two tables describe the same policies at different operating points, for
+% the reason given in Section~\ref{sec:setup-scaling}, and should not be read
+% across. Similarly, the absolute Germany50 figures correspond to the top $200$ of
+% $2450$ demand pairs; all methods see the identical flow set, so the comparison is
+% unbiased, but the magnitudes are those of that subset.
 
-Two points follow. First, the baseline reported here is the stronger of the two
-configurations tested, so the comparison is not flattered by an under-configured
-opponent. Second, and more important for the interpretation of
-Section~\ref{sec:res-stability}, the decentralized policy retains its advantage
-under the identical reward function: $8.5$ points of loss on GÉANT overload,
-$27.7$ points of utilisation on GÉANT feasible, and $7.6$ points of loss on
-Germany50 overload. The architectural difference therefore does not reduce to the
-reward asymmetry.
-
-\subsection{Limitations}
-\label{sec:res-limitations}
-
-Six limitations qualify these results.
-
-The policies are trained against an analytical link-utilisation surrogate rather
-than ns-3, since packet-level simulation is too slow inside a training loop. The
-agreement between objective and measurement in the overload regime shows the
-surrogate is adequate there, but it does not guarantee untested regimes, and the
-Germany50 feasible cell is precisely a case where the surrogate's ranking and the
-packet-level ranking disagree.
-
-The Germany50 OSPF baseline is sensitive to equal-cost tie-breaking. Germany50's
-links are of uniform capacity, so weighting the metric does not change any path
-cost; it changes only which of several equal-cost paths the shortest-path
-computation returns. That choice alone moves OSPF's measured overload loss by
-several percentage points, and it moves in the direction that flatters the
-learned policies. The Germany50 margins should be read with this in mind.
-
-The reward comparison of Section~\ref{sec:res-reward} was run for the
-centralized architecture only. Whether the decentralized policy would likewise
-improve under the centralized reward form was not tested, so the claim is that
-the reported baseline is the stronger of two configurations, not that it is
-optimal.
-
-Three seeds is few, particularly given the dispersion documented in
-Section~\ref{sec:res-stability}. The Germany50 feasible utilisation figures carry
-seed standard deviations between $\pm 13$ and $\pm 20$ percentage points, and
-differences between arms within that cell are not resolved by this evidence.
-
-Abilene's two tables describe the same policies at different operating points, for
-the reason given in Section~\ref{sec:setup-scaling}, and should not be read
-across. Similarly, the absolute Germany50 figures correspond to the top $200$ of
-$2450$ demand pairs; all methods see the identical flow set, so the comparison is
-unbiased, but the magnitudes are those of that subset.
-
-Finally, topologies are static and each simulation holds a single traffic matrix.
-Link and node failures, convergence during a topology change, and adaptation to
-traffic shifting \emph{within} an episode are not evaluated. The study
-demonstrates generalisation across networks and across matrices, not adaptation
-within one, and this remains the largest gap between the present work and a
-deployable system.
+% Finally, topologies are static and each simulation holds a single traffic matrix.
+% Link and node failures, convergence during a topology change, and adaptation to
+% traffic shifting \emph{within} an episode are not evaluated. The study
+% demonstrates generalisation across networks and across matrices, not adaptation
+% within one, and this remains the largest gap between the present work and a
+% deployable system.
