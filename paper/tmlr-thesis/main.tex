@@ -1,0 +1,64 @@
+
+\documentclass[10pt]{article} % For LaTeX2e
+% \usepackage{tmlr}
+% If accepted, instead use the following line for the camera-ready submission:
+% \usepackage[accepted]{tmlr}
+% To de-anonymize and remove mentions to TMLR (for example for posting to preprint servers), instead use the following:
+\usepackage[preprint]{tmlr}
+
+% Optional math commands from https://github.com/goodfeli/dlbook_notation.
+\input{math_commands.tex}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath} 
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsfonts}
+\usepackage{natbib}
+
+\title{Network Performance Evaluation of Graph Neural Network-Based Multi-Agent Reinforcement Learning for Backbone Routing}
+
+% Authors must not appear in the submitted version. They should be hidden
+% as long as the tmlr package is used without the [accepted] or [preprint] options.
+% Non-anonymous submissions will be rejected without review.
+
+\author{\name Dean Verrell Matalino Ariefin \email dean.ariefin.25@ucl.ac.uk \\
+      \addr Department of Electronic and Electrical Engineering\\
+      University College London}
+
+% The \author macro works with any number of authors. Use \AND 
+% to separate the names and addresses of multiple authors.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\def\month{MM}  % Insert correct month for camera-ready version
+\def\year{YYYY} % Insert correct year for camera-ready version
+\def\openreview{\url{https://openreview.net/forum?id=XXXX}} % Insert correct link to OpenReview for camera-ready version
+
+
+\begin{document}
+
+
+\maketitle
+
+\begin{abstract}
+Telecommunication backbone networks serve as the core infrastructure that carries aggregated traffic across geographic regions, interconnecting cities, and networks through high-capacity links. As traffic demand increases rapidly, network routing protocols must deliver efficient and adaptive solutions for packet transmission. This study evaluates the performance of a new routing approach, Multi-Agent Reinforcement Learning (MARL) combined with Graph Neural Networks (GNN), on three distinct telecommunication networks: ABILENE, GEANT, and Germany50. In this approach, each network node is modeled as an autonomous agent that utilizes a GNN-based state to capture both local and global network environment data. Nodes use a centralized training and decentralized execution model to optimize routing decision strategies based on real-time network assessments. The proposed protocol is assessed using NS-3 simulations to measure link utilization and Quality of Service performance. Under overload traffic, the approach outperforms the Open Shortest Path First (OSPF) routing protocol on GEANT and Germany50, reducing packet loss from $14.1\%$ to $2.9\%$ and from $27.3\%$ to $10.6\%$, while in the feasible regime it holds maximum link utilization at $66.7\%$ against OSPF's $97.3\%$ on GEANT at no cost in loss or delay. The results show that integrating MARL with GNNs enhances the performance of telecommunication backbone networks, enabling dynamic learning and adaptation across different network topologies. Nevertheless, further research and more advanced laboratory environments are required for real-world applications.\end{abstract}
+
+\input{Introduction}
+\input{Related Work}
+\input{Methodology}
+\input{Experiments}
+\input{Discussion} 
+% \input{Broader Impact}
+\input{Conclusion}
+
+\bibliography{main}
+\bibliographystyle{tmlr}
+
+\appendix
+\input{Appendix}
+
+\end{document}
