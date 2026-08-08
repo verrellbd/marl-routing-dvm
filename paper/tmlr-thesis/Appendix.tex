@@ -120,13 +120,16 @@ Matrices retained per regime & $3$ & $3$ & $3$ \\
 
 
 
+\subsection{Training Convergence}
+\label{app:training}
+The performance of the multi-agent reinforcement learning (MARL) approach depends on the accuracy of the reward calculation. The model was trained on 17 topologies from SNDLib using the TMGen matrix across three random seeds. We train for approximately 1,500,000 steps to achieve the final results. According to Equation~\eqref{eq:telescope}, the episode return is defined as the final bottleneck expressed as a percentage of OSPF’s, plus $\beta$ times the number of detour hops taken.
+
+Figure~\ref{fig:training-curve} illustrates the training progress across the three seeds. The baseline OSPF bottleneck reaches $-100$ with no detours. The model demonstrates an average return across the three seeds that increases from $-344.5$ during the first fifty updates to $-231.7$ during the last fifty updates. The final per-seed returns are $-208.2$, $-243.3$, and $-243.6$, with a standard deviation of $7.2\%$ of the mean. These results indicate that the model exhibits consistent performance across different seeds. Although the returns do not approach the OSPF baseline, they improve substantially over training.
+
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{images/fig_heatmap_summary.png}
-  \caption{Maximum offered load, packet loss and mean delay for the four methods
-  on the three evaluation backbones, by congestion regime. Each metric is shaded
-  within its own panel, so colour reads as distance from the best method on that
-  network; absolute values are printed in every cell. Means over three model
-  seeds.}
-  \label{fig:heatmap}
+  \includegraphics[width=0.8\textwidth]{images/fig_marl_training_curves.png}
+  \caption{MARL ($h{=}32$) mean episode return over the $732$ policy updates of the
+  matched budget, on the seventeen training topologies.}
+  \label{fig:training-curve}
 \end{figure}

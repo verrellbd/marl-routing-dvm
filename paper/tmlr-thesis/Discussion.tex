@@ -1,34 +1,33 @@
 \section{Results and Discussion}
 \label{sec:results}
-This section presents evaluation results for the Abilene, GÉANT, and Germany50 topologies using real measured operator traffic. The results emphasize two performance indicators and the progression of rewards within the model. For the reinforcement learning method, results are reported as mean $\pm$ standard deviation \emph{across model seeds}, each seed contributing its own mean over the retained matrices. Figure~\ref{fig:heatmap} summarises all three metrics for the four methods across both regimes; the sections that follow examine each metric in turn.
+This section presents evaluation results for the Abilene, GÉANT, and Germany50 topologies using real measured operator traffic. The results emphasize two performance indicators and the reward trade-offs the trained policy makes on networks it has not seen. For the reinforcement learning method, results are reported as mean $\pm$ standard deviation \emph{across model seeds}, each seed contributing its own mean over the retained matrices. Figure~\ref{fig:heatmap} summarises all three metrics for the four methods across both regimes; the sections that follow examine each metric in turn.
 
-\subsection{The Reward Formulation}
-\label{sec:res-reward}
-The performance of the multi-agent reinforcement learning (MARL) approach depends on the accuracy of the reward calculation. The model was trained on 17 topologies from SNDLib using the TMGen matrix across three random seeds. We train for approximately 1,500,000 steps to achieve the final results. According to Equation~\eqref{eq:telescope}, the episode return is defined as the final bottleneck expressed as a percentage of OSPF’s, plus $\beta$ times the number of detour hops taken.
-
-Figure~\ref{fig:training-curve} illustrates the training progress across the three seeds. The baseline OSPF bottleneck reaches $-100$ with no detours. The model demonstrates an average return across the three seeds that increases from $-344.5$ during the first fifty updates to $-231.7$ during the last fifty updates. The final per-seed returns are $-208.2$, $-243.3$, and $-243.6$, with a standard deviation of $7.2\%$ of the mean. These results indicate that the model exhibits consistent performance across different seeds.
-
-
-
-\begin{figure}[htbp]
+\begin{figure}[t]
   \centering
-  \includegraphics[width=0.8\textwidth]{images/fig_marl_training_curves.png}
-  \caption{MARL ($h{=}32$) mean episode return over the $732$ policy updates of the
-  matched budget, on the seventeen training topologies.}
-  \label{fig:training-curve}
+  \includegraphics[width=\textwidth]{images/fig_heatmap_summary.png}
+  \caption{Maximum offered load, packet loss and mean delay for the four methods
+  on the three evaluation backbones, by congestion regime. Each metric is shaded
+  within its own panel, so colour reads as distance from the best method on that
+  network; absolute values are printed in every cell. Means over three model
+  seeds.}
+  \label{fig:heatmap}
 \end{figure}
 
+\subsection{Reward Trade-offs on Unseen Topologies}
+\label{sec:res-reward}
 
-The trained policy was further evaluated on three previously unseen topologies: Abilene, GEANT, and Germany50. The objective of this evaluation was to assess the trade-offs between performance gains and associated costs when applying the policy to new networks; Table~\ref{tab:reward-decomp} decomposes the resulting return into its congestion and delay terms. On Abilene, the policy detours on only $3.0\%$ of hops, incurs a cost of $4.8$, and reduces the bottleneck to $96\%$ of OSPF's bottleneck. On GÉANT, the policy detours on $3.8\%$ of hops, with a cost of $8.4$, reducing the bottleneck to $67\%$ of OSPF's. On Germany50, the largest improvement is observed, with the bottleneck reduced to $47\%$ of OSPF's, at the expense of detouring on $14.2\%$ of hops and a cost of $61.0$.
+The policy was trained on seventeen SNDLib topologies across three random seeds and then evaluated on three previously unseen topologies: Abilene, GÉANT, and Germany50 (training convergence is reported in Appendix~\ref{app:training}). The objective of this evaluation was to assess the trade-offs between performance gains and associated costs when applying the policy to new networks; Table~\ref{tab:reward-decomp} decomposes the resulting return into its congestion and delay terms. On Abilene, the policy detours on only $3.0\%$ of hops, incurs a cost of $4.8$, and reduces the bottleneck to $96\%$ of OSPF's bottleneck. On GÉANT, the policy detours on $3.8\%$ of hops, with a cost of $8.4$, reducing the bottleneck to $67\%$ of OSPF's. On Germany50, the largest improvement is observed, with the bottleneck reduced to $47\%$ of OSPF's, at the expense of detouring on $14.2\%$ of hops and a cost of $61.0$.
 
-These results indicate that the policy can be applied to other networks. Although the rewards do not approach the OSPF baseline, they have improved significantly during training. Evaluation on previously unseen topologies demonstrates the trade-offs associated with the method employed in this study. Additional training with more steps, diverse topologies, and varied traffic patterns may further enhance model performance.
+The trade is struck very differently across the three networks. On Abilene and GÉANT the return is dominated by the congestion term and the delay penalty is small, but on Germany50 the delay penalty is the larger of the two: the policy achieves its best bottleneck reduction there, to $47\%$ of OSPF's, yet pays enough detour hops that its overall return falls below the $-100$ that OSPF scores by construction. Lower bottleneck utilization is therefore not free.
+
+These results indicate that the policy can be applied to other networks. Evaluation on previously unseen topologies demonstrates the trade-offs associated with the method employed in this study. Additional training with more steps, diverse topologies, and varied traffic patterns may further enhance model performance.
 
 \subsection{Bottleneck Offered Load}
 \label{sec:res-util}
 
 Measured traffic data from SNDLib \citep{SNDlib10} provides actual traffic values across multiple timeframes. Traffic scaling is applied to generate demand for simulation. The resulting load is simulated on an analytical surrogate domain, since ns-3 link capacity is limited to 100\%. Therefore, simulation demand is evaluated under two distinct conditions: overload and feasible regimes. Results for both regimes are reported for all three networks.
 
-The results in Figure~\ref{fig:link-utilization}, whose underlying values are listed in Table~\ref{tab:offered-util}, show that MARL consistently outperforms other methods in both overload and feasible regimes. MARL achieves superior performance compared to OSPF, ECMP, and single-agent approaches on the GEANT and Germany50 networks, although it performs slightly worse than the single-agent method on Abilene. Additionally, MARL demonstrates a significant reduction in maximum offered load, achieving up to a 53\% decrease on GEANT and Germany50 in both regimes. In the overload regime, MARL reduces the offered load to 96.6\%, maintaining it below the 100\% threshold.
+Figure~\ref{fig:link-utilization} breaks the offered-load panel of Figure~\ref{fig:heatmap} out by topology, with the underlying values listed in Table~\ref{tab:offered-util}. The results show that MARL consistently outperforms other methods in both overload and feasible regimes. MARL achieves superior performance compared to OSPF, ECMP, and single-agent approaches on the GEANT and Germany50 networks, although it performs slightly worse than the single-agent method on Abilene. Additionally, MARL demonstrates a significant reduction in maximum offered load, achieving up to a 53\% decrease on GEANT and Germany50 in both regimes. In the overload regime, MARL reduces the offered load to 96.6\%, maintaining it below the 100\% threshold.
 
 In the feasible regime, OSPF reaches a maximum offered load of 81\% on Germany50, while ECMP achieves 70.4\%. ECMP's more efficient algorithm results in approximately an 11\% reduction on both GEANT and Germany50 in the feasible regime. The single-agent approach shows significant improvement on Germany50 at 52\%, but underperforms on GEANT at 70\%. MARL outperforms all three baselines on GEANT and Germany50, achieving 48.2\% and 40.9\%, respectively.
 
@@ -105,7 +104,7 @@ These observations demonstrate that MARL improves routing by reducing the maximu
 
 \subsection{Packet-Level Quality of Service}
 \label{sec:res-qos}
-Quality of Service results were obtained using the NS-3 simulator. FlowMonitor was employed to collect data from this packet-level simulator. To ensure consistency, measured traffic from SNDLib was used under maximum offered load conditions. The results are divided into overload and feasible regimes to highlight differences between these conditions. Packet loss is reported as a percentage, and delay is measured in milliseconds (ms). Table~\ref{tab:qos} lists the complete set of packet-level measurements.
+Quality of Service results were obtained using the NS-3 simulator. FlowMonitor was employed to collect data from this packet-level simulator. To ensure consistency, measured traffic from SNDLib was used under maximum offered load conditions. The results are divided into overload and feasible regimes to highlight differences between these conditions. Packet loss is reported as a percentage, and delay is measured in milliseconds (ms). Table~\ref{tab:qos} lists the complete set of packet-level measurements, and Figures~\ref{fig:loss-qos} and~\ref{fig:delay-qos} break the corresponding panels of Figure~\ref{fig:heatmap} out by topology.
 
 Overall, MARL is the strongest method in the overload regime, leading on four of the six loss and delay measurements. It achieves the lowest packet loss and delay at GEANT and demonstrates superior delay performance at Abilene and packet loss at Germany50. MARL reduces packet loss to 2.92\% at GEANT. However, as shown in Figure \ref{fig:loss-qos} and Figure \ref{fig:delay-qos}, loss and delay results are similar across methods in the feasible regime, with both MARL and ECMP achieving a packet loss of 0.12\% at GEANT.
 
