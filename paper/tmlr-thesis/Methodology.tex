@@ -25,7 +25,7 @@ Traffic is a demand matrix decomposed into flows
 $\mathcal{F}=\{f=(s_f,d_f,r_f)\}$, where flow $f$ requests rate $r_f$ from $s_f$ to
 $d_f$. An episode routes one matrix, held fixed for its duration; training matrices
 are synthesised and evaluation matrices are real measured demand
-(Sections~\ref{sec:setup-train} and~\ref{sec:setup-instances}). A routing assigns
+(Section~\ref{sec:setup-instances}). A routing assigns
 each flow a single path $p_f$, giving link loads and utilizations
 \begin{equation}\label{eq:load}
 \ell_e=\sum_{f\in\mathcal{F}} r_f\,\mathbb{1}\!\left[e\in p_f\right],
