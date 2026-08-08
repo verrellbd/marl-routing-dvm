@@ -9,16 +9,16 @@ This section outlines the experimental setup based on the proposed methodology. 
 \subsection{Computing Environment}
 \label{sec:setup-compute}
 
-The experiment was conducted on a single Linux server (Rocky 9) equipped with an AMD EPYC 7543 processor (128 hardware threads) and 512 GB of RAM. Model training and evaluation utilized CPU-based concurrent core parallelization. The software stack included Python 3.9, ns-3.42, PyTorch 2.6.0, PyTorch Geometric 2.6.1, NetworkX, and Stable-Baselines3 2.7.1. The pipeline was implemented using several versions of Python modules. To facilitate reproducibility in other environments, we provide a README file (\texttt{readme.md}) and a Jupyter notebook (\texttt{experiment.ipynb}).
+The experiment was conducted on a single Linux server (Rocky 9) equipped with an AMD EPYC 7543 processor (128 hardware threads) and 512 GB of RAM. Model training and evaluation utilized CPU-based concurrent core parallelization. The software stack included Python 3.9, ns-3.42, PyTorch 2.6.0, PyTorch Geometric 2.6.1, NetworkX, and Stable-Baselines3 2.7.1. Every result reported below was produced on this single configuration.
 
 \subsection{Networks and Traffic Resources}
 \label{sec:setup-instances}
 
 The network simulation utilizes a set of topologies and traffic patterns. Seventeen topologies from SNDLib, excluding Abilene, GEANT, and Germany50, are used to train the model. The training set includes topologies ranging from 10 to 54 nodes and 21 to 80 edges, which enhances the model's ability to generalize across different network structures. In contrast, traffic data require a different approach because measured traffic is only available for Abilene, GEANT, and Germany50.
 
-To address the limitations of SNDLib resources for policy training, synthesized traffic is generated using the TMgen library and the modulated-gravity model \cite{internet-traffic}. This model represents inter-node traffic by analogy with Newton's law of gravitation and serves as the standard generator for such purposes. For each topology, traffic patterns are generated and evaluated across five volume scales $\{0.6, 0.8, 1.0, 1.2, 1.5\}$, with normalization such that scale $1.0$ sets the OSPF bottleneck at exactly $100\%$. This methodology enables the evaluation of both feasible and congested traffic regimes.
+To address the limitations of SNDLib resources for policy training, synthesized traffic is generated using the TMgen library and the modulated-gravity model \citep{internet-traffic}. This model represents inter-node traffic by analogy with Newton's law of gravitation and serves as the standard generator for such purposes. For each topology, traffic patterns are generated and evaluated across five volume scales $\{0.6, 0.8, 1.0, 1.2, 1.5\}$, with normalization such that scale $1.0$ sets the OSPF bottleneck at exactly $100\%$. This methodology enables the evaluation of both feasible and congested traffic regimes.
 
-Additionally, the measured traffic in SNDLib is insufficient to utilize the capacity of the backbone topologies fully. To simulate scenarios where link capacities are exceeded, demand scaling variations are applied to the evaluation topologies.  The three backbones span $12$, $22$ and $50$ nodes. Abilene is the only one with  eterogeneous capacities, fourteen links at $9.92$\,Gb/s and one at $2.48$; GEANT and Germany50 are uniform at $40$\,Gb/s. Because a correctly costed OSPF is never overloaded on Abilene at the analytical demand scales and never feasible on Germany50 at the packet-level ones, those two networks are measured at two scale sets each, so their rows in the two result tables describe the same policies at different operating points and must not be read across. Full instance properties and the complete evaluation protocol are given in Table~\ref{tab:eval-setup} of Appendix~\ref{app:instances}.
+Additionally, the measured traffic in SNDLib is insufficient to utilize the capacity of the backbone topologies fully. To simulate scenarios where link capacities are exceeded, demand scaling variations are applied to the evaluation topologies.  The three backbones span $12$, $22$ and $50$ nodes. Abilene is the only one with heterogeneous capacities, fourteen links at $9.92$\,Gb/s and one at $2.48$; GEANT and Germany50 are uniform at $40$\,Gb/s. Because a correctly costed OSPF is never overloaded on Abilene at the analytical demand scales and never feasible on Germany50 at the packet-level ones, those two networks are measured at two scale sets each, so their rows in the two result tables describe the same policies at different operating points and must not be read across. Full instance properties and the complete evaluation protocol are given in Table~\ref{tab:eval-setup} of Appendix~\ref{app:instances}.
 
 
 
@@ -38,12 +38,15 @@ MARL is compared against two deployed routing protocols and a single-agent reinf
 \subsection{Training Configuration}
 \label{sec:setup-hyper}
 
-Table~\ref{tab:hyper} presents the learner configurations. Every optimizer hyperparameter is held equal across the two architectures, so any difference in outcome is attributable to decentralization rather than to tuning. The centralized controller keeps the default settings of Stable-Baselines3 \cite{stable-baselines3}, and MAPPO is adapted to these defaults rather than modifying the baseline to match the proposed method. This approach avoids disadvantaging the baseline. Both methods therefore perform 732 updates over $1.5\times10^{6}$ environment steps using three random seeds.
+Table~\ref{tab:hyper} presents the learner configurations. Every optimizer hyperparameter is held equal across the two architectures, so any difference in outcome is attributable to decentralization rather than to tuning. The centralized controller keeps the default settings of Stable-Baselines3 \citep{stable-baselines3}, and MAPPO is adapted to these defaults rather than modifying the baseline to match the proposed method. This approach avoids disadvantaging the baseline. Both methods therefore perform 732 updates over $1.5\times10^{6}$ environment steps using three random seeds.
 
 
 \begin{table}[h]
 \centering
 \small
+\caption{Learner configurations for the two architectures, matched on every
+optimizer hyperparameter.}
+\label{tab:hyper}
 \begin{tabular}{lcc}
 \hline
 & MARL (MAPPO) & Single-agent GNN (PPO) \\
@@ -67,8 +70,6 @@ Candidate paths per pair $k$ & --- (hop-by-hop) & $3$ \\
 Seeds & $0,1,2$ & $0,1,2$ \\
 \hline
 \end{tabular}
-\caption{Hypermaraters}
-\label{tab:hyper}
 \end{table}
 
 

@@ -96,6 +96,8 @@
 \begin{table}[h]
 \centering
 \small
+\caption{Evaluation instances and protocol.}
+\label{tab:eval-setup}
 \begin{tabular}{lccc}
 \hline
 & Abilene & GEANT & Germany50 \\
@@ -114,8 +116,6 @@ Candidate matrices per scale & $6$ & $6$ & $6$ \\
 Matrices retained per regime & $3$ & $3$ & $3$ \\
 \hline
 \end{tabular}
-\caption{Evaluation instances and protocol.}
-\label{tab:eval-setup}
 \end{table}
 
 
@@ -123,6 +123,10 @@ Matrices retained per regime & $3$ & $3$ & $3$ \\
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{images/fig_heatmap_summary.png}
-  \caption{Heatmap.}
+  \caption{Maximum offered load, packet loss and mean delay for the four methods
+  on the three evaluation backbones, by congestion regime. Each metric is shaded
+  within its own panel, so colour reads as distance from the best method on that
+  network; absolute values are printed in every cell. Means over three model
+  seeds.}
   \label{fig:heatmap}
 \end{figure}

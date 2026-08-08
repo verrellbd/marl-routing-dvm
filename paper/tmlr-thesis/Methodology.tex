@@ -3,8 +3,8 @@
 This study applies MARL to network routing, representing each node as an agent that
 observes local link state and forwards the traffic transiting it. The topology is
 modelled with a Graph Neural Network, which represents the network state through
-nodes and links \cite{Rusek_2020}, and learning follows Centralized Training with
-Decentralized Execution \cite{marl-book}. Three principles govern the design:
+nodes and links \citep{Rusek_2020}, and learning follows Centralized Training with
+Decentralized Execution \citep{marl-book}. Three principles govern the design:
 \begin{enumerate}
     \item The MARL approach employs Centralized Training with Decentralized Execution. Proximal Policy Optimization is used as the underlying algorithm, and the reward function incorporates maximum link utilization and quality of service (QoS).
     \item The architecture is designed with a loop-free pattern to ensure that all traffic is transmitted from source to destination without routing loops.
