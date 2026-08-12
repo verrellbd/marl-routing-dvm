@@ -28,10 +28,10 @@ import numpy as np
 ARMS = [("ospf", "OSPF", "#37424C"),
         ("ecmp", "ECMP", "#14A8A0"),
         ("single", "Single-agent", "#D9730D"),
-        ("marlh32", "MARL ($h{=}32$)", "#3B49B8")]
-TOPOS = [("abilene", "Abilene\n(12 nodes)"),
-         ("geant", "GÉANT\n(22 nodes)"),
-         ("germany50", "Germany50\n(50 nodes)")]
+        ("marlh32", "MARL", "#3B49B8")]
+TOPOS = [("abilene", "Abilene"),
+         ("geant", "GÉANT"),
+         ("germany50", "Germany50")]
 INK, MUTED, GRID = "#1A1F24", "#5C6A75", "#DDE3E7"
 
 ap = argparse.ArgumentParser()
@@ -54,22 +54,17 @@ def grouped(ax, cells, get, ylabel, capline=None, logy=False):
     n = len(ARMS)
     width = 0.8 / n
     for k, (key, label, colour) in enumerate(ARMS):
-        xs, ys, es = [], [], []
+        xs, ys = [], []
         for i, (topo, _) in enumerate(TOPOS):
             v = get(cells, topo, key)
             if v is None:
                 continue
             xs.append(i - 0.4 + width * (k + 0.5))
-            ys.append(v[0]); es.append(v[1])
+            ys.append(v[0])
         # 2px surface gap between adjacent bars, per the mark spec
         ax.bar(xs, ys, width * 0.88, color=colour, label=label, zorder=3,
                linewidth=0.6, edgecolor="white")
-        if any(e > 0 for e in es):
-            # loss, delay and utilisation are all non-negative, so a symmetric SD
-            # would draw a whisker through impossible values; clip the lower arm
-            lo = [min(e, y) for e, y in zip(es, ys)]
-            ax.errorbar(xs, ys, yerr=[lo, es], fmt="none", ecolor=INK, elinewidth=0.9,
-                        capsize=2.2, capthick=0.9, zorder=4, alpha=.75)
+        # seed dispersion is carried by the appendix tables, not drawn here
     if capline is not None:
         # identified in the legend rather than annotated in-plot: at every in-plot
         # position the label collided with a bar
@@ -183,12 +178,12 @@ def training_curve():
 
 if __name__ == "__main__":
     two_panel("fig_offered_util_regime.png", get_offered,
-              "max offered load (\\%)", "Overload regime", "Feasible regime",
+              "max offered load (%)", "Overload regime", "Feasible regime",
               capline=100)
     two_panel("fig_qos_loss_regime.png", get_loss,
-              "packet loss (\\%)", "Overload regime", "Feasible regime")
+              "packet loss (%)", "Overload regime", "Feasible regime")
     two_panel("fig_qos_delay_regime.png", get_delay,
               "mean delay (ms)", "Overload regime", "Feasible regime")
     two_panel("fig_ns3_util_regime.png", get_util,
-              "max link utilisation (\\%)", "Overload regime", "Feasible regime")
+              "max link utilisation (%)", "Overload regime", "Feasible regime")
     training_curve()

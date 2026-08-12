@@ -5,7 +5,7 @@
 - Experiments and evidence : Correct, with baselines/control, statistical significance, and details to reproduce the results
 - Discussion and conclusions : Impact discussed, claims supported, broad scope of application (e.g., tested at scale/production)
 
-# Structure need to be 
+# Structure need to have 
 - Abstract : What, why, how, key result -- in 150 - 250 words
 - Introduction : Context -> problem -> gap -> your contribution
 - Related Work : What exists, why it is insufficient -- not a catalogue.
