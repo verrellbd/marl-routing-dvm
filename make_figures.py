@@ -123,8 +123,10 @@ def get_util(c, t, a):    return _ns3(c, t, a, "maxutil_pct", "maxutil_sd")
 def training_curve():
     """MARL h=32 episode return against policy update, three seeds plus the mean."""
     runs = []
-    for s in (0, 1, 2):
-        f = Path(f"logs/train_marlh32cm_s{s}.log")
+    # every seed that has a log, not a fixed three -- the reported seed count changed
+    # from 3 to 10 and a hardcoded range silently left this figure stale
+    for f in sorted(Path("logs").glob("train_marlh32cm_s*.log"),
+                    key=lambda p: int(re.search(r"_s(\d+)", p.name).group(1))):
         if not f.exists():
             continue
         upd, ret = [], []

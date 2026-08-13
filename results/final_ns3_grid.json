@@ -1,338 +1,230 @@
 {
-  "abilene/feasible": {
-    "ospf": {
-      "loss_pct": 0.17,
-      "loss_sd": 0.0,
-      "delay_ms": 11.45,
-      "delay_sd": 0.0,
-      "maxutil_pct": 96.68,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "ecmp": {
-      "loss_pct": 0.18,
-      "loss_sd": 0.0,
-      "delay_ms": 11.51,
-      "delay_sd": 0.02,
-      "maxutil_pct": 96.68,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "single": {
-      "loss_pct": 0.24,
-      "loss_sd": 0.09,
-      "delay_ms": 13.77,
-      "delay_sd": 2.27,
-      "maxutil_pct": 88.14,
-      "maxutil_sd": 1.71,
-      "seeds": 3
-    },
-    "marlh32": {
-      "loss_pct": 0.97,
-      "loss_sd": 1.02,
-      "delay_ms": 14.17,
-      "delay_sd": 4.21,
-      "maxutil_pct": 93.23,
-      "maxutil_sd": 4.82,
-      "seeds": 3
-    },
-    "marlh64": {
-      "loss_pct": 3.3,
-      "loss_sd": 1.99,
-      "delay_ms": 24.8,
-      "delay_sd": 13.79,
-      "maxutil_pct": 99.65,
-      "maxutil_sd": 0.36,
-      "seeds": 3
-    },
-    "single_whole_ablation": {
-      "loss_pct": 3.69,
-      "loss_sd": 4.97,
-      "delay_ms": 37.84,
-      "delay_sd": 37.13,
-      "maxutil_pct": 92.46,
-      "maxutil_sd": 6.24,
-      "seeds": 3
-    }
+ "abilene/feasible": {
+  "ospf": {
+   "loss_pct": 0.17,
+   "loss_sd": 0.0,
+   "delay_ms": 11.45,
+   "delay_sd": 0.0,
+   "maxutil_pct": 96.68,
+   "maxutil_sd": 0.0,
+   "seeds": 1
   },
-  "abilene/overload": {
-    "ospf": {
-      "loss_pct": 14.35,
-      "loss_sd": 0.0,
-      "delay_ms": 122.6,
-      "delay_sd": 0.0,
-      "maxutil_pct": 100.03,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "ecmp": {
-      "loss_pct": 14.3,
-      "loss_sd": 0.03,
-      "delay_ms": 115.41,
-      "delay_sd": 4.26,
-      "maxutil_pct": 100.03,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "single": {
-      "loss_pct": 13.41,
-      "loss_sd": 0.82,
-      "delay_ms": 127.84,
-      "delay_sd": 5.28,
-      "maxutil_pct": 100.03,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "marlh32": {
-      "loss_pct": 15.41,
-      "loss_sd": 2.13,
-      "delay_ms": 108.8,
-      "delay_sd": 11.4,
-      "maxutil_pct": 100.07,
-      "maxutil_sd": 0.01,
-      "seeds": 3
-    },
-    "marlh64": {
-      "loss_pct": 14.57,
-      "loss_sd": 0.99,
-      "delay_ms": 111.11,
-      "delay_sd": 6.67,
-      "maxutil_pct": 100.07,
-      "maxutil_sd": 0.01,
-      "seeds": 3
-    },
-    "single_whole_ablation": {
-      "loss_pct": 21.64,
-      "loss_sd": 6.07,
-      "delay_ms": 145.96,
-      "delay_sd": 4.69,
-      "maxutil_pct": 100.03,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    }
+  "ecmp": {
+   "loss_pct": 0.22,
+   "loss_sd": 0.04,
+   "delay_ms": 12.82,
+   "delay_sd": 1.32,
+   "maxutil_pct": 96.76,
+   "maxutil_sd": 0.08,
+   "seeds": 10
   },
-  "geant/feasible": {
-    "ospf": {
-      "loss_pct": 0.16,
-      "loss_sd": 0.0,
-      "delay_ms": 9.46,
-      "delay_sd": 0.0,
-      "maxutil_pct": 97.31,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "ecmp": {
-      "loss_pct": 0.12,
-      "loss_sd": 0.0,
-      "delay_ms": 8.22,
-      "delay_sd": 0.07,
-      "maxutil_pct": 78.23,
-      "maxutil_sd": 4.37,
-      "seeds": 3
-    },
-    "single": {
-      "loss_pct": 0.42,
-      "loss_sd": 0.26,
-      "delay_ms": 13.36,
-      "delay_sd": 2.32,
-      "maxutil_pct": 94.41,
-      "maxutil_sd": 6.59,
-      "seeds": 3
-    },
-    "marlh32": {
-      "loss_pct": 0.12,
-      "loss_sd": 0.0,
-      "delay_ms": 8.33,
-      "delay_sd": 0.15,
-      "maxutil_pct": 66.71,
-      "maxutil_sd": 1.7,
-      "seeds": 3
-    },
-    "marlh64": {
-      "loss_pct": 0.14,
-      "loss_sd": 0.01,
-      "delay_ms": 9.28,
-      "delay_sd": 0.22,
-      "maxutil_pct": 68.23,
-      "maxutil_sd": 5.2,
-      "seeds": 3
-    },
-    "single_whole_ablation": {
-      "loss_pct": 0.41,
-      "loss_sd": 0.23,
-      "delay_ms": 12.05,
-      "delay_sd": 1.91,
-      "maxutil_pct": 95.81,
-      "maxutil_sd": 2.66,
-      "seeds": 3
-    }
+  "single": {
+   "loss_pct": 1.01,
+   "loss_sd": 1.65,
+   "delay_ms": 21.55,
+   "delay_sd": 16.2,
+   "maxutil_pct": 91.42,
+   "maxutil_sd": 5.22,
+   "seeds": 10
   },
-  "geant/overload": {
-    "ospf": {
-      "loss_pct": 14.13,
-      "loss_sd": 0.0,
-      "delay_ms": 21.35,
-      "delay_sd": 0.0,
-      "maxutil_pct": 100.01,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "ecmp": {
-      "loss_pct": 6.82,
-      "loss_sd": 0.51,
-      "delay_ms": 18.6,
-      "delay_sd": 1.51,
-      "maxutil_pct": 100.01,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "single": {
-      "loss_pct": 11.38,
-      "loss_sd": 2.0,
-      "delay_ms": 22.25,
-      "delay_sd": 3.58,
-      "maxutil_pct": 100.01,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "marlh32": {
-      "loss_pct": 2.92,
-      "loss_sd": 0.17,
-      "delay_ms": 18.07,
-      "delay_sd": 0.77,
-      "maxutil_pct": 100.01,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "marlh64": {
-      "loss_pct": 3.56,
-      "loss_sd": 0.72,
-      "delay_ms": 20.62,
-      "delay_sd": 3.24,
-      "maxutil_pct": 100.01,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "single_whole_ablation": {
-      "loss_pct": 13.29,
-      "loss_sd": 0.78,
-      "delay_ms": 17.69,
-      "delay_sd": 0.51,
-      "maxutil_pct": 100.01,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    }
-  },
-  "germany50/feasible": {
-    "ospf": {
-      "loss_pct": 0.03,
-      "loss_sd": 0.0,
-      "delay_ms": 1.78,
-      "delay_sd": 0.0,
-      "maxutil_pct": 95.62,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "ecmp": {
-      "loss_pct": 0.58,
-      "loss_sd": 0.37,
-      "delay_ms": 5.26,
-      "delay_sd": 1.86,
-      "maxutil_pct": 84.0,
-      "maxutil_sd": 2.85,
-      "seeds": 3
-    },
-    "single": {
-      "loss_pct": 0.03,
-      "loss_sd": 0.0,
-      "delay_ms": 1.91,
-      "delay_sd": 0.01,
-      "maxutil_pct": 61.45,
-      "maxutil_sd": 12.5,
-      "seeds": 3
-    },
-    "marlh32": {
-      "loss_pct": 1.02,
-      "loss_sd": 0.81,
-      "delay_ms": 2.03,
-      "delay_sd": 0.12,
-      "maxutil_pct": 70.85,
-      "maxutil_sd": 19.8,
-      "seeds": 3
-    },
-    "marlh64": {
-      "loss_pct": 2.44,
-      "loss_sd": 1.54,
-      "delay_ms": 2.27,
-      "delay_sd": 0.24,
-      "maxutil_pct": 61.94,
-      "maxutil_sd": 13.37,
-      "seeds": 3
-    },
-    "single_whole_ablation": {
-      "loss_pct": 0.03,
-      "loss_sd": 0.0,
-      "delay_ms": 1.83,
-      "delay_sd": 0.07,
-      "maxutil_pct": 74.75,
-      "maxutil_sd": 16.37,
-      "seeds": 3
-    }
-  },
-  "germany50/overload": {
-    "ospf": {
-      "loss_pct": 27.29,
-      "loss_sd": 0.0,
-      "delay_ms": 19.68,
-      "delay_sd": 0.0,
-      "maxutil_pct": 100.01,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "ecmp": {
-      "loss_pct": 22.9,
-      "loss_sd": 2.46,
-      "delay_ms": 17.02,
-      "delay_sd": 3.41,
-      "maxutil_pct": 100.01,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "single": {
-      "loss_pct": 18.17,
-      "loss_sd": 5.9,
-      "delay_ms": 20.18,
-      "delay_sd": 1.82,
-      "maxutil_pct": 100.01,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    },
-    "marlh32": {
-      "loss_pct": 10.62,
-      "loss_sd": 2.91,
-      "delay_ms": 20.71,
-      "delay_sd": 6.75,
-      "maxutil_pct": 100.0,
-      "maxutil_sd": 0.01,
-      "seeds": 3
-    },
-    "marlh64": {
-      "loss_pct": 8.88,
-      "loss_sd": 1.34,
-      "delay_ms": 15.06,
-      "delay_sd": 1.35,
-      "maxutil_pct": 99.99,
-      "maxutil_sd": 0.01,
-      "seeds": 3
-    },
-    "single_whole_ablation": {
-      "loss_pct": 16.73,
-      "loss_sd": 3.97,
-      "delay_ms": 19.23,
-      "delay_sd": 1.82,
-      "maxutil_pct": 100.0,
-      "maxutil_sd": 0.0,
-      "seeds": 3
-    }
+  "marlh32": {
+   "loss_pct": 0.56,
+   "loss_sd": 0.67,
+   "delay_ms": 13.66,
+   "delay_sd": 3.74,
+   "maxutil_pct": 92.43,
+   "maxutil_sd": 3.68,
+   "seeds": 10
   }
+ },
+ "abilene/overload": {
+  "ospf": {
+   "loss_pct": 14.35,
+   "loss_sd": 0.0,
+   "delay_ms": 122.6,
+   "delay_sd": 0.0,
+   "maxutil_pct": 100.03,
+   "maxutil_sd": 0.0,
+   "seeds": 1
+  },
+  "ecmp": {
+   "loss_pct": 14.31,
+   "loss_sd": 0.02,
+   "delay_ms": 116.33,
+   "delay_sd": 4.4,
+   "maxutil_pct": 100.03,
+   "maxutil_sd": 0.0,
+   "seeds": 10
+  },
+  "single": {
+   "loss_pct": 17.81,
+   "loss_sd": 4.67,
+   "delay_ms": 147.02,
+   "delay_sd": 24.35,
+   "maxutil_pct": 100.03,
+   "maxutil_sd": 0.01,
+   "seeds": 10
+  },
+  "marlh32": {
+   "loss_pct": 14.9,
+   "loss_sd": 1.69,
+   "delay_ms": 112.75,
+   "delay_sd": 8.19,
+   "maxutil_pct": 100.07,
+   "maxutil_sd": 0.02,
+   "seeds": 10
+  }
+ },
+ "geant/feasible": {
+  "ospf": {
+   "loss_pct": 0.16,
+   "loss_sd": 0.0,
+   "delay_ms": 9.46,
+   "delay_sd": 0.0,
+   "maxutil_pct": 97.31,
+   "maxutil_sd": 0.0,
+   "seeds": 1
+  },
+  "ecmp": {
+   "loss_pct": 0.12,
+   "loss_sd": 0.0,
+   "delay_ms": 8.14,
+   "delay_sd": 0.11,
+   "maxutil_pct": 79.35,
+   "maxutil_sd": 7.73,
+   "seeds": 10
+  },
+  "single": {
+   "loss_pct": 0.98,
+   "loss_sd": 2.04,
+   "delay_ms": 12.77,
+   "delay_sd": 4.02,
+   "maxutil_pct": 90.53,
+   "maxutil_sd": 8.97,
+   "seeds": 10
+  },
+  "marlh32": {
+   "loss_pct": 0.12,
+   "loss_sd": 0.0,
+   "delay_ms": 8.5,
+   "delay_sd": 0.34,
+   "maxutil_pct": 66.3,
+   "maxutil_sd": 1.44,
+   "seeds": 10
+  }
+ },
+ "geant/overload": {
+  "ospf": {
+   "loss_pct": 14.13,
+   "loss_sd": 0.0,
+   "delay_ms": 21.35,
+   "delay_sd": 0.0,
+   "maxutil_pct": 100.01,
+   "maxutil_sd": 0.0,
+   "seeds": 1
+  },
+  "ecmp": {
+   "loss_pct": 7.52,
+   "loss_sd": 2.41,
+   "delay_ms": 18.8,
+   "delay_sd": 1.61,
+   "maxutil_pct": 100.01,
+   "maxutil_sd": 0.0,
+   "seeds": 10
+  },
+  "single": {
+   "loss_pct": 11.23,
+   "loss_sd": 4.54,
+   "delay_ms": 24.83,
+   "delay_sd": 6.17,
+   "maxutil_pct": 100.01,
+   "maxutil_sd": 0.0,
+   "seeds": 10
+  },
+  "marlh32": {
+   "loss_pct": 3.36,
+   "loss_sd": 0.69,
+   "delay_ms": 18.14,
+   "delay_sd": 1.64,
+   "maxutil_pct": 100.01,
+   "maxutil_sd": 0.0,
+   "seeds": 10
+  }
+ },
+ "germany50/feasible": {
+  "ospf": {
+   "loss_pct": 0.03,
+   "loss_sd": 0.0,
+   "delay_ms": 1.78,
+   "delay_sd": 0.0,
+   "maxutil_pct": 95.62,
+   "maxutil_sd": 0.0,
+   "seeds": 1
+  },
+  "ecmp": {
+   "loss_pct": 0.26,
+   "loss_sd": 0.35,
+   "delay_ms": 3.32,
+   "delay_sd": 2.17,
+   "maxutil_pct": 71.61,
+   "maxutil_sd": 11.25,
+   "seeds": 10
+  },
+  "single": {
+   "loss_pct": 0.03,
+   "loss_sd": 0.0,
+   "delay_ms": 1.86,
+   "delay_sd": 0.06,
+   "maxutil_pct": 69.61,
+   "maxutil_sd": 14.0,
+   "seeds": 10
+  },
+  "marlh32": {
+   "loss_pct": 1.09,
+   "loss_sd": 0.83,
+   "delay_ms": 2.08,
+   "delay_sd": 0.21,
+   "maxutil_pct": 65.5,
+   "maxutil_sd": 16.1,
+   "seeds": 10
+  }
+ },
+ "germany50/overload": {
+  "ospf": {
+   "loss_pct": 27.29,
+   "loss_sd": 0.0,
+   "delay_ms": 19.68,
+   "delay_sd": 0.0,
+   "maxutil_pct": 100.01,
+   "maxutil_sd": 0.0,
+   "seeds": 1
+  },
+  "ecmp": {
+   "loss_pct": 20.68,
+   "loss_sd": 2.83,
+   "delay_ms": 21.53,
+   "delay_sd": 5.7,
+   "maxutil_pct": 100.01,
+   "maxutil_sd": 0.0,
+   "seeds": 10
+  },
+  "single": {
+   "loss_pct": 14.94,
+   "loss_sd": 4.97,
+   "delay_ms": 19.7,
+   "delay_sd": 2.24,
+   "maxutil_pct": 100.01,
+   "maxutil_sd": 0.0,
+   "seeds": 10
+  },
+  "marlh32": {
+   "loss_pct": 10.63,
+   "loss_sd": 2.63,
+   "delay_ms": 17.08,
+   "delay_sd": 4.57,
+   "maxutil_pct": 100.0,
+   "maxutil_sd": 0.01,
+   "seeds": 10
+  }
+ }
 }

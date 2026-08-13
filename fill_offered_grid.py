@@ -40,6 +40,8 @@ ARMS = [("single",  "results/single_singleH64gRM_seed{s}/policy.zip", None),
 ap = argparse.ArgumentParser()
 ap.add_argument("--out", default="results/offered_grid.json")
 ap.add_argument("--max-flows", type=int, default=200)
+# arms with fewer trained seeds than this are skipped per-seed by the exists() check
+ap.add_argument("--seeds", type=int, default=3)
 A = ap.parse_args()
 
 
@@ -72,8 +74,11 @@ def main():
         # make the analytical and packet-level tables describe different mechanisms.
         b = ref.bundles[0]
         allsp = [all_shortest_paths(b.topo.graph, b.W, s, d, "weighted") for (s, d) in p]
+        # One hash seed per reported seed, so ECMP carries the same dispersion here as
+        # in the packet-level grid. Averaging the hash seeds into a single value (as an
+        # earlier version did) made ECMP the only arm quoted without a spread.
         ecmp_seeds = []
-        for hseed in (0, 1, 2):
+        for hseed in range(A.seeds):
             rng = np.random.RandomState(hseed)
             arcp = []
             for ps in allsp:
@@ -87,17 +92,16 @@ def main():
                         load[ap] += m[i]
                 vals.append(float((100.0 * load / b.cap).max()))
             ecmp_seeds.append(np.array(vals))
-        ecmp = np.mean(ecmp_seeds, axis=0)
         short = topo.replace("_sndlib", "")
         for regime, sel in [("overload", ospf >= 100), ("feasible", ospf < 100)]:
             if want not in (regime, "both") or sel.sum() == 0:
                 continue
             acc[(short, regime, "ospf")] = [float(ospf[sel].mean())]
-            acc[(short, regime, "ecmp")] = [float(ecmp[sel].mean())]
+            acc[(short, regime, "ecmp")] = [float(e[sel].mean()) for e in ecmp_seeds]
 
         for arm, tmpl, hidden in ARMS:
             per_seed = {"overload": [], "feasible": []}
-            for s in [0, 1, 2]:
+            for s in range(A.seeds):
                 mp = Path(tmpl.format(s=s))
                 if not mp.exists():
                     print(f"[skip] {mp}"); continue
@@ -130,7 +134,10 @@ def main():
                     if want in (regime, "both") and sel.sum():
                         per_seed[regime].append(float(vals[sel].mean()))
             for regime, v in per_seed.items():
-                if v:
+                # a grid built at N seeds carries only arms that have N seeds
+                if v and len(v) < A.seeds:
+                    print(f"  [drop] {short}/{regime} {arm}: only {len(v)} seeds")
+                elif v:
                     acc[(short, regime, arm)] = v
                     print(f"  {short}/{regime:8s} {arm:8s} {np.mean(v):7.1f} +/- {np.std(v):4.1f} "
                           f"(OSPF {acc[(short,regime,'ospf')][0]:6.1f})", flush=True)

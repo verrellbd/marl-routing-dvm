@@ -31,7 +31,7 @@ DIRS = {           # directory stem -> topology label
     "abilene": "Abilene", "geant": "GEANT",
     "germany50": "Germany50", "g50feas": "Germany50",
 }
-SEEDS = (0, 1, 2)
+SEEDS = tuple(range(10))
 
 
 def read(stem, seed, kind, m):

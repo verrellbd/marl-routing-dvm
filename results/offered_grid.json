@@ -6,24 +6,19 @@
       "seeds": 1
     },
     "ecmp": {
-      "mean": 57.2,
-      "sd": 0.0,
-      "seeds": 1
+      "mean": 57.4,
+      "sd": 0.1,
+      "seeds": 10
     },
     "single": {
-      "mean": 54.2,
-      "sd": 1.6,
-      "seeds": 3
+      "mean": 55.6,
+      "sd": 2.5,
+      "seeds": 10
     },
     "marlh32": {
-      "mean": 56.1,
-      "sd": 1.9,
-      "seeds": 3
-    },
-    "marlh64": {
-      "mean": 61.6,
-      "sd": 6.5,
-      "seeds": 3
+      "mean": 56.8,
+      "sd": 2.1,
+      "seeds": 10
     }
   },
   "abilene/overload": {
@@ -33,24 +28,19 @@
       "seeds": 1
     },
     "ecmp": {
-      "mean": 129.2,
-      "sd": 0.0,
-      "seeds": 1
+      "mean": 129.6,
+      "sd": 0.4,
+      "seeds": 10
     },
     "single": {
-      "mean": 116.3,
-      "sd": 2.8,
-      "seeds": 3
+      "mean": 126.6,
+      "sd": 11.2,
+      "seeds": 10
     },
     "marlh32": {
-      "mean": 124.9,
-      "sd": 3.3,
-      "seeds": 3
-    },
-    "marlh64": {
-      "mean": 130.3,
-      "sd": 3.3,
-      "seeds": 3
+      "mean": 125.4,
+      "sd": 3.0,
+      "seeds": 10
     }
   },
   "geant/overload": {
@@ -60,24 +50,19 @@
       "seeds": 1
     },
     "ecmp": {
-      "mean": 119.2,
-      "sd": 0.0,
-      "seeds": 1
+      "mean": 119.6,
+      "sd": 10.1,
+      "seeds": 10
     },
     "single": {
-      "mean": 133.7,
-      "sd": 10.7,
-      "seeds": 3
+      "mean": 135.2,
+      "sd": 21.5,
+      "seeds": 10
     },
     "marlh32": {
-      "mean": 96.6,
-      "sd": 1.6,
-      "seeds": 3
-    },
-    "marlh64": {
-      "mean": 102.1,
-      "sd": 3.0,
-      "seeds": 3
+      "mean": 97.7,
+      "sd": 2.6,
+      "seeds": 10
     }
   },
   "geant/feasible": {
@@ -88,23 +73,18 @@
     },
     "ecmp": {
       "mean": 60.7,
-      "sd": 0.0,
-      "seeds": 1
+      "sd": 5.5,
+      "seeds": 10
     },
     "single": {
       "mean": 70.0,
-      "sd": 5.9,
-      "seeds": 3
+      "sd": 12.0,
+      "seeds": 10
     },
     "marlh32": {
-      "mean": 48.2,
-      "sd": 1.1,
-      "seeds": 3
-    },
-    "marlh64": {
-      "mean": 55.0,
-      "sd": 2.9,
-      "seeds": 3
+      "mean": 49.0,
+      "sd": 0.9,
+      "seeds": 10
     }
   },
   "germany50/overload": {
@@ -114,24 +94,19 @@
       "seeds": 1
     },
     "ecmp": {
-      "mean": 211.9,
-      "sd": 0.0,
-      "seeds": 1
+      "mean": 182.9,
+      "sd": 26.4,
+      "seeds": 10
     },
     "single": {
-      "mean": 176.3,
-      "sd": 51.0,
-      "seeds": 3
+      "mean": 158.3,
+      "sd": 35.7,
+      "seeds": 10
     },
     "marlh32": {
-      "mean": 117.0,
-      "sd": 3.5,
-      "seeds": 3
-    },
-    "marlh64": {
-      "mean": 113.7,
-      "sd": 9.7,
-      "seeds": 3
+      "mean": 118.7,
+      "sd": 9.6,
+      "seeds": 10
     }
   },
   "germany50/feasible": {
@@ -141,24 +116,19 @@
       "seeds": 1
     },
     "ecmp": {
-      "mean": 70.4,
-      "sd": 0.0,
-      "seeds": 1
+      "mean": 60.2,
+      "sd": 9.2,
+      "seeds": 10
     },
     "single": {
-      "mean": 52.3,
-      "sd": 11.3,
-      "seeds": 3
+      "mean": 60.2,
+      "sd": 13.5,
+      "seeds": 10
     },
     "marlh32": {
-      "mean": 40.9,
-      "sd": 2.4,
-      "seeds": 3
-    },
-    "marlh64": {
-      "mean": 40.8,
-      "sd": 1.5,
-      "seeds": 3
+      "mean": 38.9,
+      "sd": 2.6,
+      "seeds": 10
     }
   }
 }

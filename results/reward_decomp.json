@@ -1,0 +1,32 @@
+{
+ "abilene": {
+  "return": -104.4,
+  "return_sd": 5.4,
+  "congestion": -99.5,
+  "delay": -4.9,
+  "detour_hops": 9.8,
+  "detour_pct": 3.0,
+  "util_ratio": 1.0,
+  "seeds": 10
+ },
+ "geant": {
+  "return": -78.3,
+  "return_sd": 3.6,
+  "congestion": -68.5,
+  "delay": -9.8,
+  "detour_hops": 19.7,
+  "detour_pct": 4.4,
+  "util_ratio": 0.69,
+  "seeds": 10
+ },
+ "germany50": {
+  "return": -106.7,
+  "return_sd": 18.1,
+  "congestion": -48.0,
+  "delay": -58.7,
+  "detour_hops": 117.4,
+  "detour_pct": 13.5,
+  "util_ratio": 0.48,
+  "seeds": 10
+ }
+}

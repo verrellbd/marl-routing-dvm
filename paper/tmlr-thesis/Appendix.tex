@@ -1,97 +1,5 @@
-\section{Appendix}
+\section{Additional Tables}
 \label{app:instances}
-
-\begin{table}[htbp]
-  \centering
-  \small
-  \caption{Decomposition of the MARL ($h{=}32$) episode return on the evaluation
-  traffic, by Equation~\eqref{eq:telescope}. The congestion term is the
-  bottleneck as a percentage of OSPF's; the delay term is $\beta D$. Means over
-  three seeds and eighteen matrices per network.}
-  \label{tab:reward-decomp}
-  \setlength{\tabcolsep}{5pt}
-  \begin{tabular}{lccccc}
-    \toprule
-    Network & Return $G$ & Congestion & Delay $\beta D$ & Detour hops & $U_T/U^{\mathrm{OSPF}}$ \\
-    \midrule
-    Abilene    & $-100.9$ & $-96.1$ & $-4.8$  & $9.6$ \;($3.0\%$)  & $0.96$ \\
-    GÉANT      & $-75.9$  & $-67.5$ & $-8.4$  & $16.8$ \;($3.8\%$) & $0.67$ \\
-    Germany50  & $-108.7$ & $-47.7$ & $-61.0$ & $122.0$ \;($14.2\%$) & $0.47$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{table}[htbp]
-  \centering
-  \small
-  \caption{Maximum offered load on the bottleneck link, as a percentage of link
-  capacity (lower is better; $>100\%$ denotes infeasible demand). Mean $\pm$
-  standard deviation over three model seeds; OSPF and ECMP are deterministic
-  given a matrix.}
-  \label{tab:offered-util}
-  \setlength{\tabcolsep}{4.5pt}
-  \begin{tabular}{lcccc}
-    \toprule
-    Topology & OSPF & ECMP & Single-agent & MARL  \\
-    \midrule
-    \multicolumn{5}{l}{\emph{Overload regime (OSPF drives a link $\geq$ capacity)}} \\
-    \midrule
-    Abilene   & 129.3\% & 129.2\% & \textbf{116.3 $\pm$ 2.8\%} & 124.9 $\pm$ 3.3\%          \\
-    GÉANT     & 145.2\% & 119.2\% & 133.7 $\pm$ 10.7\%         & \textbf{96.6 $\pm$ 1.6\%}  \\
-    Germany50 & 249.2\% & 211.9\% & 176.3 $\pm$ 51.0\%         & \textbf{117.0 $\pm$ 3.5\%}         \\
-    \midrule
-    \multicolumn{5}{l}{\emph{Feasible regime (traffic fits under OSPF)}} \\
-    \midrule
-    Abilene   & 57.2\% & 57.2\% & \textbf{54.2 $\pm$ 1.6\%} & 56.1 $\pm$ 1.9\%           \\
-    GÉANT     & 71.1\% & 60.7\% & 70.0 $\pm$ 5.9\%          & \textbf{48.2 $\pm$ 1.1\%}  \\
-    Germany50 & 81.0\% & 70.4\% & 52.3 $\pm$ 11.3\%         & \textbf{40.9 $\pm$ 2.4\%}         \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{table}[htbp]
-  \centering
-  \small
-  \caption{Packet-level performance under ns-3 on real traffic matrices
-  (Abilene/Zhang, GÉANT/Uhlig-TOTEM, Germany50/DFN). Deviations are over the three
-  model seeds and are therefore quoted for the learned arms only: OSPF is
-  deterministic, and ECMP is reported as the mean over three hash seeds, whose
-  spread measures tie-breaking rather than training and is not comparable with it
-  (Section~\ref{sec:setup-metrics}). Best per row in bold, \emph{including the
-  rows where a baseline wins}.}
-  \label{tab:qos}
-  \setlength{\tabcolsep}{3.5pt}
-  \begin{tabular}{llcccc}
-    \toprule
-    Topology & Metric & OSPF & ECMP & Single-agent & MARL \\
-    \midrule
-    \multicolumn{6}{l}{\emph{Overload regime}} \\
-    \midrule
-    \multirow{2}{*}{Abilene}   & Loss  & 14.35\%   & 14.30\%                     & \textbf{13.41 $\pm$ 0.82\%} & 15.41 $\pm$ 2.13\%\\
-                               & Delay & 122.6\,ms & 115.4\,ms                   & 127.8 $\pm$ 5.3\,ms  & \textbf{108.8 $\pm$ 11.4\,ms} \\
-    \cmidrule(l){1-6}
-    \multirow{2}{*}{GÉANT}     & Loss  & 14.13\%  & 6.82\%             & 11.38 $\pm$ 2.00\%          & \textbf{2.92 $\pm$ 0.17\%} \\
-                               & Delay & 21.4\,ms & 18.6\,ms           & 22.3 $\pm$ 3.6\,ms          & \textbf{18.1 $\pm$ 0.8\,ms} \\
-    \cmidrule(l){1-6}
-    \multirow{2}{*}{Germany50} & Loss  & 27.29\%  & 22.90\%             & 18.17 $\pm$ 5.90\%  & \textbf{10.62 $\pm$ 2.91\%} \\
-                               & Delay & 19.7\,ms & \textbf{17.0\,ms}            & 20.2 $\pm$ 1.8\,ms  & 20.7 $\pm$ 6.8\,ms   \\
-    \midrule
-    \multicolumn{6}{l}{\emph{Feasible regime}} \\
-    \midrule
-    \multirow{3}{*}{Abilene}   & Loss  & \textbf{0.17\%}   & 0.18\%             & 0.24 $\pm$ 0.09\%   & 0.97 $\pm$ 1.02\%   \\
-                               & Delay & \textbf{11.5\,ms} & 11.5\,ms           & 13.8 $\pm$ 2.3\,ms  & 14.2 $\pm$ 4.2\,ms  \\
-                               & Util  & 96.7\%            & 96.7\%            & \textbf{88.1 $\pm$ 1.7\%} & 93.2 $\pm$ 4.8\%  \\
-    \cmidrule(l){1-6}
-    \multirow{3}{*}{GÉANT}     & Loss  & 0.16\%   & \textbf{0.12\%}            & 0.42 $\pm$ 0.26\%   & \textbf{0.12 $\pm$ 0.00\%}  \\
-                               & Delay & 9.5\,ms  & \textbf{8.2\,ms}           & 13.4 $\pm$ 2.3\,ms  & 8.3 $\pm$ 0.2\,ms \\
-                               & Util  & 97.3\%   & 78.2\%                    & 94.4 $\pm$ 6.6\%    & \textbf{66.7 $\pm$ 1.7\%}  \\
-    \cmidrule(l){1-6}
-    \multirow{3}{*}{Germany50} & Loss  & \textbf{0.03\%}  & 0.58\%             & \textbf{0.03 $\pm$ 0.00\%} & 1.02 $\pm$ 0.81\% \\
-                               & Delay & \textbf{1.8\,ms} & 5.3\,ms            & 1.9 $\pm$ 0.0\,ms          & 2.0 $\pm$ 0.1\,ms \\
-                               & Util  & 95.6\%           & 84.0\%            & \textbf{61.5 $\pm$ 12.5\%} & 70.8 $\pm$ 19.8\%  \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \begin{table}[h]
 \centering
@@ -120,16 +28,93 @@ Matrices retained per regime & $3$ & $3$ & $3$ \\
 
 
 
-\subsection{Training Convergence}
-\label{app:training}
-The performance of the multi-agent reinforcement learning (MARL) approach depends on the accuracy of the reward calculation. The model was trained on 17 topologies from SNDLib using the TMGen matrix across three random seeds. We train for approximately 1,500,000 steps to achieve the final results. According to Equation~\eqref{eq:telescope}, the episode return is defined as the final bottleneck expressed as a percentage of OSPF’s, plus $\beta$ times the number of detour hops taken.
-
-Figure~\ref{fig:training-curve} illustrates the training progress across the three seeds. The baseline OSPF bottleneck reaches $-100$ with no detours. The model demonstrates an average return across the three seeds that increases from $-344.5$ during the first fifty updates to $-231.7$ during the last fifty updates. The final per-seed returns are $-208.2$, $-243.3$, and $-243.6$, with a standard deviation of $7.2\%$ of the mean. These results indicate that the model exhibits consistent performance across different seeds. Although the returns do not approach the OSPF baseline, they improve substantially over training.
-
-\begin{figure}[htbp]
+\begin{table}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{images/fig_marl_training_curves.png}
-  \caption{MARL ($h{=}32$) mean episode return over the $732$ policy updates of the
-  matched budget, on the seventeen training topologies.}
-  \label{fig:training-curve}
-\end{figure}
+  \small
+  \caption{Decomposition of the MARL episode return on the evaluation
+  traffic, by ~\eqref{eq:telescope}. The congestion term is the
+  bottleneck as a percentage of OSPF's and the delay term as $\beta D$.}
+  \label{tab:reward-decomp}
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{lccccc}
+    \toprule
+    Network & Return $G$ & Congestion & Delay $\beta D$ & Detour hops & $U_T/U^{\mathrm{OSPF}}$ \\
+    \midrule
+    Abilene    & $-104.4$ & $-99.5$ & $-4.9$  & $9.8$ \;($3.0\%$)  & $1.00$ \\
+    GÉANT      & $-78.3$  & $-68.5$ & $-9.8$  & $19.7$ \;($4.4\%$) & $0.69$ \\
+    Germany50  & $-106.7$ & $-48.0$ & $-58.7$ & $117.4$ \;($13.5\%$) & $0.48$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Maximum offered load. Mean $\pm$ standard deviation over ten model seeds.}
+  \label{tab:offered-util}
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{lcccc}
+    \toprule
+    Topology & OSPF & ECMP & Single-agent & MARL  \\
+    \midrule
+    \multicolumn{5}{l}{\emph{Overload regime (OSPF drives a link $\geq$ capacity)}} \\
+    \midrule
+    Abilene   & 129.3\% & 129.6 $\pm$ 0.4\% & 126.6 $\pm$ 11.2\% & \textbf{125.4 $\pm$ 3.0\%}          \\
+    GÉANT     & 145.2\% & 119.6 $\pm$ 10.1\% & 135.2 $\pm$ 21.5\%         & \textbf{97.7 $\pm$ 2.6\%}  \\
+    Germany50 & 249.2\% & 182.9 $\pm$ 26.4\% & 158.3 $\pm$ 35.7\%         & \textbf{118.7 $\pm$ 9.6\%}         \\
+    \midrule
+    \multicolumn{5}{l}{\emph{Feasible regime (traffic fits under OSPF)}} \\
+    \midrule
+    Abilene   & 57.2\% & 57.4 $\pm$ 0.1\% & \textbf{55.6 $\pm$ 2.5\%} & 56.8 $\pm$ 2.1\%           \\
+    GÉANT     & 71.1\% & 60.7 $\pm$ 5.5\% & 70.0 $\pm$ 12.0\%          & \textbf{49.0 $\pm$ 0.9\%}  \\
+    Germany50 & 81.0\% & 60.2 $\pm$ 9.2\% & 60.2 $\pm$ 13.5\%         & \textbf{38.9 $\pm$ 2.6\%}         \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Quality of Service Results.}
+  \label{tab:qos}
+  \setlength{\tabcolsep}{3.5pt}
+  \begin{tabular}{llcccc}
+    \toprule
+    Topology & Metric & OSPF & ECMP & Single-agent & MARL \\
+    \midrule
+    \multicolumn{6}{l}{\emph{Overload regime}} \\
+    \midrule
+    \multirow{2}{*}{Abilene}   & Loss  & \textbf{14.35\%}   & 14.31 $\pm$ 0.02\%                     & 17.81 $\pm$ 4.67\% & 14.90 $\pm$ 1.69\%\\
+                               & Delay & 122.6\,ms & 116.3 $\pm$ 4.4\,ms                   & 147.0 $\pm$ 24.4\,ms  & \textbf{112.8 $\pm$ 8.2\,ms} \\
+    \cmidrule(l){1-6}
+    \multirow{2}{*}{GÉANT}     & Loss  & 14.13\%  & 7.52 $\pm$ 2.41\%             & 11.23 $\pm$ 4.54\%          & \textbf{3.36 $\pm$ 0.69\%} \\
+                               & Delay & 21.4\,ms & 18.8 $\pm$ 1.6\,ms           & 24.8 $\pm$ 6.2\,ms          & \textbf{18.1 $\pm$ 1.6\,ms} \\
+    \cmidrule(l){1-6}
+    \multirow{2}{*}{Germany50} & Loss  & 27.29\%  & 20.68 $\pm$ 2.83\%             & 14.94 $\pm$ 4.97\%  & \textbf{10.63 $\pm$ 2.63\%} \\
+                               & Delay & 19.7\,ms & 21.5 $\pm$ 5.7\,ms            & 19.7 $\pm$ 2.2\,ms  & \textbf{17.1 $\pm$ 4.6\,ms}   \\
+    \midrule
+    \multicolumn{6}{l}{\emph{Feasible regime}} \\
+    \midrule
+    \multirow{2}{*}{Abilene}   & Loss  & \textbf{0.17\%}   & 0.22 $\pm$ 0.04\%             & 1.01 $\pm$ 1.65\%   & 0.56 $\pm$ 0.67\%   \\
+                               & Delay & \textbf{11.5\,ms} & 12.8 $\pm$ 1.3\,ms           & 21.6 $\pm$ 16.2\,ms  & 13.7 $\pm$ 3.7\,ms  \\
+
+    \cmidrule(l){1-6}
+    \multirow{2}{*}{GÉANT}     & Loss  & 0.16\%   & \textbf{0.12 $\pm$ 0.00\%}            & 0.98 $\pm$ 2.04\%   & \textbf{0.12 $\pm$ 0.00\%}  \\
+                               & Delay & 9.5\,ms  & \textbf{8.1 $\pm$ 0.1\,ms}           & 12.8 $\pm$ 4.0\,ms  & 8.5 $\pm$ 0.3\,ms \\
+
+    \cmidrule(l){1-6}
+    \multirow{2}{*}{Germany50} & Loss  & \textbf{0.03\%}  & 0.26 $\pm$ 0.35\%             & \textbf{0.03 $\pm$ 0.00\%} & 1.09 $\pm$ 0.83\% \\
+                               & Delay & \textbf{1.8\,ms} & 3.3 $\pm$ 2.2\,ms            & 1.9 $\pm$ 0.1\,ms          & 2.1 $\pm$ 0.2\,ms \\
+                               
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+% \subsection{Training Convergence}
+% \label{app:training}
+% The performance of the multi-agent reinforcement learning (MARL) approach depends on the accuracy of the reward calculation. The model was trained on 17 topologies from SNDLib using the TMGen matrix across three random seeds. We train for approximately 1,500,000 steps to achieve the final results. According to Equation~\eqref{eq:telescope}, the episode return is defined as the final bottleneck expressed as a percentage of OSPF’s, plus $\beta$ times the number of detour hops taken.
+
+% Figure~\ref{fig:training-curve} illustrates the training progress across the three seeds. The baseline OSPF bottleneck reaches $-100$ with no detours. The model demonstrates an average return across the three seeds that increases from $-344.5$ during the first fifty updates to $-231.7$ during the last fifty updates. The final per-seed returns are $-208.2$, $-243.3$, and $-243.6$, with a standard deviation of $7.2\%$ of the mean. These results indicate that the model exhibits consistent performance across different seeds. Although the returns do not approach the OSPF baseline, they improve substantially over training.
+

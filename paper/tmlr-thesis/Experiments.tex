@@ -37,7 +37,7 @@ MARL is compared against two deployed routing protocols and a single-agent reinf
 \subsection{Training Configuration}
 \label{sec:setup-hyper}
 
-Table~\ref{tab:hyper} presents the learner configurations. Every optimizer hyperparameter is held equal across the two architectures, so any difference in outcome is attributable to decentralization rather than to tuning. The centralized controller keeps the default settings of Stable-Baselines3 \citep{stable-baselines3}, and MAPPO is adapted to these defaults rather than modifying the baseline to match the proposed method. This approach avoids disadvantaging the baseline. Both methods therefore perform 732 updates over $1.5\times10^{6}$ environment steps using three random seeds.
+Table~\ref{tab:hyper} presents the learner configurations. Every optimizer hyperparameter is held equal across the two architectures, so any difference in outcome is attributable to decentralization rather than to tuning. The centralized controller keeps the default settings of Stable-Baselines3 \citep{stable-baselines3}, and MAPPO is adapted to these defaults rather than modifying the baseline to match the proposed method. This approach avoids disadvantaging the baseline. Both methods therefore perform 732 updates over $1.5\times10^{6}$ environment steps using ten random seeds.
 
 
 \begin{table}[h]
@@ -66,7 +66,7 @@ Message-passing rounds & $3$ & $3$ \\
 Hidden width & $32$ & $64$ \\
 Trainable parameters & $17{,}570$ & $268{,}420$ \\
 Candidate paths per pair $k$ & --- (hop-by-hop) & $3$ \\
-Seeds & $0,1,2$ & $0,1,2$ \\
+Seeds & $0,\dots,9$ & $0,\dots,9$ \\
 \hline
 \end{tabular}
 \end{table}
@@ -103,3 +103,13 @@ This study evaluates the network performance of the MARL in comparison to other 
   \item \textbf{Packet loss.} This metric represents the proportion of dropped packets, expressed as a percentage. It indicates the impact of congestion on data transmission. Packet loss is captured in percentage.
   \item \textbf{Delay.} This metric measures the mean end-to-end packet transmission time, representing the duration required for a packet to travel from source to destination. Delay is recorded in milliseconds.
 \end{enumerate}
+
+% Differences between MARL and OSPF are tested with a two-sided Wilcoxon signed-rank
+% test paired on the traffic matrix. Pairing is the appropriate design because each
+% learned routing is simulated on exactly the same matrix as the OSPF routing it is
+% compared against, so the matrix is held fixed and only the routing varies; matrices
+% differ widely in offered load, and an unpaired test would submerge the routing
+% effect in that variation. The three model seeds are averaged before pairing, since
+% they are three draws of a single policy rather than three independent observations
+% of a matrix. Each regime therefore contributes nine paired matrices, three from each
+% backbone.
