@@ -1,0 +1,163 @@
+/home/uceedv1/thesis/ns3ai-venv/lib64/python3.9/site-packages/networkx/utils/backends.py:135: RuntimeWarning: networkx backend defined more than once: nx-loopback
+  backends.update(_get_backends("networkx.backends"))
+[TopoAgnosticMARLEnv] 17 topos: atlanta_sndlib(15n), cost266_sndlib(37n), dfn-bwin_sndlib(10n), dfn-gwin_sndlib(11n), di-yuan_sndlib(11n), france_sndlib(25n), india35_sndlib(35n), janos-us_sndlib(26n), newyork_sndlib(16n), nobel-eu_sndlib(28n), nobel-germany_sndlib(17n), nobel-us_sndlib(14n), norway_sndlib(27n), pdh_sndlib(11n), polska_sndlib(12n), ta1_sndlib(24n), zib54_sndlib(54n); stretch=2 max_stretch=4 fail_links=0 metric=weighted
+[tier2] train on 17 topos (tmgen traffic), zero-shot test on ['abilene_sndlib', 'geant_sndlib', 'germany50_sndlib']; seed=7 updates=732
+  upd   5/732  ep_ret~-441.50  pl -0.053  vl 6.503  ent 0.348
+  upd  10/732  ep_ret~-545.30  pl -0.010  vl 15.571  ent 0.428
+  upd  15/732  ep_ret~-244.02  pl +0.032  vl 21.369  ent 0.598
+  upd  20/732  ep_ret~-201.54  pl -0.061  vl 25.871  ent 0.766
+  upd  25/732  ep_ret~-386.18  pl -0.008  vl 7.940  ent 0.816
+  upd  30/732  ep_ret~-237.40  pl +0.019  vl 14.055  ent 0.601
+  upd  35/732  ep_ret~-254.46  pl -0.019  vl 6.629  ent 0.367
+  upd  40/732  ep_ret~-164.62  pl -0.030  vl 11.608  ent 0.406
+  upd  45/732  ep_ret~-202.13  pl +0.014  vl 1.020  ent 0.307
+  upd  50/732  ep_ret~-316.47  pl -0.101  vl 18.145  ent 0.396
+  upd  55/732  ep_ret~-192.38  pl +0.007  vl 78.148  ent 0.372
+  upd  60/732  ep_ret~-142.40  pl +0.023  vl 27.281  ent 0.388
+  upd  65/732  ep_ret~-325.00  pl -0.061  vl 6.259  ent 0.359
+  upd  70/732  ep_ret~-340.67  pl -0.021  vl 4.734  ent 0.545
+  upd  75/732  ep_ret~-136.73  pl -0.009  vl 13.922  ent 0.352
+  upd  80/732  ep_ret~-179.34  pl -0.096  vl 9.967  ent 0.449
+  upd  85/732  ep_ret~-234.20  pl +0.111  vl 3.675  ent 0.294
+  upd  90/732  ep_ret~-338.25  pl +0.005  vl 6.549  ent 0.568
+  upd  95/732  ep_ret~-395.10  pl -0.027  vl 0.959  ent 0.329
+  upd 100/732  ep_ret~-263.22  pl -0.074  vl 14.307  ent 0.386
+  upd 105/732  ep_ret~-219.90  pl -0.045  vl 7.728  ent 0.282
+  upd 110/732  ep_ret~-120.34  pl -0.014  vl 49.085  ent 0.321
+  upd 115/732  ep_ret~-164.25  pl -0.038  vl 5.990  ent 0.575
+  upd 120/732  ep_ret~-131.41  pl -0.048  vl 22.750  ent 0.447
+  upd 125/732  ep_ret~-162.76  pl -0.028  vl 7.736  ent 0.259
+  upd 130/732  ep_ret~-236.32  pl -0.012  vl 15.959  ent 0.714
+  upd 135/732  ep_ret~-217.86  pl +0.017  vl 7.767  ent 0.191
+  upd 140/732  ep_ret~-278.26  pl +0.015  vl 11.233  ent 0.282
+  upd 145/732  ep_ret~-184.96  pl +0.023  vl 5.770  ent 0.292
+  upd 150/732  ep_ret~-338.81  pl +0.009  vl 7.242  ent 0.541
+  upd 155/732  ep_ret~-235.29  pl -0.034  vl 2.865  ent 0.196
+  upd 160/732  ep_ret~-183.94  pl +0.118  vl 35.988  ent 0.335
+  upd 165/732  ep_ret~-287.28  pl +0.037  vl 6.020  ent 0.477
+  upd 170/732  ep_ret~-115.64  pl -0.052  vl 28.515  ent 0.317
+  upd 175/732  ep_ret~-175.71  pl +0.112  vl 1.589  ent 0.254
+  upd 180/732  ep_ret~-174.50  pl -0.011  vl 16.301  ent 0.216
+  upd 185/732  ep_ret~-127.60  pl -0.070  vl 26.722  ent 0.341
+  upd 190/732  ep_ret~-366.46  pl +0.012  vl 15.450  ent 0.549
+  upd 195/732  ep_ret~-211.72  pl -0.001  vl 7.881  ent 0.189
+  upd 200/732  ep_ret~-282.71  pl +0.095  vl 5.445  ent 0.536
+  upd 205/732  ep_ret~-468.07  pl +0.012  vl 7.229  ent 0.331
+  upd 210/732  ep_ret~-165.25  pl -0.066  vl 12.489  ent 0.439
+  upd 215/732  ep_ret~-240.16  pl +0.021  vl 11.451  ent 0.178
+  upd 220/732  ep_ret~-386.89  pl -0.072  vl 1.145  ent 0.383
+  upd 225/732  ep_ret~-200.50  pl -0.051  vl 17.628  ent 0.391
+  upd 230/732  ep_ret~-155.69  pl +0.003  vl 23.567  ent 0.322
+  upd 235/732  ep_ret~-216.17  pl -0.162  vl 19.339  ent 0.556
+  upd 240/732  ep_ret~-146.03  pl -0.073  vl 1.188  ent 0.167
+  upd 245/732  ep_ret~-404.08  pl +0.075  vl 9.782  ent 0.376
+  upd 250/732  ep_ret~-133.08  pl +0.020  vl 22.903  ent 0.296
+  upd 255/732  ep_ret~-139.98  pl -0.067  vl 20.537  ent 0.228
+  upd 260/732  ep_ret~-280.20  pl +0.059  vl 5.550  ent 0.471
+  upd 265/732  ep_ret~-172.05  pl -0.026  vl 8.767  ent 0.513
+  upd 270/732  ep_ret~-169.62  pl -0.048  vl 5.707  ent 0.356
+  upd 275/732  ep_ret~-271.00  pl -0.099  vl 6.760  ent 0.208
+  upd 280/732  ep_ret~-372.93  pl +0.006  vl 1.415  ent 0.433
+  upd 285/732  ep_ret~-119.75  pl +0.009  vl 18.658  ent 0.299
+  upd 290/732  ep_ret~-215.48  pl -0.070  vl 1.507  ent 0.293
+  upd 295/732  ep_ret~-188.44  pl -0.020  vl 11.502  ent 0.429
+  upd 300/732  ep_ret~-108.42  pl +0.035  vl 21.380  ent 0.250
+  upd 305/732  ep_ret~-300.36  pl +0.165  vl 5.362  ent 0.568
+  upd 310/732  ep_ret~-178.60  pl +0.003  vl 11.581  ent 0.194
+  upd 315/732  ep_ret~-196.59  pl +0.010  vl 13.377  ent 0.301
+  upd 320/732  ep_ret~-370.03  pl -0.049  vl 10.202  ent 0.559
+  upd 325/732  ep_ret~-110.79  pl -0.063  vl 54.158  ent 0.401
+  upd 330/732  ep_ret~-146.92  pl +0.042  vl 22.626  ent 0.582
+  upd 335/732  ep_ret~-314.29  pl -0.019  vl 5.718  ent 0.290
+  upd 340/732  ep_ret~-147.61  pl -0.086  vl 11.585  ent 0.482
+  upd 345/732  ep_ret~-293.89  pl +0.005  vl 5.935  ent 0.327
+  upd 350/732  ep_ret~-216.53  pl -0.025  vl 1.575  ent 0.198
+  upd 355/732  ep_ret~-120.64  pl +0.046  vl 32.206  ent 0.337
+  upd 360/732  ep_ret~-262.65  pl +0.025  vl 7.949  ent 0.191
+  upd 365/732  ep_ret~-448.84  pl +0.042  vl 6.515  ent 0.288
+  upd 370/732  ep_ret~-165.15  pl -0.027  vl 11.806  ent 0.315
+  upd 375/732  ep_ret~-297.97  pl -0.051  vl 7.407  ent 0.390
+  upd 380/732  ep_ret~-192.45  pl -0.024  vl 8.873  ent 0.511
+  upd 385/732  ep_ret~-252.51  pl +0.006  vl 4.018  ent 0.312
+  upd 390/732  ep_ret~-177.40  pl -0.032  vl 15.518  ent 0.179
+  upd 395/732  ep_ret~-210.38  pl -0.033  vl 19.239  ent 0.497
+  upd 400/732  ep_ret~-380.54  pl -0.080  vl 1.559  ent 0.699
+  upd 405/732  ep_ret~-269.81  pl -0.007  vl 6.280  ent 0.451
+  upd 410/732  ep_ret~-315.50  pl -0.036  vl 1.375  ent 0.335
+  upd 415/732  ep_ret~-287.38  pl +0.066  vl 10.431  ent 0.421
+  upd 420/732  ep_ret~-216.64  pl +0.054  vl 4.815  ent 0.257
+  upd 425/732  ep_ret~-217.12  pl -0.009  vl 6.830  ent 0.225
+  upd 430/732  ep_ret~-402.88  pl -0.029  vl 5.272  ent 0.527
+  upd 435/732  ep_ret~-132.80  pl -0.039  vl 17.872  ent 0.296
+  upd 440/732  ep_ret~-197.44  pl +0.003  vl 2.666  ent 0.218
+  upd 445/732  ep_ret~-161.36  pl +0.035  vl 1.617  ent 0.211
+  upd 450/732  ep_ret~-237.18  pl -0.137  vl 7.415  ent 0.199
+  upd 455/732  ep_ret~-150.06  pl -0.024  vl 9.743  ent 0.280
+  upd 460/732  ep_ret~-192.19  pl -0.042  vl 43.382  ent 0.499
+  upd 465/732  ep_ret~-299.51  pl +0.080  vl 3.341  ent 0.335
+  upd 470/732  ep_ret~-202.87  pl +0.050  vl 12.231  ent 0.355
+  upd 475/732  ep_ret~-199.49  pl -0.084  vl 16.418  ent 0.312
+  upd 480/732  ep_ret~-261.11  pl +0.054  vl 2.966  ent 0.217
+  upd 485/732  ep_ret~-125.01  pl -0.028  vl 43.210  ent 0.290
+  upd 490/732  ep_ret~-255.89  pl -0.014  vl 8.884  ent 0.197
+  upd 495/732  ep_ret~-269.13  pl -0.052  vl 8.946  ent 0.205
+  upd 500/732  ep_ret~-234.42  pl -0.077  vl 16.170  ent 0.302
+  upd 505/732  ep_ret~-269.72  pl -0.004  vl 10.766  ent 0.271
+  upd 510/732  ep_ret~-178.51  pl +0.030  vl 21.398  ent 0.189
+  upd 515/732  ep_ret~-163.17  pl +0.069  vl 24.625  ent 0.480
+  upd 520/732  ep_ret~-414.25  pl -0.003  vl 8.918  ent 0.378
+  upd 525/732  ep_ret~-337.45  pl -0.010  vl 7.749  ent 0.358
+  upd 530/732  ep_ret~-411.60  pl -0.077  vl 8.389  ent 0.691
+  upd 535/732  ep_ret~-231.97  pl -0.025  vl 6.091  ent 0.216
+  upd 540/732  ep_ret~-142.62  pl -0.011  vl 1.569  ent 0.156
+  upd 545/732  ep_ret~-216.03  pl -0.013  vl 2.362  ent 0.258
+  upd 550/732  ep_ret~-273.14  pl +0.005  vl 2.290  ent 0.338
+  upd 555/732  ep_ret~-215.19  pl +0.035  vl 4.061  ent 0.340
+  upd 560/732  ep_ret~-317.64  pl -0.070  vl 7.439  ent 0.388
+  upd 565/732  ep_ret~-331.74  pl -0.104  vl 14.821  ent 0.221
+  upd 570/732  ep_ret~-347.19  pl -0.027  vl 5.884  ent 0.467
+  upd 575/732  ep_ret~-517.22  pl -0.057  vl 11.311  ent 0.675
+  upd 580/732  ep_ret~-413.76  pl -0.001  vl 1.655  ent 0.751
+  upd 585/732  ep_ret~-272.53  pl +0.019  vl 8.036  ent 0.235
+  upd 590/732  ep_ret~-207.31  pl -0.025  vl 4.647  ent 0.304
+  upd 595/732  ep_ret~-194.78  pl -0.115  vl 14.032  ent 0.253
+  upd 600/732  ep_ret~-122.26  pl -0.000  vl 62.242  ent 0.247
+  upd 605/732  ep_ret~-159.52  pl +0.039  vl 18.095  ent 0.333
+  upd 610/732  ep_ret~-171.62  pl -0.013  vl 16.220  ent 0.464
+  upd 615/732  ep_ret~-177.66  pl +0.034  vl 17.048  ent 0.287
+  upd 620/732  ep_ret~-239.93  pl -0.086  vl 6.781  ent 0.382
+  upd 625/732  ep_ret~-224.73  pl -0.048  vl 9.603  ent 0.239
+  upd 630/732  ep_ret~-206.66  pl +0.034  vl 3.818  ent 0.211
+  upd 635/732  ep_ret~-185.67  pl +0.067  vl 13.318  ent 0.396
+  upd 640/732  ep_ret~-136.06  pl -0.078  vl 13.931  ent 0.235
+  upd 645/732  ep_ret~-150.64  pl +0.027  vl 24.340  ent 0.254
+  upd 650/732  ep_ret~-213.46  pl +0.006  vl 28.127  ent 0.271
+  upd 655/732  ep_ret~-219.19  pl -0.078  vl 7.516  ent 0.180
+  upd 660/732  ep_ret~-228.97  pl +0.102  vl 4.137  ent 0.276
+  upd 665/732  ep_ret~-162.58  pl -0.056  vl 4.781  ent 0.183
+  upd 670/732  ep_ret~-108.11  pl -0.110  vl 48.692  ent 0.154
+  upd 675/732  ep_ret~-137.69  pl -0.007  vl 26.745  ent 0.285
+  upd 680/732  ep_ret~-251.17  pl -0.016  vl 7.627  ent 0.170
+  upd 685/732  ep_ret~-204.59  pl -0.004  vl 28.762  ent 0.332
+  upd 690/732  ep_ret~-127.66  pl -0.022  vl 21.465  ent 0.273
+  upd 695/732  ep_ret~-218.64  pl +0.043  vl 1.457  ent 0.166
+  upd 700/732  ep_ret~-324.12  pl +0.028  vl 8.450  ent 0.476
+  upd 705/732  ep_ret~-246.32  pl -0.031  vl 21.640  ent 0.650
+  upd 710/732  ep_ret~-214.09  pl +0.033  vl 8.676  ent 0.181
+  upd 715/732  ep_ret~-198.66  pl +0.072  vl 3.198  ent 0.274
+  upd 720/732  ep_ret~-105.88  pl -0.009  vl 64.159  ent 0.321
+  upd 725/732  ep_ret~-303.65  pl +0.037  vl 7.760  ent 0.451
+  upd 730/732  ep_ret~-160.90  pl +0.027  vl 19.640  ent 0.377
+  upd 732/732  ep_ret~-193.86  pl -0.018  vl 11.658  ent 0.409
+[saved] results/marlgnn_tier2m15cm_seed7/policy.pt
+
+[eval] ZERO-SHOT on core backbones (real measured test traffic):
+[TopoAgnosticMARLEnv] 1 topos: abilene_sndlib(12n); stretch=2 max_stretch=4 fail_links=0 metric=weighted
+  [abilene_sndlib       feasible] OSPF   57.2%  ECMP   57.4%  MARL   56.2%  vs-OSPF +1.1pt  vs-ECMP +1.2pt  (n=18)
+[TopoAgnosticMARLEnv] 1 topos: geant_sndlib(22n); stretch=2 max_stretch=4 fail_links=0 metric=weighted
+  [geant_sndlib         overload] OSPF  145.5%  ECMP  106.3%  MARL   95.4%  vs-OSPF +50.1pt  vs-ECMP +10.8pt  (n=8)
+  [geant_sndlib         feasible] OSPF   71.2%  ECMP   54.2%  MARL   48.9%  vs-OSPF +22.4pt  vs-ECMP +5.4pt  (n=10)
+[TopoAgnosticMARLEnv] 1 topos: germany50_sndlib(50n); stretch=2 max_stretch=4 fail_links=0 metric=weighted
+  [germany50_sndlib     overload] OSPF  252.1%  ECMP  183.8%  MARL  118.8%  vs-OSPF +133.2pt  vs-ECMP +65.0pt  (n=18)
+
+[saved] results/marlgnn_tier2m15cm_seed7/summary.json

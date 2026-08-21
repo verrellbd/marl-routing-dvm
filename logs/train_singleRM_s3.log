@@ -1,0 +1,87 @@
+/home/uceedv1/thesis/ns3ai-venv/lib64/python3.9/site-packages/networkx/utils/backends.py:135: RuntimeWarning: networkx backend defined more than once: nx-loopback
+  backends.update(_get_backends("networkx.backends"))
+[GraphSeqRoutingEnv] 17 topologies: atlanta_sndlib(15n/44a), cost266_sndlib(37n/114a), dfn-bwin_sndlib(10n/90a), dfn-gwin_sndlib(11n/94a), di-yuan_sndlib(11n/84a), france_sndlib(25n/90a), india35_sndlib(35n/160a), janos-us_sndlib(26n/84a), newyork_sndlib(16n/98a), nobel-eu_sndlib(28n/82a), nobel-germany_sndlib(17n/52a), nobel-us_sndlib(14n/42a), norway_sndlib(27n/102a), pdh_sndlib(11n/68a), polska_sndlib(12n/36a), ta1_sndlib(24n/102a), zib54_sndlib(54n/160a); k=3; metric=weighted
+[GraphSeqRoutingEnv] 17 topologies: atlanta_sndlib(15n/44a), cost266_sndlib(37n/114a), dfn-bwin_sndlib(10n/90a), dfn-gwin_sndlib(11n/94a), di-yuan_sndlib(11n/84a), france_sndlib(25n/90a), india35_sndlib(35n/160a), janos-us_sndlib(26n/84a), newyork_sndlib(16n/98a), nobel-eu_sndlib(28n/82a), nobel-germany_sndlib(17n/52a), nobel-us_sndlib(14n/42a), norway_sndlib(27n/102a), pdh_sndlib(11n/68a), polska_sndlib(12n/36a), ta1_sndlib(24n/102a), zib54_sndlib(54n/160a); k=3; metric=weighted
+[GraphSeqRoutingEnv] 17 topologies: atlanta_sndlib(15n/44a), cost266_sndlib(37n/114a), dfn-bwin_sndlib(10n/90a), dfn-gwin_sndlib(11n/94a), di-yuan_sndlib(11n/84a), france_sndlib(25n/90a), india35_sndlib(35n/160a), janos-us_sndlib(26n/84a), newyork_sndlib(16n/98a), nobel-eu_sndlib(28n/82a), nobel-germany_sndlib(17n/52a), nobel-us_sndlib(14n/42a), norway_sndlib(27n/102a), pdh_sndlib(11n/68a), polska_sndlib(12n/36a), ta1_sndlib(24n/102a), zib54_sndlib(54n/160a); k=3; metric=weighted
+[GraphSeqRoutingEnv] 17 topologies: atlanta_sndlib(15n/44a), cost266_sndlib(37n/114a), dfn-bwin_sndlib(10n/90a), dfn-gwin_sndlib(11n/94a), di-yuan_sndlib(11n/84a), france_sndlib(25n/90a), india35_sndlib(35n/160a), janos-us_sndlib(26n/84a), newyork_sndlib(16n/98a), nobel-eu_sndlib(28n/82a), nobel-germany_sndlib(17n/52a), nobel-us_sndlib(14n/42a), norway_sndlib(27n/102a), pdh_sndlib(11n/68a), polska_sndlib(12n/36a), ta1_sndlib(24n/102a), zib54_sndlib(54n/160a); k=3; metric=weighted
+[GraphSeqRoutingEnv] 17 topologies: atlanta_sndlib(15n/44a), cost266_sndlib(37n/114a), dfn-bwin_sndlib(10n/90a), dfn-gwin_sndlib(11n/94a), di-yuan_sndlib(11n/84a), france_sndlib(25n/90a), india35_sndlib(35n/160a), janos-us_sndlib(26n/84a), newyork_sndlib(16n/98a), nobel-eu_sndlib(28n/82a), nobel-germany_sndlib(17n/52a), nobel-us_sndlib(14n/42a), norway_sndlib(27n/102a), pdh_sndlib(11n/68a), polska_sndlib(12n/36a), ta1_sndlib(24n/102a), zib54_sndlib(54n/160a); k=3; metric=weighted
+[GraphSeqRoutingEnv] 17 topologies: atlanta_sndlib(15n/44a), cost266_sndlib(37n/114a), dfn-bwin_sndlib(10n/90a), dfn-gwin_sndlib(11n/94a), di-yuan_sndlib(11n/84a), france_sndlib(25n/90a), india35_sndlib(35n/160a), janos-us_sndlib(26n/84a), newyork_sndlib(16n/98a), nobel-eu_sndlib(28n/82a), nobel-germany_sndlib(17n/52a), nobel-us_sndlib(14n/42a), norway_sndlib(27n/102a), pdh_sndlib(11n/68a), polska_sndlib(12n/36a), ta1_sndlib(24n/102a), zib54_sndlib(54n/160a); k=3; metric=weighted
+[GraphSeqRoutingEnv] 17 topologies: atlanta_sndlib(15n/44a), cost266_sndlib(37n/114a), dfn-bwin_sndlib(10n/90a), dfn-gwin_sndlib(11n/94a), di-yuan_sndlib(11n/84a), france_sndlib(25n/90a), india35_sndlib(35n/160a), janos-us_sndlib(26n/84a), newyork_sndlib(16n/98a), nobel-eu_sndlib(28n/82a), nobel-germany_sndlib(17n/52a), nobel-us_sndlib(14n/42a), norway_sndlib(27n/102a), pdh_sndlib(11n/68a), polska_sndlib(12n/36a), ta1_sndlib(24n/102a), zib54_sndlib(54n/160a); k=3; metric=weighted
+[GraphSeqRoutingEnv] 17 topologies: atlanta_sndlib(15n/44a), cost266_sndlib(37n/114a), dfn-bwin_sndlib(10n/90a), dfn-gwin_sndlib(11n/94a), di-yuan_sndlib(11n/84a), france_sndlib(25n/90a), india35_sndlib(35n/160a), janos-us_sndlib(26n/84a), newyork_sndlib(16n/98a), nobel-eu_sndlib(28n/82a), nobel-germany_sndlib(17n/52a), nobel-us_sndlib(14n/42a), norway_sndlib(27n/102a), pdh_sndlib(11n/68a), polska_sndlib(12n/36a), ta1_sndlib(24n/102a), zib54_sndlib(54n/160a); k=3; metric=weighted
+[single] train 17 SNDlib (tmgen); zero-shot ['abilene_sndlib', 'geant_sndlib', 'germany50_sndlib']; seed=3 buffer=2048 -> 732 updates
+[TopoAgnosticGNNExtractor] k=3, hidden=64, rounds=3, out=64 (topology-agnostic)
+[progress] 25000/1500000 (  1.7%) elapsed 6.5min eta 382.8min
+[progress] 50000/1500000 (  3.3%) elapsed 13.1min eta 381.0min
+[progress] 75000/1500000 (  5.0%) elapsed 19.5min eta 371.2min
+[progress] 100000/1500000 (  6.7%) elapsed 26.1min eta 365.5min
+[progress] 125000/1500000 (  8.3%) elapsed 33.1min eta 363.9min
+[progress] 150000/1500000 ( 10.0%) elapsed 40.3min eta 363.0min
+[progress] 175000/1500000 ( 11.7%) elapsed 47.1min eta 356.4min
+[progress] 200000/1500000 ( 13.3%) elapsed 54.1min eta 351.9min
+[progress] 225000/1500000 ( 15.0%) elapsed 60.7min eta 344.0min
+[progress] 250000/1500000 ( 16.7%) elapsed 67.6min eta 338.1min
+[progress] 275000/1500000 ( 18.3%) elapsed 74.0min eta 329.7min
+[progress] 300000/1500000 ( 20.0%) elapsed 80.4min eta 321.5min
+[progress] 325000/1500000 ( 21.7%) elapsed 86.8min eta 313.7min
+[progress] 350000/1500000 ( 23.3%) elapsed 93.2min eta 306.2min
+[progress] 375000/1500000 ( 25.0%) elapsed 100.2min eta 300.5min
+[progress] 400000/1500000 ( 26.7%) elapsed 106.8min eta 293.7min
+[progress] 425000/1500000 ( 28.3%) elapsed 113.4min eta 286.7min
+[progress] 450000/1500000 ( 30.0%) elapsed 119.8min eta 279.4min
+[progress] 475000/1500000 ( 31.7%) elapsed 126.1min eta 272.2min
+[progress] 500000/1500000 ( 33.3%) elapsed 133.0min eta 266.1min
+[progress] 525000/1500000 ( 35.0%) elapsed 139.4min eta 258.9min
+[progress] 550000/1500000 ( 36.7%) elapsed 145.8min eta 251.8min
+[progress] 575000/1500000 ( 38.3%) elapsed 152.1min eta 244.7min
+[progress] 600000/1500000 ( 40.0%) elapsed 158.5min eta 237.7min
+[progress] 625000/1500000 ( 41.7%) elapsed 165.3min eta 231.5min
+[progress] 650000/1500000 ( 43.3%) elapsed 171.7min eta 224.5min
+[progress] 675000/1500000 ( 45.0%) elapsed 178.1min eta 217.7min
+[progress] 700000/1500000 ( 46.7%) elapsed 184.5min eta 210.8min
+[progress] 725000/1500000 ( 48.3%) elapsed 191.4min eta 204.6min
+[progress] 750000/1500000 ( 50.0%) elapsed 197.8min eta 197.8min
+[progress] 775000/1500000 ( 51.7%) elapsed 204.2min eta 191.0min
+[progress] 800000/1500000 ( 53.3%) elapsed 210.5min eta 184.2min
+[progress] 825000/1500000 ( 55.0%) elapsed 216.9min eta 177.5min
+[progress] 850000/1500000 ( 56.7%) elapsed 223.8min eta 171.2min
+[progress] 875000/1500000 ( 58.3%) elapsed 230.2min eta 164.4min
+[progress] 900000/1500000 ( 60.0%) elapsed 236.6min eta 157.7min
+[progress] 925000/1500000 ( 61.7%) elapsed 242.9min eta 151.0min
+[progress] 950000/1500000 ( 63.3%) elapsed 249.3min eta 144.3min
+[progress] 975000/1500000 ( 65.0%) elapsed 256.2min eta 138.0min
+[progress] 1000000/1500000 ( 66.7%) elapsed 262.6min eta 131.3min
+[progress] 1025000/1500000 ( 68.3%) elapsed 269.0min eta 124.7min
+[progress] 1050000/1500000 ( 70.0%) elapsed 275.4min eta 118.0min
+[progress] 1075000/1500000 ( 71.7%) elapsed 281.7min eta 111.4min
+[progress] 1100000/1500000 ( 73.3%) elapsed 288.6min eta 105.0min
+[progress] 1125000/1500000 ( 75.0%) elapsed 295.0min eta 98.3min
+[progress] 1150000/1500000 ( 76.7%) elapsed 301.4min eta 91.7min
+[progress] 1175000/1500000 ( 78.3%) elapsed 307.8min eta 85.1min
+[progress] 1200000/1500000 ( 80.0%) elapsed 314.2min eta 78.6min
+[progress] 1225000/1500000 ( 81.7%) elapsed 321.1min eta 72.1min
+[progress] 1250000/1500000 ( 83.3%) elapsed 327.5min eta 65.5min
+[progress] 1275000/1500000 ( 85.0%) elapsed 333.8min eta 58.9min
+[progress] 1300000/1500000 ( 86.7%) elapsed 340.2min eta 52.3min
+[progress] 1325000/1500000 ( 88.3%) elapsed 346.6min eta 45.8min
+[progress] 1350000/1500000 ( 90.0%) elapsed 353.5min eta 39.3min
+[progress] 1375000/1500000 ( 91.7%) elapsed 359.9min eta 32.7min
+[progress] 1400000/1500000 ( 93.3%) elapsed 366.3min eta 26.2min
+[progress] 1425000/1500000 ( 95.0%) elapsed 372.7min eta 19.6min
+[progress] 1450000/1500000 ( 96.7%) elapsed 379.5min eta 13.1min
+[progress] 1475000/1500000 ( 98.3%) elapsed 386.0min eta 6.5min
+[progress] 1500000/1500000 (100.0%) elapsed 392.4min eta 0.0min
+[saved] results/single_singleH64gRM_seed3/policy.zip
+
+[eval] ZERO-SHOT on core backbones (real measured):
+[GraphSeqRoutingEnv] 1 topologies: abilene_sndlib(12n/30a); k=3; metric=weighted
+[abilene_sndlib]
+  [feasible] OSPF   57.2% ECMP   57.4% SINGLE   54.9%  vs-OSPF +2.4 vs-ECMP +2.5 (n=18)
+[GraphSeqRoutingEnv] 1 topologies: geant_sndlib(22n/72a); k=3; metric=weighted
+[geant_sndlib]
+  [overload] OSPF  145.5% ECMP  106.3% SINGLE  139.4%  vs-OSPF +6.2 vs-ECMP -33.1 (n=8)
+  [feasible] OSPF   71.2% ECMP   54.2% SINGLE   67.1%  vs-OSPF +4.1 vs-ECMP -12.9 (n=10)
+[GraphSeqRoutingEnv] 1 topologies: germany50_sndlib(50n/176a); k=3; metric=weighted
+[germany50_sndlib]
+  [overload] OSPF  252.1% ECMP  183.8% SINGLE  157.7%  vs-OSPF +94.4 vs-ECMP +26.1 (n=18)
+
+[saved] results/single_singleH64gRM_seed3/summary.json
