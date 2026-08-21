@@ -45,9 +45,12 @@ Novel angle: GNN as the agent backbone (one novel element — keep scope discipl
 - Disabled ns3-ai examples (API drift with ns-3.42): rate-control, multi-bss.
   Do not re-enable them.
 - Build with -j8 (not nproc) on shared machines. On monaco (dedicated) more is fine.
-- Training/eval are CPU-ONLY (device="cpu" hardcoded in train_gnn_qos.py + mappo.py).
-  No GPU selection needed. For parallel jobs cap threads (OMP_NUM_THREADS=2) so many run
-  at once; see train_all_monaco.sh + eval_ns3_all_monaco.sh (18-model / 18-dir launchers).
+- Training/eval are CPU-ONLY (device="cpu" hardcoded in train_single_tier2.py,
+  marl_routing/mappo.py + marl_routing/marl_gnn.py, and the exporters/aggregators that
+  load a policy: export_topoagn_routes.py, fill_offered_grid.py, evaluate_ns3.py).
+  No GPU selection needed. For parallel jobs cap threads (OMP_NUM_THREADS=1) so many run
+  at once; the CURRENT launchers are train_seeds10.sh + eval_seeds10.sh (2 arms x 10 seeds
+  / 558 sims). The old 18-model monaco launchers were deleted on 2026-08-21.
 
 ## Sanity check (bridge works)
 cd ~/thesis/ns-3-dev/contrib/ai/examples/a-plus-b/use-gym && python apb.py
@@ -374,9 +377,13 @@ the pinned vendor commit.
   (`*_sndlib.json`); testing = zero-shot on abilene/geant/germany50 SNDlib variants with
   real measured traffic. The old hand-built `abilene.json`/`geant.json` (gravity traffic)
   belong to the early phase. NOTE `abilene_sndlib` is NOT all-10G: 14x9.92G + 1x2.48G.
-- Topology Zoo (245 topos, `ingest_topzoo.py`, `vendor`-free, in `topologies/zoo_*.json`)
-  was tried and is KEPT ONLY as an honest negative: more topological diversity did not
-  help; germany50 degraded out-of-distribution. Not the main story.
+- Topology Zoo (245 topos, in `topologies/zoo_*.json`) was tried and is KEPT ONLY as an
+  honest negative: more topological diversity did not help; germany50 degraded
+  out-of-distribution. Not the main story. NOTE the code that produced it
+  (`ingest_topzoo.py`, `dump_zoo_traffic.py`, `train_marl_gnn_zoo.py`) was DELETED on
+  2026-08-21 in commit 0f7beeb; the topologies and `results/marlgnn_zoo_seed0/` are still
+  on disk, so the negative result stays citable. To re-run rather than cite it:
+  `git checkout 0f7beeb~1 -- ingest_topzoo.py dump_zoo_traffic.py train_marl_gnn_zoo.py`
 
 ## Working conventions
 - Research design questions: discuss, don't just implement.
