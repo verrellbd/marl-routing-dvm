@@ -65,7 +65,7 @@ cd ~/thesis/ns-3-dev/contrib/ai/examples/a-plus-b/use-gym && python apb.py
   * topologies/geant.json: 23 nodes, 39 links, mixed 10G/2.5G (European backbone)
   * marl_routing/topology.py: NetworkX loader, validates strong-connectivity, diameter
   * marl_routing/visualize.py: renders topology with lat/lon positioning
-  * results/abilene_topology.png, geant_topology.png: visual reference
+  * topology figures were deleted 2026-08-21; regenerate with marl_routing/visualize.py
 - ✅ Gravity-model traffic generator (marl_routing/traffic.py):
   * Generate N×N demand matrix from log-normal node weights (realistic hot spots)
   * Load factor sweep: α=0.3 (light), 1.0 (moderate), 1.5 (heavy)
@@ -106,164 +106,110 @@ cd ~/thesis/ns-3-dev/contrib/ai/examples/a-plus-b/use-gym && python apb.py
 > below and supersedes it. Do not resume "Phase 3 PPO" — that line of work is finished and
 > was superseded twice (per-topology GNN -> MARL -> topology-agnostic MARL).
 
-## CURRENT STATE (2026-07-28)
+## CURRENT STATE (2026-08-21)
 
-Branch `sndlib-tmgen-matched` holds the main result. Branch `ns3-ospf-baseline` is an
-in-flight side quest (see below).
+Branch `seeds-10` holds the main result. Branch `ns3-ospf-baseline` is an in-flight side
+quest (see below).
 
 **The experiment.** Train ONE topology-agnostic policy on 17 SNDlib topologies with TMgen
 modulated-gravity traffic; test ZERO-SHOT on abilene/geant/germany50 with real measured
-traffic. Five arms, all scored on identical matrices:
-OSPF | ECMP | single-agent GNN | MARL h32 | MARL h64 (hidden=64 = capacity-matched).
-Matched budget = 1.5M env steps each, 3 seeds each.
+traffic. FOUR reported arms, all scored on identical matrices:
+OSPF | ECMP | single-agent GNN (`_singleH64gRM`) | MARL h32 (`_tier2m15cm`).
+Matched budget = 1.5M env steps each, **10 seeds** each.
+A MARL h=64 arm existed only as the width-selection sensitivity check. It is not reported
+anywhere, and its runs were deleted on 2026-08-21 (commit 3b6067d).
+`results/width_selection.json` keeps the summary that chose h=32; the underlying h64 runs
+are gone, so `fill_offered_grid.py` now finds 0/10 policies for its third arm and silently
+skips it. The reported `offered_grid.json` never contained h64, so no reported number moves.
 
-**!! THIS BLOCK IS SUPERSEDED — see "FINAL PACKET-LEVEL GRID" below. !!**
-The numbers that used to sit here (abilene 7.19->0.62%, geant 14.13->3.65%, germany50
-18.94->11.60%, "germany50 headroom at NO QoS cost", "ECMP is WORSE than OSPF on germany50")
-came from `results/matched_ns3_grid.json`, which was measured with CAPACITY-BLIND learned
-paths and equal-HOP ECMP. Three of those four claims did not survive re-measurement.
-**Use `results/final_ns3_grid.json` for everything. Do not quote matched_ns3_grid.json.**
-What still holds from the old block: MARL is the STABLE method and the single agent is
-seed-fragile (germany50 spread +/-33.9 vs h32's +/-3.5) — and that now holds under
-IDENTICAL PPO hyperparameters, so the fragility is architectural, not a settings artifact.
-
-**!! RESULT REVERSAL 2026-07-28 — ABILENE IS A LOSS. Do not report the old abilene win. !!**
-Measured with a correctly configured OSPF (cost = refBW/linkBW), on all 18 abilene test
-matrices: **weighted OSPF 57.25%** < MARL h64 70.64% < MARL h32 72.61% < single 88.99% <
-ECMP 100.06% < hop-count OSPF 102.61%. Real OSPF BEATS every learned method by ~13pt, and
-abilene has NO overload regime at all under it (0/18 matrices >=100%; the old "abilene
-overload" was entirely an artifact of hop-count routing through the single 2.48G link).
-WHY (this is the insight, not just a bug): abilene_sndlib is 14x9.92G + 1x2.48G. Weighted
-OSPF gives that link cost 4 and avoids it. Everything else in the table is CAPACITY-BLIND in
-path construction — hop-count OSPF walks into it, ECMP sprays onto it, and our learned
-policies choose among HOP-COUNT k-shortest paths with hop-based detour limits, so the slow
-link sits in their candidate set. Honest framing: on heterogeneous-capacity topologies a
-capacity-aware baseline beats capacity-blind optimisation, however good the optimiser.
-WHAT SURVIVES: geant + germany50 have UNIFORM 40G links, so weighted == hop-count there
-(verified identical, 145.5%). ALL geant/germany50 results — including the whole packet-level
-grid and the germany50 headroom finding — STAND UNCHANGED. The core claim holds on the two
-larger topologies and fails on the 12-node toy.
-PACKET-LEVEL CONFIRMATION (2026-07-28, 126 sims, 0 fails, `results/ns3m_*_abilenew_s*`,
-loads 16/22/28, `--metric weighted` on all exporters). Abilene with a CORRECT baseline:
-  loss %  OVERLOAD  OSPF 14.35 | ECMP 14.30 | MARLh64 14.37 | MARLh32 16.53 | single 18.29
-  loss %  FEASIBLE  OSPF  0.17 | ECMP  0.18 | MARLh64  1.61 | MARLh32  1.67 | single  2.75
-  delay   FEASIBLE  OSPF 11.45ms vs learned 36.7-42.1ms  (3-4x WORSE)
-So on abilene the learned methods are at BEST tied (MARLh64 in overload) and clearly worse
-everywhere else — the detours cost delay without buying congestion relief. Report abilene as
-a NEGATIVE RESULT. `_abilenew_` dirs are the correct ones; the old `ns3m_*_abilene_s*` dirs
-use the hop-count straw man and must NOT be reported.
-MECHANISM PROVEN (2026-07-28): the slow link is arc (1,5)/(5,1) @2480 Mbps. Mean utilisation
-OF THAT LINK across the 18 abilene matrices: hop-count OSPF **83.6%**, weighted OSPF
-**0.0%** (it avoids it entirely), MARL h64 **58.0%**. Fast links sit at only ~21-24% in all
-three, so there is ample spare capacity — weighted OSPF simply moves everything off the slow
-link. MARL learned to PARTIALLY relieve it (83.6 -> 58.0) but cannot eliminate it, because
-its k=3 candidates are HOP-shortest (for some pairs all 3 traverse the slow link) and its
-hop-based stretch limit forbids the longer capacity-avoiding route.
-RE-MATCH AT HIGHER LOAD DOES NOT SAVE IT: at loads 16/22/28 (weighted OSPF genuinely
-congested, 129.3% on its overload subset) the learned methods are still far worse —
-MARL h64 148.9% (-19.6pt), h32 155.4%, single 195.9%. The failure is STRUCTURAL
-(capacity-blind candidate paths), not a load-distribution artifact.
-NOTE ECMP IS ALSO WRONG ON ABILENE: real ECMP splits among equal-cost paths under OSPF's
-METRIC; ours used equal-HOP-COUNT paths. Re-baselining abilene must fix both OSPF and ECMP.
-**CAPACITY-AWARE FIX — IMPLEMENTED 2026-07-28, RETRAIN IN FLIGHT.** The deeper fix was
-taken. `--metric weighted` now threads through the ENVIRONMENTS, not just the exporters:
-- `marl_routing/ospf_metric.py`: added `dist_to_all()` (Dijkstra on OSPF cost) + `edge_cost()`.
-- `compute_ksp(..., weight="w")`: candidate k-shortest paths are now COST-shortest.
+## Capacity-aware routing (`--metric weighted`)
+`--metric weighted` threads OSPF cost (refBW/linkBW) through the ENVIRONMENTS, not just the
+exporters. This is live code, not history:
+- `marl_routing/ospf_metric.py`: `dist_to_all()` (Dijkstra on OSPF cost) + `edge_cost()`.
+- `compute_ksp(..., weight="w")` (`marl_routing/gnn_routing_agent.py`): candidate
+  k-shortest paths are COST-shortest, not hop-shortest.
 - `graph_routing_env._TopoBundle(metric=)`: weighted KSP, weighted `ospf_arc_paths`,
   equal-COST next-hops in `ecmp_max_util` (float costs -> 1e-9 tolerance, not `== dist-1`).
 - `topo_agnostic_marl_env._MARLBundle(metric=)`: `dist_to` is COST distance, so the agent's
-  progress test and the reward's `is_detour` are capacity-aware. `_valid()` now accumulates
-  `self.cur_cost` in cost units instead of counting hops — the hop-based stretch limit was
-  the thing forbidding the capacity-avoiding route.
+  progress test and the reward's `is_detour` are capacity-aware. `_valid()` accumulates
+  `self.cur_cost` in cost units instead of counting hops.
 - `--metric` flag on both trainers; exporters pass theirs into the env too.
-DEFAULT REMAINS "hop" everywhere, so every committed result keeps its old meaning.
-PRE-LAUNCH VERIFICATION (do not re-derive):
-  abilene   slow link in k=3 candidates 112/396 -> 50/396; random policy max util 80.4 -> 40.2
-  geant     identical under both metrics (uniform 40G) — confirms nothing else can regress
-  germany50 max util identical 69.9; OSPF ref 28.6 -> 28.2 (equal-cost tie-break only)
-RETRAIN: `train_capaware.sh`, 9 runs (single | MARL h32 | MARL h64) x 3 seeds, matched
-1.5M steps, tags `_singleH64gcap` / `_tier2m15cap` / `_tier2m15h64cap`. Hyperparameters
-were RECOVERED FROM THE SAVED POLICIES, not guessed, so `--metric` is the only variable.
-Old capacity-blind dirs stay on disk for the before/after table.
-**!! ABILENE NEGATIVE RESULT IS REVERSED (2026-07-28, 126 ns-3 sims, 0 fails). !!**
-`results/ns3m_*_abilenecap_s*` — the SAME saved policies, re-exported with capacity-aware
-candidates (no retraining; the policies are topology-agnostic and consume whatever the env
-gives them). Compare `_abilenew_` (capacity-blind learned paths) -> `_abilenecap_`:
-  OVERLOAD loss%   OSPF 14.35 | ECMP 14.30 | single 18.29->14.11 | h32 16.53->15.06 |
-                   h64 14.37->**13.62**   (h64 delay 119.9->102.1ms vs OSPF 122.6ms)
-  FEASIBLE loss%   OSPF  0.17 | single 2.75->0.17 | h32 1.67->0.20 | h64 1.61->0.20
-  FEASIBLE delay   OSPF 11.45ms | single 42.10->11.40 | h32 36.68->12.09 | h64 36.93->12.11
-  FEASIBLE maxutil OSPF 96.7 | single 100.1->**91.6** | h32 98.5->94.5 | h64 100.0->96.5
-THE OLD CONCLUSION "detours cost delay without buying congestion relief" WAS AN ARTIFACT OF
-CAPACITY-BLIND CANDIDATE PATHS. Delete it. The 3-4x delay penalty is gone (11.4-12.1ms vs
-OSPF 11.45), and the single agent frees 5.1pt of headroom at identical QoS.
-HONEST READING: this is PARITY + a headroom gain, NOT dominance. Feasible loss 0.20 vs OSPF
-0.17 is marginally worse (noise); h32 still trails OSPF in overload (15.06 vs 14.35).
-Report abilene as "capacity-blind failure diagnosed and fixed", not as a win.
-STILL TO DO: re-run geant/germany50 with `--metric weighted` env candidates and rebuild
-`results/matched_ns3_grid.json`. Expect NO change there (uniform 40G -> weighted == hop),
-but verify rather than assume.
+DEFAULT REMAINS "hop" everywhere; every reported run passes `--metric weighted` explicitly.
 
-## !! SINGLE-AGENT REWARD FORM PROMOTED (2026-07-30) — READ BEFORE QUOTING ANY SINGLE NUMBER
-The reported single agent is now `results/single_singleH64gRM_seed*` (`--reward-form marl`),
-NOT `_singleH64gcap`. The old arm is kept in the grid as `single_whole_ablation`.
+WHY IT MATTERS — the abilene mechanism, still the explanation for the abilene negative:
+abilene_sndlib is 14x9.92G + 1x2.48G. The slow arc is (1,5)/(5,1) @2480 Mbps, OSPF cost 4.
+Mean utilisation OF THAT ARC across the 18 abilene matrices: hop-count OSPF **83.6%**,
+weighted OSPF **0.0%** — it avoids the link entirely. Fast links sit at only ~21-24%, so
+there is ample spare capacity and weighted OSPF simply routes around the slow link. The
+learned policies only PARTIALLY relieve it, because for some pairs all k=3 candidates
+traverse it. Honest framing: on heterogeneous-capacity topologies a capacity-aware baseline
+beats capacity-blind optimisation, however good the optimiser. geant + germany50 are uniform
+40G, so weighted == hop-count there (verified: identical path COSTS; the paths that differ
+are equal-cost tie-breaks only).
+
+## SINGLE-AGENT REWARD FORM (2026-07-30) — READ BEFORE QUOTING ANY SINGLE NUMBER
+The reported single agent is `results/single_singleH64gRM_seed*` (`--reward-form marl`), NOT
+the older `_singleH64gcap` whole-reward arm (deleted 2026-08-21; it is also no longer in the
+grid as `single_whole_ablation`).
 WHY: the two arms' delay penalties differed in MEANING though not in value (both beta=0.5).
 Single charged beta per EXTRA HOP and normalised it with the congestion term; MARL charges a
-flat beta per DETOUR HOP unnormalised. Measured consequence: under the old form the
+flat beta per DETOUR HOP unnormalised. Measured consequence of the old form: the
 cost-shortest candidate was myopically optimal for 95.2% of geant / 97.2% of germany50
 demands (median congestion benefit of deviating = 0.000, median penalty 1.011), and the
-policy reproduced OSPF on 90.3% of geant demands.
-PACKET-LEVEL EFFECT (54 sims, 0 fails, `results/ns3f_singleRM_*`), old -> new:
-  abilene FEASIBLE loss 3.69 -> **0.24** | delay 37.84 -> **13.77**ms | util 92.5 -> **88.1**
-  abilene OVERLOAD loss 21.64 -> **13.41** (now BEST in cell: OSPF 14.35, ECMP 14.30, h32 15.41)
-  geant   OVERLOAD loss 13.29 -> 11.38 | g50 FEASIBLE util 74.8 -> **61.5** at OSPF's 0.03 loss
-  REGRESSION: g50 OVERLOAD loss 16.73 -> 18.17 (the one cell it loses)
-CONSEQUENCES FOR THE WRITE-UP (already applied to paper/):
-- **ABILENE IS NO LONGER A BLANKET NEGATIVE.** The single agent BEATS OSPF in both abilene
-  regimes. MARL still does not. Correct claim: "learned routing wins at 12 nodes, the
-  hop-by-hop decentralised formulation does not". Section renamed accordingly.
-- **h32 vs single is now an EVEN 3-3 SPLIT** across the 6 cells (was 5-1). MARL takes both
-  geant cells + g50 overload; single takes both abilene cells + g50 feasible. Do not claim
-  MARL dominates.
-- Seed fragility STILL holds and is stronger: single g50 analytical +/-51.4 vs h32 +/-3.5.
-  But on abilene the single agent is the TIGHTER arm (+/-0.82 vs +/-2.13) — state both.
-- MARL's advantage SURVIVES the identical reward: geant overload +8.5pt, geant feasible
-  +27.7pt util, g50 overload +7.6pt. The architecture conclusion does not reduce to reward.
-NOT TESTED (stated as a limitation): whether MARL would also improve under the single
-agent's whole-reward form. Only the centralized arm was re-run.
+policy reproduced OSPF on 90.3% of geant demands. Unifying the reward form is what makes the
+single agent a fair baseline, and it STRENGTHENED that baseline.
 
-## FINAL PACKET-LEVEL GRID (2026-07-28) — `results/final_ns3_grid.json`
-378 ns-3 sims, 0 failures, `results/ns3f_*`. Capacity-aware (`--metric weighted` in the ENV)
-+ matched hyperparameters. Arms: single `_singleH64gcap`, h32 `_tier2m15cm`, h64
-`_tier2m15h64cm`. THIS SUPERSEDES `matched_ns3_grid.json` AND ALL `ns3m_*` DIRS.
+**!! THE 3-SEED CONCLUSIONS THIS BLOCK USED TO DRAW DID NOT SURVIVE 10 SEEDS. !!**
+Re-checked 2026-08-21 against `results/final_ns3_grid.json`:
+- "The single agent BEATS OSPF in both abilene regimes" — **FALSE**. Abilene feasible loss
+  1.01 vs OSPF 0.17, delay 21.55 vs 11.45; overload loss 17.81 vs 14.35, delay 147.0 vs
+  122.6. OSPF wins both regimes on loss AND delay. The single agent is better only on
+  feasible UTILISATION (91.4 vs 96.7).
+- "h32 vs single is an EVEN 3-3 SPLIT" — **FALSE**. It is **5-1 to MARL** (overload scored
+  by loss, feasible by utilisation). Single takes only abilene feasible, and there only on
+  utilisation while losing the same cell on loss (1.01 vs 0.56).
+- "on abilene the single agent is the TIGHTER arm" — **FALSE**. MARL h32 has the smaller
+  seed spread in ALL SIX cells at 10 seeds.
+- "single abilene overload is BEST in cell" — **FALSE**. Best is ECMP 14.31, then OSPF
+  14.35, then h32 14.90, then single 17.81.
+WHAT SURVIVES: MARL's advantage is not an artifact of the reward form. Under the IDENTICAL
+reward it still wins geant overload, geant feasible, g50 overload and g50 feasible.
+NOT TESTED (state as a limitation): whether MARL would also improve under the single agent's
+whole-reward form. Only the centralized arm was re-run.
+
+## FINAL PACKET-LEVEL GRID — `results/final_ns3_grid.json`
+558 ns-3 sims, 0 failures, `results/ns3f_*` = 3 arms x 10 seeds x 18 matrices, plus the 18
+deterministic OSPF runs. Capacity-aware (`--metric weighted` in the ENV) + matched
+hyperparameters. Arms: single `_singleH64gRM`, h32 `_tier2m15cm`, ECMP `_ecmp`.
 Abilene ran at loads 16/22/28 (weighted OSPF has no overload regime below ~16), so its
 packet row does NOT correspond to its analytical row (8/12/16). geant/germany50 do.
+OSPF is deterministic given the matrix, so it carries no seed spread and was simulated once.
 
-  geant OVERLOAD    loss%  OSPF 14.13 | ECMP 6.82 | single 13.29 | h32 **2.92** | h64 3.56
-  geant FEASIBLE    util%  OSPF 97.3  | ECMP 78.2 | single 95.8  | h32 **66.7** | h64 68.2
-                    (h32 loss 0.12 vs OSPF 0.16, delay 8.33 vs 9.46 — headroom is FREE here)
-  g50   OVERLOAD    loss%  OSPF 27.29 | ECMP 22.90 | single 16.73 | h32 10.62 | h64 **8.88**
-  g50   FEASIBLE    util%  OSPF 95.6  | single 74.8 | h32 70.8 | h64 61.9
-                    BUT loss  OSPF 0.03 | single **0.03** | h32 1.02 | h64 2.44
-                    -> SINGLE AGENT WINS THIS CELL (OSPF's loss, 20.8pt more headroom).
-                       MARL's extra headroom here is BOUGHT WITH LOSS. Report the trade.
-  abilene FEASIBLE  loss%  OSPF **0.17** | h32 0.97 | h64 3.30 | single 3.69
-                    delay  OSPF **11.45**| h32 14.17| h64 24.80| single 37.84
-  abilene OVERLOAD  loss%  OSPF 14.35 | ECMP 14.30 | h32 15.41 | h64 14.57 | single 21.64
+  geant OVERLOAD    loss%  OSPF 14.13 | ECMP 7.52 | single 11.23 | h32 **3.36**
+  geant FEASIBLE    util%  OSPF 97.3  | ECMP 79.4 | single 90.5  | h32 **66.3**
+                    (h32 loss 0.12 vs OSPF 0.16, delay 8.50 vs 9.46 — headroom is FREE here)
+  g50   OVERLOAD    loss%  OSPF 27.29 | ECMP 20.68 | single 14.94 | h32 **10.63**
+  g50   FEASIBLE    util%  OSPF 95.6  | ECMP 71.6 | single 69.6 | h32 **65.5**
+                    BUT loss  OSPF 0.03 | single **0.03** | h32 1.09
+                    -> SINGLE AGENT WINS THIS CELL ON QoS: OSPF's own loss with 26.0pt more
+                       headroom. h32 buys 4pt more headroom and pays 1.09% loss for it.
+                       Report the trade, not just the headroom.
+  abilene FEASIBLE  loss%  OSPF **0.17** | ECMP 0.22 | h32 0.56 | single 1.01
+                    delay  OSPF **11.45**| ECMP 12.82 | h32 13.66 | single 21.55
+                    util   OSPF 96.7 | ECMP 96.8 | single **91.4** | h32 92.4
+  abilene OVERLOAD  loss%  ECMP **14.31** | OSPF 14.35 | h32 14.90 | single 17.81
+                    delay  h32 **112.8** | ECMP 116.3 | OSPF 122.6 | single 147.0
 
-**ABILENE IS STILL A NEGATIVE RESULT — the reversal recorded below applies ONLY to the OLD
-capacity-blind-trained policies re-exported with capacity-aware candidates (`_abilenecap_`).
-The RETRAINED matched arm is WORSE on abilene (h64 feasible loss 0.20 -> 3.30).** The
-analytical grid predicted this independently (h64 abilene 61.6 +/-6.5 vs OSPF 57.2), so both
-measurements agree. The matched hyperparameters that helped geant/germany50 hurt abilene.
-Do not quote `_abilenecap_` as the final abilene result.
+**ABILENE IS A NEGATIVE RESULT FOR BOTH LEARNED ARMS** on loss and delay — OSPF or ECMP wins
+every abilene QoS cell. The only abilene gain is feasible-regime headroom (single 91.4,
+h32 92.4, against OSPF 96.7). The mechanism is the slow-link section above.
 
-**ECMP FINDING FLIPPED.** Real equal-COST ECMP beats OSPF in BOTH overload cells (geant 6.82
-vs 14.13; germany50 22.90 vs 27.29). The old "ECMP is WORSE than OSPF on germany50 (23.40 vs
-18.94)" was equal-HOP ECMP, a straw man. ECMP is a much stronger baseline than we reported.
+**ECMP IS A STRONG BASELINE.** Real equal-COST ECMP beats OSPF in both overload cells
+(geant 7.52 vs 14.13; germany50 20.68 vs 27.29) and takes abilene overload loss outright at
+14.31. Any older note claiming ECMP is worse than OSPF used equal-HOP ECMP, a straw man.
 
-MARL h32 > h64 on geant + abilene and has ~1/3 the seed spread; h64 wins only germany50.
-The results chapter currently treats h64 as headline — change it to h32.
+MARL h32 is the reported decentralised arm: it wins 5 of the 6 head-to-head cells against
+the single agent and is the tighter arm on seed spread in all six.
 
 ## Hyperparameter matching (audited 2026-07-28)
 ENV/DATA SIDE IS ALREADY FULLY MATCHED between single-agent and MARL — same 17 train topos,
@@ -285,36 +231,58 @@ gradient steps under the old settings), so MARL winning anyway is not an under-t
 artifact — but SB3's 10 epochs over a 2048 buffer could itself explain the single agent's
 seed collapse, which is why the matched re-run is worth having.
 
-**KNOWN DEFECT — being fixed (this is what caused the reversal above).** Our OSPF baseline routes by
-HOP COUNT (`nx.shortest_path` with no weight), but real OSPF uses cost = refBW/linkBW.
-abilene_sndlib has ONE 2.48G link among fourteen 9.92G links, so hop-count OSPF routes
-straight through it and looks ~45pt worse than a correctly configured OSPF
-(102.6% -> 57.2% mean offered load). **Every abilene gain is currently measured against a
-straw-man baseline and may not survive the fix.** geant/germany50 have uniform 40G links,
-so weighting changes nothing there — but germany50 swings 92pt on equal-cost TIE-BREAKING
-alone, so its OSPF number is fragile too. Fix = weighted Dijkstra in the exporters +
-re-run the OSPF arm (~1h of sims).
+**DEFECT FOUND AND FIXED — kept because it explains why the abilene result moved.** The
+OSPF baseline originally routed by HOP COUNT (`nx.shortest_path` with no weight), but real
+OSPF uses cost = refBW/linkBW. abilene_sndlib has ONE 2.48G link among fourteen 9.92G links,
+so hop-count OSPF routed straight through it and looked ~45pt worse than a correctly
+configured OSPF (102.6% -> 57.2% mean offered load) — every early abilene "gain" was
+measured against a straw man, and none of them survived. geant/germany50 have uniform 40G
+links, so weighting changes nothing there, though germany50 does swing on equal-cost
+TIE-BREAKING alone. The fix is `--metric weighted` everywhere (see "Capacity-aware routing"
+above); every reported run uses it, and all current numbers are post-fix.
+
+## Session 2026-08-21 — cleanup + paper audit
+Three commits changed what is on disk. Read this before looking for a file.
+- `0f7beeb` deleted 27 superseded scripts (dead figure duplicates, early-phase analysis,
+  the monaco launchers, the older trainers, the Topology Zoo code). KEPT despite looking
+  orphaned: `make_heatmap.py` (produces Figure 1 of the paper), `run_ns3_phase2.py` and
+  `evaluate_ns3.py` (the live exporters print them as their next step).
+- `2a978ac` tracked the 20 training logs behind the training-curve figure. They had been
+  UNTRACKED, i.e. the figure's only input data had no git backup.
+- `3b6067d` deleted 516 results/logs entries (174M -> 74M). KEPT: the 120 reported
+  `ns3f_{ecmp,marlh32,singleRM}_*` dirs, the 10+10 reported policies, the five reported
+  JSONs, the 20 training logs, and the `.done`/`_jobs.txt` run records. DROPPED beyond the
+  superseded set, at explicit request: the h64 arm, the `_singleH64gcap` whole-reward arm,
+  and the Topology Zoo artifacts. Restore anything with `git checkout 2a978ac -- <path>`.
+- `787c5e8` corrected seven numbers in `paper/`. The audit that found them checked EVERY
+  figure in the paper against the current grids: **165/165 values in the three result
+  tables already matched** — the defects were isolated. What changed: a stale 3-seed GEANT
+  loss in the Conclusion (2.9 -> 3.4); the abilene-overload "best method" (OSPF -> ECMP,
+  14.31 < 14.35); the single-agent parameter count (268,420 -> 100,740, measured from the
+  saved policy, which narrows the capacity gap from ~15x to ~5.7x); the work-budget
+  multiplier (six times -> three times, measured 3.32 hops/demand by rolling the trained
+  policy over the 17 training topologies); the training edge range (21 -> 18, polska);
+  three training-convergence figures; and a duplicated appendix block that had left
+  `tab:reward-decomp` and `fig:training-curve` multiply defined.
+DO NOT re-derive these — they are measured, and the measurement commands are in the commit
+messages.
 
 ## Next steps (ranked, after long deliberation)
-1. **Fix the OSPF metric** — DONE for the baselines (exporters), and the deeper
-   capacity-aware fix to the ENVIRONMENTS is implemented + retraining (see above).
-   Remaining: re-run the ns-3 grid weighted once the 9 runs land.
-1b. **Specialist baseline** (decided 2026-07-28): KEEP the 17-topology zero-shot design as
+1. **Specialist baseline** (decided 2026-07-28): KEEP the 17-topology zero-shot design as
    the headline — it is the contribution the survey identifies as unmet (GDDR/GROM fail to
    beat per-topology retraining). Add per-topology specialists at the SAME 1.5M budget as a
    REFERENCE arm to quantify the generalization gap (the ROAR-style comparison nobody
    reports). Needs a `--topos` flag on `train_marl_gnn_tier2.py` (currently hardcoded
    `TRAIN_TOPOS`). ~9 runs, ~3h parallel on geneva. NOT a replacement for the 17.
-   The existing `*_sndlib_marl_real_seed*` dirs are an OLDER env/budget — not comparable.
+   (The old `*_sndlib_marl_real_seed*` dirs were an OLDER env/budget and were deleted on
+   2026-08-21 — there is nothing on disk to compare against; specialists must be trained.)
 2. **Finish the ns3-ospf branch** — see below. Citability, not correctness.
 3. **Failure robustness**: env already supports `fail_links` (currently 0). Evaluate the
    SAVED policies zero-shot with 1 link failed. No retraining, ~2h. Biggest claim-per-hour.
 4. **Within-episode traffic shifts.** The project premise says "dynamic traffic" but each
    ns-3 run holds ONE static matrix; we test generalization ACROSS matrices, not adaptation
    WITHIN an episode. State this as a limitation or close it.
-5. Update the results chapter: two written conclusions changed (germany50 MARL variance;
-   "no benefit in the feasible regime" was abilene-specific and is FALSE at 50 nodes).
-6. Greedy-k3 oracle as a cheap upper reference (no ceiling in the table currently).
+5. Greedy-k3 oracle as a cheap upper reference (no ceiling in the table currently).
 
 ## ns-3 evaluation: what is real and what is not
 - **Reported loss/delay/throughput/utilisation are ns-3 packet-level.** Training and the
@@ -377,13 +345,16 @@ the pinned vendor commit.
   (`*_sndlib.json`); testing = zero-shot on abilene/geant/germany50 SNDlib variants with
   real measured traffic. The old hand-built `abilene.json`/`geant.json` (gravity traffic)
   belong to the early phase. NOTE `abilene_sndlib` is NOT all-10G: 14x9.92G + 1x2.48G.
-- Topology Zoo (245 topos, in `topologies/zoo_*.json`) was tried and is KEPT ONLY as an
+- Topology Zoo (245 topos, in `topologies/zoo_*.json`) was tried and is kept ONLY as an
   honest negative: more topological diversity did not help; germany50 degraded
-  out-of-distribution. Not the main story. NOTE the code that produced it
-  (`ingest_topzoo.py`, `dump_zoo_traffic.py`, `train_marl_gnn_zoo.py`) was DELETED on
-  2026-08-21 in commit 0f7beeb; the topologies and `results/marlgnn_zoo_seed0/` are still
-  on disk, so the negative result stays citable. To re-run rather than cite it:
-  `git checkout 0f7beeb~1 -- ingest_topzoo.py dump_zoo_traffic.py train_marl_gnn_zoo.py`
+  out-of-distribution. Not the main story.
+  **THIS NEGATIVE IS NO LONGER REPRODUCIBLE FROM THIS REPO.** Both halves were deleted on
+  2026-08-21: the code (`ingest_topzoo.py`, `dump_zoo_traffic.py`, `train_marl_gnn_zoo.py`)
+  in commit 0f7beeb, and the artifacts (`results/marlgnn_zoo_seed0/`) in commit 3b6067d.
+  Only the 246 `topologies/zoo_*.json` files and this written claim survive. If the result
+  ever needs defending, restore both halves first:
+    `git checkout 0f7beeb~1 -- ingest_topzoo.py dump_zoo_traffic.py train_marl_gnn_zoo.py`
+    `git checkout 2a978ac -- results/marlgnn_zoo_seed0`
 
 ## Working conventions
 - Research design questions: discuss, don't just implement.
