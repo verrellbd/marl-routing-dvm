@@ -28,24 +28,6 @@ Matrices retained per regime & $3$ & $3$ & $3$ \\
 
 
 
-\begin{table}[htbp]
-  \centering
-  \small
-  \caption{Decomposition of the MARL episode return on the evaluation
-  traffic, by ~\eqref{eq:telescope}. The congestion term is the
-  bottleneck as a percentage of OSPF's and the delay term as $\beta D$.}
-  \label{tab:reward-decomp}
-  \setlength{\tabcolsep}{5pt}
-  \begin{tabular}{lccccc}
-    \toprule
-    Network & Return $G$ & Congestion & Delay $\beta D$ & Detour hops & $U_T/U^{\mathrm{OSPF}}$ \\
-    \midrule
-    Abilene    & $-104.4$ & $-99.5$ & $-4.9$  & $9.8$ \;($3.0\%$)  & $1.00$ \\
-    GÉANT      & $-78.3$  & $-68.5$ & $-9.8$  & $19.7$ \;($4.4\%$) & $0.69$ \\
-    Germany50  & $-106.7$ & $-48.0$ & $-58.7$ & $117.4$ \;($13.5\%$) & $0.48$ \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \begin{table}[htbp]
   \centering
@@ -86,7 +68,7 @@ Matrices retained per regime & $3$ & $3$ & $3$ \\
     \midrule
     \multicolumn{6}{l}{\emph{Overload regime}} \\
     \midrule
-    \multirow{2}{*}{Abilene}   & Loss  & \textbf{14.35\%}   & 14.31 $\pm$ 0.02\%                     & 17.81 $\pm$ 4.67\% & 14.90 $\pm$ 1.69\%\\
+    \multirow{2}{*}{Abilene}   & Loss  & 14.35\%   & \textbf{14.31 $\pm$ 0.02\%}                     & 17.81 $\pm$ 4.67\% & 14.90 $\pm$ 1.69\%\\
                                & Delay & 122.6\,ms & 116.3 $\pm$ 4.4\,ms                   & 147.0 $\pm$ 24.4\,ms  & \textbf{112.8 $\pm$ 8.2\,ms} \\
     \cmidrule(l){1-6}
     \multirow{2}{*}{GÉANT}     & Loss  & 14.13\%  & 7.52 $\pm$ 2.41\%             & 11.23 $\pm$ 4.54\%          & \textbf{3.36 $\pm$ 0.69\%} \\
@@ -117,17 +99,4 @@ Matrices retained per regime & $3$ & $3$ & $3$ \\
 
 
 
-\section{Training Convergence}
-\label{app:training}
-The performance of the multi-agent reinforcement learning (MARL) approach depends on the accuracy of the reward calculation. The model was trained on 17 topologies from SNDLib using the TMGen matrix across ten random seeds. We train for approximately 1,500,000 steps to achieve the final results. According to Equation~\eqref{eq:telescope}, the episode return is defined as the final bottleneck expressed as a percentage of OSPF's, plus $\beta$ times the number of detour hops taken.
-
-Figure~\ref{fig:training-curve} illustrates the training progress across the ten seeds. The baseline OSPF bottleneck reaches $-100$ with no detours. The model demonstrates an average return across the ten seeds that increases from $-329.7$ during the first fifty updates to $-237.3$ during the last fifty updates. The final per-seed returns range from $-281.2$ to $-208.2$, with a standard deviation of $10.7\%$ of the mean. These results indicate that the model exhibits consistent performance across different seeds. Although the returns do not approach the OSPF baseline, they improve substantially over training.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{images/fig_marl_training_curves.png}
-  \caption{MARL mean episode return over the $732$ policy updates of the
-  matched budget, on the seventeen training topologies.}
-  \label{fig:training-curve}
-\end{figure}
 

@@ -1,21 +1,20 @@
 \section{Experiments}
 
 % NOTE: this chapter describes the configuration that produced
-% results/final_ns3_grid.json (558 ns-3 simulations, 0 failures, dirs results/ns3f_*).
-% Launchers: train_seeds10.sh (training), eval_seeds10.sh (evaluation).
-% Aggregators: rebuild_ns3_grid.py, fill_offered_grid.py, decompose_reward.py.
+% results/final_ns3_grid.json (378 ns-3 simulations, 0 failures, dirs results/ns3f_*).
+% Launchers: train_matched_hparams.sh (training), run_ns3_final.sh (evaluation).
 
-This section outlines the experimental setup based on the proposed methodology. It details the training and evaluation procedures for the Multi-Agent Reinforcement Learning computational environment. The resources used to represent the backbone network, the baseline routing methods, and the metrics employed to assess network performance are described. Additionally, the parameters utilized for model training are presented. The aim of this section is to ensure that the methodology can be reproduced in other environment.
+This section outlines the experimental setup following the proposed methodology, so it is reproducible in different environments. It describes how we trained and evaluated the Multi-Agent Reinforcement Learning environment. We also list all resources used in this study to measure network routing performance. Finally, we include the parameters used for model training. 
 
 \subsection{Computing Environment}
 \label{sec:setup-compute}
 
-The experiment was conducted on a single Linux server (Rocky 9) equipped with an AMD EPYC 7543 processor (128 hardware threads) and 512 GB of RAM. We use the CPU to train and evaluate the model with concurrent core parallelization. The software stack included Python 3.9, ns-3.42, PyTorch 2.6.0, PyTorch Geometric 2.6.1, NetworkX, and Stable-Baselines3 2.7.1. 
+The experiment was conducted on a single Linux server (Rocky 9) equipped with an AMD EPYC 7543 processor and 512 GB of RAM. We use the CPU to train and evaluate the model with concurrent core parallelization. The software stack included Python 3.9, ns-3.42, PyTorch 2.6.0, PyTorch Geometric 2.6.1, NetworkX, and Stable-Baselines3 2.7.1. 
 
 \subsection{Networks and Traffic Resources}
 \label{sec:setup-instances}
 
-The simulation utilizes a set of topologies and traffic patterns. We use seventeen topologies from SNDLib to train the model, except Abilene, GEANT, and Germany50. The training set includes topologies ranging from 10 to 54 nodes and 21 to 80 edges. This approach aims to enable the model’s ability to generalize across different network structures. In contrast, traffic data require a different approach because measured traffic is only available for Abilene, GEANT, and Germany50.
+The simulation utilizes a set of topologies and traffic patterns. We use seventeen topologies from SNDLib to train the model, except Abilene, GEANT, and Germany50. The training set includes topologies ranging from 10 to 54 nodes and 18 to 80 edges. This approach aims to enable the model’s ability to generalize across different network structures. In contrast, traffic data require a different approach because measured traffic is only available for Abilene, GEANT, and Germany50.
 
 To overcome the limitations of SNDLib resources for policy training, we generate synthetic traffic using the modulated-gravity model with the TMgen library \citep{internet-traffic}. This model uses an analogy with Newton’s law of gravitation to represent traffic between nodes and is the standard tool for this purpose. For each topology,  traffic patterns are generated and evaluated at five volume scales: $\{0.6, 0.8, 1.0, 1.2, 1.5\}$. We normalize these so that a scale of $1.0$ sets the OSPF bottleneck at exactly $100\%$. This methodology allows us to evaluate both feasible and congested traffic conditions.
 
@@ -65,35 +64,29 @@ Value coefficient & $0.5$ & $0.5$ \\
 Gradient-norm clip & $0.5$ & $0.5$ \\
 Message-passing rounds & $3$ & $3$ \\
 Hidden width & $32$ & $64$ \\
-Trainable parameters & $17{,}570$ & $268{,}420$ \\
+Trainable parameters & $17{,}570$ & $100{,}740$ \\
 Candidate paths per pair $k$ & --- (hop-by-hop) & $3$ \\
 Seeds & $0,\dots,9$ & $0,\dots,9$ \\
 \hline
 \end{tabular}
 \end{table}
+The two policies have different capacities because making their parameter equal would distort one of the architectures. We selected the decentralized width on training topologies rather than on the evaluation backbones, using held-out TMgen matrices from seventeen training instances generated with a different seed than the training seed. Furthermore, both trainings used the same environment settings: delay penalty  ($\beta = 0.5$), detour allowance ($\sigma = 2$), and maximum stretch ($\sigma_{\max} = 4$). Training also applies reward normalization and limits the demands to $500$.   
 
 
-The two policies differ in capacity because equalizing parameter counts would require distorting one of the architectures. The decentralized width was selected on training topologies rather than on the evaluation backbones, using held-out TMgen matrices from the seventeen training instances generated with a seed distinct from that used in training.
-
-Both training procedures share identical environment settings: delay penalty $\beta = 0.5$, detour allowance $\sigma = 2$, maximum stretch $\sigma_{\max} = 4$ cost units, reward normalization by the episode's OSPF bottleneck, and a $500$-demand cap on training matrices. The reward function is also consistent, with a flat environment charging a fixed $\beta$ for each detour hop and normalized congestion.
-
-Two key differences remain between the approaches. First, the decentralized policy receives rewards incrementally along the hops of a demand, whereas the centralized policy receives a single reward at the end. As a result, both policies encounter different value targets and effective horizons because the discount factors are the same. Second, the definition of a step is different for both policies. A single centralized step routes an entire demand, while one MARL step advances only a single hop. Therefore, at $1.5\times10^{6}$ environment steps, the centralized controller processes approximately six times as many demands, given that average path length is about six hops. Although the budget is matched in terms of environment steps, it is not matched in terms of routing work. Both differences favor the centralized method, so the decentralized policy's superior performance cannot be attributed to under-training of the baseline.
+Two key differences remain between the approaches. First, the decentralized policy receives rewards incrementally along the hops of a demand, whereas the centralized policy receives a single reward at the end. As a result, both policies encounter different value targets and effective horizons because the discount factors are the same. Second, the definition of a step is different for both policies. A single centralized step routes an entire demand, while one MARL step advances only a single hop. Therefore, at $1.5\times10^{6}$ environment steps, the centralized controller processes approximately three times as many demands, given that average path length is about three hops. Although the budget is matched in terms of environment steps, it is not matched in terms of routing work. Both differences favor the centralized method, so the decentralized policy's superior performance cannot be attributed to under-training of the baseline.
 
 
 \subsection{Congestion Regimes}
 \label{sec:setup-regimes}
-Network simulations are classified into two distinct congestion regimes to account for the differing outcomes produced by the routing problem under each condition. The congestion measure is the bottleneck utilization $U$ of Equations~\eqref{eq:load}--\eqref{eq:bottleneck}, the offered utilization of the busiest link under a given routing, computed as the total demand of the paths traversing a link divided by that link's capacity.
+Network simulations are classified into two congestion regimes to account for the differing outcomes produced by the routing problem under each condition. The congestion measure is the bottleneck utilization $U$ of ~\eqref{eq:load} and \eqref{eq:bottleneck}, the offered utilization of the busiest link under a given routing, computed as the total demand of the paths traversing a link divided by that link's capacity.
 
-Because it is computed from the demands alone it has no upper bound, and values above $100\%$ express routing pressure that exceeds capacity. The offered load is evaluated using an analytical surrogate to assign regime labels to each traffic matrix. Each test matrix is categorized based on the offered utilization that \emph{OSPF} would produce: \textbf{overload} when $U_{\mathrm{OSPF}}\ge100\%$, and \textbf{feasible} when $U_{\mathrm{OSPF}}<100\%$.
-
-The labelling is confirmed in ns-3: under OSPF the overload matrices lose 14 to 27 percent of packets and the feasible matrices between 0.03 and 0.17 percent.
+Because it is computed from the demands alone, it has no upper bound, and values above $100\%$ express routing pressure that exceeds capacity. The offered load is evaluated using an analytical surrogate to assign regime labels to each traffic matrix. Each test matrix is categorized based on the offered utilization that \emph{OSPF} would produce: \textbf{overload} when $U_{\mathrm{OSPF}}\ge100\%$, and \textbf{feasible} when $U_{\mathrm{OSPF}}<100\%$.
 
 \subsection{Packet-Level Evaluation Configuration}
 \label{sec:setup-ns3}
 
 
-This study uses ns-3 to evaluate labeled traffic. Each link is a \texttt{PointToPointNetDevice} with the default DropTail transmit queue of 100 packets, and no active queue management, shaping, or congestion control is enabled, so all reported packet loss results solely from buffer overflow. Traffic is one-way UDP, each demand a constant-rate \texttt{OnOff} application with a 1400-byte payload, so loss and delay follow from the routing decision rather than from transport-layer feedback. Propagation delays are installed at nanosecond resolution, which matters on Germany50 where several links fall below 1 ms. Each run spans 9 seconds of simulated time with flows active from 2 seconds until the end of the run, while utilization is accumulated over an 8-second window. All utilization figures are adjusted by dividing by 7/8 to account for the 7 seconds of activity within that window. Demand rates and link capacities are both divided by 20, which preserves every utilization, loss, and delay ratio while making the packet count manageable. Last, the complete grid consists of 558 simulations: three routing arms across ten model seeds on eighteen evaluation matrices, together with the eighteen deterministic OSPF runs.
-
+This study uses ns-3 to evaluate labeled traffic. Each link is a PointToPointNetDevice with a DropTail transmit queue of 100 packets. We use no active queue management, shaping, or congestion control, so all packet loss comes from buffer overflow. This study also uses one-way UDP traffic, with each demand using a constant-rate OnOff application and a 1400-byte payload. As a result, loss and delay depend on routing decisions, not transport-layer feedback. Propagation delays are set at nanosecond resolution, which is important for Germany50 since some links are under 1 ms. Each simulation runs for 8 seconds, with flows active from 2 to 9 seconds. While preserving all utilization, loss, and delay ratios, demand rates and link capacities are divided by 20 to keep the packet count manageable. Lastly, the complete grid consists of 558 simulations.
 
 \subsection{Performance Metrics}
 \label{sec:setup-metrics}
@@ -101,8 +94,6 @@ This study uses ns-3 to evaluate labeled traffic. Each link is a \texttt{PointTo
 This study evaluates the network performance of the MARL in comparison to other routing methods. Three performance metrics are selected for this evaluation. The first metric is analytical, while the remaining metrics are measured using the ns-3 simulator. All metrics are assessed under both overload and feasible operating regimes.
 \begin{enumerate}
   \item \textbf{Maximum offered load.} This metric serves as the training objective and quantifies the extent to which routing exceeds the capacity of the most congested link. It replaces utilization as a metric, since in the ns-3 simulator, traffic cannot exceed 100\% capacity.
-  \item \textbf{Packet loss.} This metric represents the proportion of dropped packets, expressed as a percentage. It indicates the impact of congestion on data transmission. Packet loss is captured in percentage.
+  \item \textbf{Packet loss.} This metric represents the proportion of dropped packets, expressed as a percentage. It indicates the impact of congestion on data transmission. Packet loss is captured as a percentage.
   \item \textbf{Delay.} This metric measures the mean end-to-end packet transmission time, representing the duration required for a packet to travel from source to destination. Delay is recorded in milliseconds.
 \end{enumerate}
-
-Differences between MARL and OSPF are tested with a two-sided Wilcoxon signed-rank test paired on the traffic matrix, because each learned routing is simulated on exactly the same matrix as the OSPF routing it is compared against, so only the routing varies. The ten model seeds are averaged before pairing, since they are ten draws of a single policy rather than ten independent observations of a matrix. Each regime therefore contributes nine paired matrices, three from each backbone.
