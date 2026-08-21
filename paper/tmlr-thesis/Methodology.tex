@@ -11,7 +11,7 @@ The topology is fixed within an episode but varies between them, since one polic
 is trained over a distribution of networks rather than fitted to a single graph
 (Section~\ref{sec:method-protocol}).
 
-Traffic is represented as a demand matrix decomposed into flows$\mathcal{F}=\{f=(s_f,d_f,r_f)\}$, where flow $f$requests requests rate $r_f$ from $s_f$ to
+Traffic is represented as a demand matrix decomposed into flows $\mathcal{F}=\{f=(s_f,d_f,r_f)\}$, where flow $f$ requests rate $r_f$ from $s_f$ to
 $d_f$. During an episode, one matrix is routed and stays the same for the whole period. Training uses synthetic matrices, while evaluation uses real measured demand (Section~\ref{sec:setup-instances}).
 A routing assigns each flow a single path $p_f$, giving link loads and utilizations
 \begin{equation}\label{eq:load}
@@ -57,7 +57,7 @@ Loop freedom is enforced structurally rather than learned. The set of allowed ne
 j\notin\mathcal{V}_f,\;\; h_d(j)<h_d(i)+\sigma,\;\;
 \omega_t+w_{ij}+h_d(j)\le h^{\star}_f+\sigma_{\max}\bigr\},
 \end{equation} 
-where $h_d(i)$ is the distance from $i$ to $d$ under the OSPF cost metric $w_e=\mathrm{refBW}/c_e$. $\mathcal{V}_f$ is the set of nodes already visited,  $\omega_t$ is the cost accumulated so far, $\sigma$ is the limitation of how far a single hop can move from the destination, and $\sigma_{\max}$  is the extra cost allowed for the completed path. Both limits are measured in cost units rather than hops, so detours are judged by capacity. This set is used as a binary mask in the policy. If the set is empty, the agent chooses the unvisited neighbor with the smallest $h_d$.
+where $h_d(i)$ is the distance from $i$ to $d$ under the OSPF cost metric $w_e=\mathrm{refBW}/c_e$. $\mathcal{V}_f$ is the set of nodes already visited,  $\omega_t$ is the cost accumulated so far, $w_{ij}$ the cost of the arc under consideration, $h^{\star}_f$ the cost of the shortest path from $s_f$ to $d_f$, $\sigma$ is the limitation of how far a single hop can move from the destination, and $\sigma_{\max}$ is the extra cost allowed for the completed path. Both limits are measured in cost units rather than hops, so detours are judged by capacity. This set is used as a binary mask in the policy. If the set is empty, the agent chooses the unvisited neighbor with the smallest $h_d$.
 
 With $U_t$ the bottleneck \eqref{eq:bottleneck} after the $t$-th hop and $U_0=0$,
 the reward is
@@ -106,10 +106,15 @@ Every node $i$ carries a state vector
 o_i(t)=\bigl[\,\mathbb{1}[i{=}c_t],\;\mathbb{1}[i{=}d_f],\;
 \tfrac{h_{d_f}(i)}{h_{\max}},\;
 \tfrac{1}{100}\!\max_{e\in\mathrm{out}(i)}\! u_e,\;
-\tfrac{1}{100}\!\min_{e\in\mathrm{out}(i)}\!(100{-}u_e),\;
+\tfrac{1}{100}\!\max_{e\in\mathrm{out}(i)}\!(100{-}u_e),\;
 \tfrac{\deg(i)}{\Delta}\,\bigr]\in\mathbb{R}^{6},
 \end{equation}
-where $c_t$ is the node holding the flow and $\Delta$ the padding bound on degree.
+where $c_t$ is the node holding the flow, $h_{\max}$ the largest OSPF-cost distance
+to $d_f$ over the network, and $\Delta=60$ a fixed padding bound on degree, chosen to
+exceed the largest degree in any training or evaluation topology so that one
+parameter set covers them all. The fourth and fifth entries report the worst
+congestion and the best headroom among the links leaving $i$, so they describe
+different links and neither determines the other.
 The vector contains \emph{no node identity and no position}: it describes a node
 only by its role in the current decision and by the congestion around it, which is
 what allows one parameter set to serve a network of any size.
@@ -137,7 +142,7 @@ vector over a fixed action set:
 \qquad
 \pi_\theta(j\mid o,m)=\frac{m_j\exp\eta_j}{\sum_{j'}m_{j'}\exp\eta_{j'}},
 \end{equation}
-where $\ell_{c_tj}\in\mathbb{R}^{4}$ represents the utilization of the link to $j$, the bottleneck for that link, the remaining headroom, and the normalized distance from node $j$ to the destination. The variable m indicates the mask defined in \eqref{eq:mask}. As a result, unacceptable hops are assigned zero probability. This approach ensures every sampled action avoids loops by design. Since $\mathrm{MLP}_\theta$ is used for each neighbor and shared across all neighbors, the policy works for any node degree. On the other hand, an output layer matched to the action set would not generalize across different topologies.
+where $\ell_{c_tj}\in\mathbb{R}^{4}$ represents the utilization of the link to $j$, the bottleneck that would result from placing the current flow on that link, the headroom remaining on it, and the normalized distance from node $j$ to the destination. The variable m indicates the mask defined in \eqref{eq:mask}. As a result, unacceptable hops are assigned zero probability. This approach ensures every sampled action avoids loops by design. Since $\mathrm{MLP}_\theta$ is used for each neighbor and shared across all neighbors, the policy works for any node degree. On the other hand, an output layer matched to the action set would not generalize across different topologies.
 
 A centralized critic $V_\phi(s_t)$ reads the global state, the utilization of
 every link, the current bottleneck, and the normalized rate of the flow being

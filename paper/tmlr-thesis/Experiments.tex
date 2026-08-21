@@ -1,8 +1,9 @@
 \section{Experiments}
 
 % NOTE: this chapter describes the configuration that produced
-% results/final_ns3_grid.json (378 ns-3 simulations, 0 failures, dirs results/ns3f_*).
-% Launchers: train_matched_hparams.sh (training), run_ns3_final.sh (evaluation).
+% results/final_ns3_grid.json (558 ns-3 simulations, 0 failures, dirs results/ns3f_*).
+% Launchers: train_seeds10.sh (training), eval_seeds10.sh (evaluation).
+% Aggregators: rebuild_ns3_grid.py, fill_offered_grid.py, decompose_reward.py.
 
 This section outlines the experimental setup based on the proposed methodology. It details the training and evaluation procedures for the Multi-Agent Reinforcement Learning computational environment. The resources used to represent the backbone network, the baseline routing methods, and the metrics employed to assess network performance are described. Additionally, the parameters utilized for model training are presented. The aim of this section is to ensure that the methodology can be reproduced in other environment.
 
@@ -28,7 +29,7 @@ MARL is compared against two deployed routing protocols and a single-agent reinf
 
 \begin{enumerate}
     \item \textbf{OSPF.} The OSPF cost metric is defined as $\text{cost}(e) = \text{refBW}/\text{cap}(e)$. This configuration is commonly deployed in practice, particularly in networks with heterogeneous link capacities.
-    \item \textbf{ECMP.} Equal-Cost Multipath over the paths that the same cost metric leaves tied, assigned one path per flow by hashing the packet header rather than divided fractionally. Because the tie is on cost, ECMP inherits OSPF's capacity awareness and forms a stronger baseline than OSPF alone.
+    \item \textbf{ECMP.} Equal-Cost Multipath over the paths that the same cost metric leaves tied, assigned one path per flow by hashing the packet header rather than divided fractionally. Because the tie is on cost, ECMP inherits OSPF's capacity awareness and forms a stronger baseline than OSPF alone on the larger networks.
     \item \textbf{Single-agent GNN.} A centralized controller that observes the entire network and selects one of $k=3$ candidate paths per demand. The network state is represented using a graph neural network (GNN) with shared weights across all links.
     \item \textbf{MARL.} Multi-Agent Reinforcement Learning (MARL) assigns an agent to each network node. Paths are constructed incrementally, with each agent making decisions one hop at a time based on local link loads and the destination of the demand. Unlike the single-agent approach, no individual agent has access to the full path. Training is conducted centrally, while execution is decentralized.
 \end{enumerate}
@@ -91,7 +92,7 @@ The labelling is confirmed in ns-3: under OSPF the overload matrices lose 14 to 
 \label{sec:setup-ns3}
 
 
-This study uses ns-3 to evaluate labeled traffic. Each link is a \texttt{PointToPointNetDevice} with the default DropTail transmit queue of 100 packets, and no active queue management, shaping, or congestion control is enabled, so all reported packet loss results solely from buffer overflow. Traffic is one-way UDP, each demand a constant-rate \texttt{OnOff} application with a 1400-byte payload, so loss and delay follow from the routing decision rather than from transport-layer feedback. Propagation delays are installed at nanosecond resolution, which matters on Germany50 where several links fall below 1 ms. Each run spans 8 seconds of simulated time with flows active from 2 to 9 seconds. All utilization figures are adjusted by dividing by 7/8 to account for this. Demand rates and link capacities are both divided by 20, which preserves every utilization, loss, and delay ratio while making the packet count manageable. Last, the complete grid consists of 378 simulations.
+This study uses ns-3 to evaluate labeled traffic. Each link is a \texttt{PointToPointNetDevice} with the default DropTail transmit queue of 100 packets, and no active queue management, shaping, or congestion control is enabled, so all reported packet loss results solely from buffer overflow. Traffic is one-way UDP, each demand a constant-rate \texttt{OnOff} application with a 1400-byte payload, so loss and delay follow from the routing decision rather than from transport-layer feedback. Propagation delays are installed at nanosecond resolution, which matters on Germany50 where several links fall below 1 ms. Each run spans 9 seconds of simulated time with flows active from 2 seconds until the end of the run, while utilization is accumulated over an 8-second window. All utilization figures are adjusted by dividing by 7/8 to account for the 7 seconds of activity within that window. Demand rates and link capacities are both divided by 20, which preserves every utilization, loss, and delay ratio while making the packet count manageable. Last, the complete grid consists of 558 simulations: three routing arms across ten model seeds on eighteen evaluation matrices, together with the eighteen deterministic OSPF runs.
 
 
 \subsection{Performance Metrics}
@@ -104,12 +105,4 @@ This study evaluates the network performance of the MARL in comparison to other 
   \item \textbf{Delay.} This metric measures the mean end-to-end packet transmission time, representing the duration required for a packet to travel from source to destination. Delay is recorded in milliseconds.
 \end{enumerate}
 
-% Differences between MARL and OSPF are tested with a two-sided Wilcoxon signed-rank
-% test paired on the traffic matrix. Pairing is the appropriate design because each
-% learned routing is simulated on exactly the same matrix as the OSPF routing it is
-% compared against, so the matrix is held fixed and only the routing varies; matrices
-% differ widely in offered load, and an unpaired test would submerge the routing
-% effect in that variation. The three model seeds are averaged before pairing, since
-% they are three draws of a single policy rather than three independent observations
-% of a matrix. Each regime therefore contributes nine paired matrices, three from each
-% backbone.
+Differences between MARL and OSPF are tested with a two-sided Wilcoxon signed-rank test paired on the traffic matrix, because each learned routing is simulated on exactly the same matrix as the OSPF routing it is compared against, so only the routing varies. The ten model seeds are averaged before pairing, since they are ten draws of a single policy rather than ten independent observations of a matrix. Each regime therefore contributes nine paired matrices, three from each backbone.
