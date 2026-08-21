@@ -23,18 +23,11 @@ and the bottleneck (maximum link) utilization
 \begin{equation}\label{eq:bottleneck}
 U=\max_{e\in\mathcal{E}} u_e .
 \end{equation}
-When $U>100\%$ a link is overloaded and the excess appears at the packet level as
-loss and queueing delay. The traffic-engineering objective is therefore to minimize
-the bottleneck $U$ while preferring short paths, penalising each \emph{detour hop}
-of a chosen path, those that do not reduce the OSPF-cost distance to the
-destination, at a weight $\beta\ge0$. Counting detours rather than excess hops
-matters where capacities are heterogeneous, since the cheapest path in hops and in
-OSPF cost then differ.
+When $U>100\%$, a link is overloaded, and the excess appears at the packet level as loss and queueing delay. The traffic-engineering objective is to minimize the bottleneck U while preferring short paths. Therefore, we add a penalty for each extra hop chosen that does not lower the OSPF distance to the destination by using a weight $\beta\ge0$. This approach is important because capacity is heterogeneous.
 
 We formulate routing as a multi-agent Markov Decision Process
 $(\mathcal{N},\mathcal{S},\{\mathcal{A}_i\},\allowbreak P,R,\{\mathcal{O}_i\},\gamma)$
-under centralized training with decentralized execution (CTDE), with transitions $P$
-given by \eqref{eq:load}--\eqref{eq:bottleneck} and $\gamma$ the discount factor:
+under centralized training with decentralized execution (CTDE):
 \begin{itemize}
 \item $\mathcal{N}$: set of agents, one per node, each deciding how flows
 transiting it are forwarded.
@@ -44,20 +37,28 @@ adjacency $A$, and the metadata $(s_f,d_f,r_f)$ of the flow being routed.
 that \eqref{eq:mask} admits may be chosen, so the agent can never revisit a node or
 stray too far from the destination. The centralized reference instead picks one of
 $k$ whole candidate paths, $\mathrm{Discrete}(k)$.
+\item $P$: the transition, given by \eqref{eq:load}--\eqref{eq:bottleneck}. It is
+deterministic: the chosen link absorbs the flow's rate $r_f$, the utilizations and the
+bottleneck are recomputed, and control passes to the agent at the next node, or to the
+source of the following demand once the current one reaches its destination.
 \item $R$: one reward shared by every agent, paying for any reduction in the
 busiest link's load and charging $\beta$ for each hop that does not move closer to
 the destination, as defined in \eqref{eq:reward}.
 \item $\mathcal{O}_i(t)$: local observation, a subset of $\mathcal{S}$ holding the
 utilizations of the links incident to $i$, its local topology, and $(s_f,d_f)$.
+\item $\gamma$: the discount factor applied to the per-hop rewards. It is set close to
+$1$ (Table~\ref{tab:hyper}) because the rewards telescope across the episode by
+\eqref{eq:telescope}, so it is the undiscounted sum that recovers the routing objective
+exactly.
 \end{itemize}
 Each agent learns a policy $\pi_i:\mathcal{O}_i\to\mathcal{A}_i$ that aims to maximize the shared return. A centralized critic reads $\mathcal{S}$ during training because each agent only sees its own links, and all agents learn at the same time. Then, the critic is removed after training, leaving the execution to rely on $\mathcal{O}_i$ alone.
 
-Loop freedom is enforced structurally rather than learned. The set of allowed next hops is defined as \begin{equation}\label{eq:mask}
+To create loop-free routing, the algorithm enforces a specific structure. The set of allowed next hops is defined as   \begin{equation}\label{eq:mask}
 \mathcal{A}^{\mathrm{ok}}_i(d)=\bigl\{\,j\in\mathcal{A}_i \;:\;
 j\notin\mathcal{V}_f,\;\; h_d(j)<h_d(i)+\sigma,\;\;
 \omega_t+w_{ij}+h_d(j)\le h^{\star}_f+\sigma_{\max}\bigr\},
-\end{equation} 
-where $h_d(i)$ is the distance from $i$ to $d$ under the OSPF cost metric $w_e=\mathrm{refBW}/c_e$. $\mathcal{V}_f$ is the set of nodes already visited,  $\omega_t$ is the cost accumulated so far, $w_{ij}$ the cost of the arc under consideration, $h^{\star}_f$ the cost of the shortest path from $s_f$ to $d_f$, $\sigma$ is the limitation of how far a single hop can move from the destination, and $\sigma_{\max}$ is the extra cost allowed for the completed path. Both limits are measured in cost units rather than hops, so detours are judged by capacity. This set is used as a binary mask in the policy. If the set is empty, the agent chooses the unvisited neighbor with the smallest $h_d$.
+\end{equation} where $h_d(i)$ is the distance from node $i$ to destination $d$, measured using the OSPF cost metric $w_e=\mathrm{refBW}/c_e$. $\mathcal{V}_f$ is the set of nodes already visited, $\omega_t$ is the total cost so far, $\sigma$ is the limitation of how far a single hop can move from the destination, and $\sigma_{\max}$ is the extra cost allowed for the completed path. Both limits are measured in cost units rather than hops, so the policy evaluates detours by capacity. The policy uses this set as a binary mask. If the set is empty, the agent picks the unvisited neighbor with the smallest hd.
+
 
 With $U_t$ the bottleneck \eqref{eq:bottleneck} after the $t$-th hop and $U_0=0$,
 the reward is
@@ -65,38 +66,15 @@ the reward is
 r_t=-\,\frac{100\,(U_t-U_{t-1})}{U^{\mathrm{OSPF}}}\;-\;\beta\,\mathbb{1}\!\left[\text{hop
 $t$ is a detour}\right].
 \end{equation}
-Normalising by $U^{\mathrm{OSPF}}$, the bottleneck OSPF reaches on the same matrix,
-keeps networks at different utilizations comparable to a single shared policy, and
-the factor $100$ puts the term in percentage points: at $\beta=0.5$ one detour hop
-costs half a point of OSPF's bottleneck.
-
-Because each hop is charged only the \emph{change} in the bottleneck and the episode
+The bottleneck is normalized by $U^{\mathrm{OSPF}}$ reaches on the same matrix, keeping networks at different utilizations comparable to a single shared policy, and the factor of $100$ converts the term to percentage points. Because each hop is charged only the \emph{change} in the bottleneck and the episode
 starts empty, the intermediate values cancel:
 \begin{equation}\label{eq:telescope}
 \sum_{t} r_t=-\,\frac{100\,U_T}{U^{\mathrm{OSPF}}}\;-\;\beta\sum_{t}
 \mathbb{1}\!\left[\text{hop $t$ is a detour}\right].
 \end{equation}
-Maximizing the return therefore minimizes the objective above exactly, no terminal
-bonus is required, and the return is directly readable: $-100$ is OSPF's bottleneck
-reached with no detours. Both learners optimise this reward.
+Maximizing the return minimizes the objective above. No separate reward at the end of the episode is required, and the return is read as $-100$. This is OSPF’s bottleneck number reached with no detours, and both learners optimize this reward.
 
-Five assumptions bound the formulation and, with it, the scope of the results that
-follow. Routing is \emph{unsplittable}: each flow follows the single path of
-\eqref{eq:load} rather than being divided across several, which is what allows a
-path to be the unit of decision but forgoes the finer balancing that fractional
-splitting permits. The topology is \emph{static} within an episode, with capacities
-and propagation delays held constant and no link or node failures, so the results
-speak to congestion rather than to resilience. Decisions are taken \emph{per demand
-matrix} rather than per packet and are stable between matrices; the resulting paths
-are source-specific, in that two flows toward the same destination may be routed
-differently, which plain destination-based IP forwarding cannot express and a
-deployment would have to realise through MPLS or segment routing. Traffic is
-\emph{open-loop}, offered as constant-rate UDP, so sources do not back off and the
-loss reported is queue overflow alone rather than the milder loss a
-congestion-controlled sender would produce. Finally, the analytical model of \eqref{eq:load}
-assumes offered demand is carried, an assumption that fails precisely once a link
-saturates; it is therefore used only to train, and every reported number is measured
-in \mbox{ns-3}.
+There are five assumptions on this study that are bound to the formulation. First, the formulation does not split the routing, so each flow uses a single path. Second, the model trains a static topology with constant capacities and delays, with no node failures. Then, the resulting paths are source-specific because the routing decisions use the demand matrix, not per-packet decisions. The experiments also use constant-rate UDP rather than TCP. Finally, the analytical model assumes it carries all offered demand.
 
 \subsection{System Architecture}
 The policy is a graph neural network (GNN) shared by every node agent. This GNN represents the network state through its nodes and links \citep{Rusek_2020}. Then, we use a custom multi-agent Proximal Policy Optimization (MAPPO) algorithm under centralized training with decentralized execution\citep{marl-book} to train the policy.
@@ -106,15 +84,10 @@ Every node $i$ carries a state vector
 o_i(t)=\bigl[\,\mathbb{1}[i{=}c_t],\;\mathbb{1}[i{=}d_f],\;
 \tfrac{h_{d_f}(i)}{h_{\max}},\;
 \tfrac{1}{100}\!\max_{e\in\mathrm{out}(i)}\! u_e,\;
-\tfrac{1}{100}\!\max_{e\in\mathrm{out}(i)}\!(100{-}u_e),\;
+\tfrac{1}{100}\!\min_{e\in\mathrm{out}(i)}\!(100{-}u_e),\;
 \tfrac{\deg(i)}{\Delta}\,\bigr]\in\mathbb{R}^{6},
 \end{equation}
-where $c_t$ is the node holding the flow, $h_{\max}$ the largest OSPF-cost distance
-to $d_f$ over the network, and $\Delta=60$ a fixed padding bound on degree, chosen to
-exceed the largest degree in any training or evaluation topology so that one
-parameter set covers them all. The fourth and fifth entries report the worst
-congestion and the best headroom among the links leaving $i$, so they describe
-different links and neither determines the other.
+where $c_t$ is the node holding the flow, and $\Delta$ is the padding bound on degree.
 The vector contains \emph{no node identity and no position}: it describes a node
 only by its role in the current decision and by the congestion around it, which is
 what allows one parameter set to serve a network of any size.
@@ -142,7 +115,7 @@ vector over a fixed action set:
 \qquad
 \pi_\theta(j\mid o,m)=\frac{m_j\exp\eta_j}{\sum_{j'}m_{j'}\exp\eta_{j'}},
 \end{equation}
-where $\ell_{c_tj}\in\mathbb{R}^{4}$ represents the utilization of the link to $j$, the bottleneck that would result from placing the current flow on that link, the headroom remaining on it, and the normalized distance from node $j$ to the destination. The variable m indicates the mask defined in \eqref{eq:mask}. As a result, unacceptable hops are assigned zero probability. This approach ensures every sampled action avoids loops by design. Since $\mathrm{MLP}_\theta$ is used for each neighbor and shared across all neighbors, the policy works for any node degree. On the other hand, an output layer matched to the action set would not generalize across different topologies.
+where $\ell_{c_tj}\in\mathbb{R}^{4}$ represents the utilization of the link to $j$, the bottleneck for that link, the remaining headroom, and the normalized distance from node $j$ to the destination. The variable m indicates the mask defined in \eqref{eq:mask}. As a result, unacceptable hops are assigned zero probability. This approach ensures every sampled action avoids loops by design. Since $\mathrm{MLP}_\theta$ is used for each neighbor and shared across all neighbors, the policy works for any node degree. On the other hand, an output layer matched to the action set would not generalize across different topologies.
 
 A centralized critic $V_\phi(s_t)$ reads the global state, the utilization of
 every link, the current bottleneck, and the normalized rate of the flow being
@@ -152,15 +125,7 @@ routed. This critic serves only to compute advantages during training and is dis
 \label{sec:method-protocol}
 The policy is trained using the analytical model described in \eqref{eq:load} and \eqref{eq:bottleneck}, which costs milliseconds per episode. Next, we evaluate the model with packet-level simulation in ns-3. This simulation assumes that all offered demand is carried, but this assumption breaks down when a link becomes saturated. As a result, the simulator is not part of the gradient path, but all reported results are based on its output.
 
-An episode is a complete routing of one demand matrix, its flows ordered by decreasing rate and
-routed hop by hop. Training maximizes the expected discounted return \eqref{eq:telescope} over
-the training distribution $\mathcal{D}_{\mathrm{train}}$. That expectation runs over a
-distribution of \emph{networks} $G$ as well as of demand matrices,
-which is what makes the trained object a topology-agnostic policy rather than a routing table:
-$\mathcal{D}_{\mathrm{train}}$ ranges over topologies none of which is an evaluation network, so
-the separation is \emph{topological} and the generalization measured is zero-shot transfer to
-unseen graphs. Instances and traffic are given in
-Sections~\ref{sec:setup-instances}.
+An episode is a complete routing of one demand matrix, with its flows routed hop by hop. Training maximizes the expected discounted return \eqref{eq:telescope} over the training distribution $\mathcal{D}_{\mathrm{train}}$. That expectation runs over a distribution of \emph{networks} $G$ as well as of demand matrices, which is what makes the trained object a topology-agnostic policy rather than a routing table: $\mathcal{D}_{\mathrm{train}}$ ranges over topologies, none of which is an evaluation network, so the separation is \emph{topological} and the generalization measured is zero-shot transfer to unseen graphs. Sections~\ref{sec:setup-instances} provides instances and traffic.
 
 Each iteration collects $T$ decision steps under $\pi_{\theta_{\mathrm{old}}}$ old and resets to a new matrix at the end of every episode. Advantages $\tilde{A}_t$ are calculated with generalized advantage estimation with a bootstrap at the truncation point. $\tilde{A}_t$  are also standardized across the batch, and the batch is reused for $E$ epochs of minibatch descent on 
 \begin{equation}\label{eq:loss}
@@ -171,4 +136,4 @@ Each iteration collects $T$ decision steps under $\pi_{\theta_{\mathrm{old}}}$ o
 \end{equation}
 with $\rho_t=\pi_\theta(a_t\mid o_t,m_t)/\pi_{\theta_{\mathrm{old}}}(a_t\mid o_t,m_t)$. Because the mask enters $\pi_\theta$ through \eqref{eq:policy}, the entropy term only explores legal next hops. Global gradient-norm clipping is used for updates. This is necessary because the reward is based on the maximum over links, and a single hop that creates a new bottleneck can cause a large sparse gradient. All router agents update the same $\theta$, so each iteration uses $T$ decisions instead of $T/N$ per-agent trajectories. We use one configuration in  Table ~\ref{tab:hyper} for every training topology and apply it to every evaluation network. The policy is topology-agnostic, so tuning it for each network would go against its purpose.
 
-Training progress is monitored by analyzing held-out matrices under the deterministic policy $a = \arg\max_a \pi_\theta(a\mid o,m)$, measuring the average bottleneck improvement over OSPF. Subsequently, we use ns-3 in export-simulate form for the final evaluation. The deterministic rollout produces a specific node path for each demand, while OSPF provides its shortest path.  Both are installed as static per-hop routes, so the only difference between runs is the routing decision. Details on the simulator setup and metric definitions are given in Sections ~\ref{sec:setup-ns3} and~\ref{sec:setup-metrics}.
+Training progress is monitored by analyzing held-out matrices under the deterministic policy $a = \arg\max_a \pi_\theta(a\mid o,m)$. This analysis measures improvement of the average bottleneck over OSPF. Subsequently, we use ns-3 in export-simulate form for the final evaluation. The deterministic rollout produces a specific node path for each demand, while OSPF provides its shortest path. Both are installed as static per-hop routes, so the only difference between runs is the routing decision. Sections ~\ref{sec:setup-ns3} and~\ref{sec:setup-metrics} provide detail on the simulator setup and metric definitions.
