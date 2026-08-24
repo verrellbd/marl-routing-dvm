@@ -28,7 +28,7 @@ MARL is compared against two deployed routing protocols and a single-agent reinf
 
 \begin{enumerate}
     \item \textbf{OSPF.} The OSPF cost metric is defined as $\text{cost}(e) = \text{refBW}/\text{cap}(e)$. This configuration is commonly deployed in practice, particularly in networks with heterogeneous link capacities.
-    \item \textbf{ECMP.} Equal-Cost Multipath over the paths that the same cost metric leaves tied, assigned one path per flow by hashing the packet header rather than divided fractionally. Because the tie is on cost, ECMP inherits OSPF's capacity awareness and forms a stronger baseline than OSPF alone on the larger networks.
+    \item \textbf{ECMP.} Equal-Cost Multipath \citep{hopps2000ecmp} over the paths that the same cost metric leaves tied, assigned one path per flow by hashing the packet header rather than divided fractionally. Because the tie is on cost, ECMP inherits OSPF's capacity awareness and forms a stronger baseline than OSPF alone on the larger networks.
     \item \textbf{Single-agent GNN.} A centralized controller that observes the entire network and selects one of $k=3$ candidate paths per demand. The network state is represented using a graph neural network (GNN) with shared weights across all links.
     \item \textbf{MARL.} Multi-Agent Reinforcement Learning (MARL) assigns an agent to each network node. Paths are constructed incrementally, with each agent making decisions one hop at a time based on local link loads and the destination of the demand. Unlike the single-agent approach, no individual agent has access to the full path. Training is conducted centrally, while execution is decentralized.
 \end{enumerate}

@@ -23,7 +23,7 @@ and the bottleneck (maximum link) utilization
 \begin{equation}\label{eq:bottleneck}
 U=\max_{e\in\mathcal{E}} u_e .
 \end{equation}
-When $U>100\%$, a link is overloaded, and the excess appears at the packet level as loss and queueing delay. The traffic-engineering objective is to minimize the bottleneck U while preferring short paths. Therefore, we add a penalty for each extra hop chosen that does not lower the OSPF distance to the destination by using a weight $\beta\ge0$. This approach is important because capacity is heterogeneous.
+When $U>100\%$, a link is overloaded, and the excess appears at the packet level as loss and queueing delay. The traffic-engineering objective is to minimize the bottleneck U while preferring short paths \citep{832225}. Therefore, we add a penalty for each extra hop chosen that does not lower the OSPF distance to the destination by using a weight $\beta\ge0$. This approach is important because capacity is heterogeneous.
 
 We formulate routing as a multi-agent Markov Decision Process
 $(\mathcal{N},\mathcal{S},\{\mathcal{A}_i\},\allowbreak P,R,\{\mathcal{O}_i\},\gamma)$
@@ -77,7 +77,7 @@ Maximizing the return minimizes the objective above. No separate reward at the e
 There are five assumptions on this study that are bound to the formulation. First, the formulation does not split the routing, so each flow uses a single path. Second, the model trains a static topology with constant capacities and delays, with no node failures. Then, the resulting paths are source-specific because the routing decisions use the demand matrix, not per-packet decisions. The experiments also use constant-rate UDP rather than TCP. Finally, the analytical model assumes it carries all offered demand.
 
 \subsection{System Architecture}
-The policy is a graph neural network (GNN) shared by every node agent. This GNN represents the network state through its nodes and links \citep{Rusek_2020}. Then, we use a custom multi-agent Proximal Policy Optimization (MAPPO) algorithm under centralized training with decentralized execution\citep{marl-book} to train the policy.
+The policy is a graph neural network (GNN) shared by every node agent. This GNN represents the network state through its nodes and links \citep{Rusek_2020}. Then, we use a custom multi-agent Proximal Policy Optimization (MAPPO) algorithm \citep{schulman2017ppo, yu2022mappo} under centralized training with decentralized execution \citep{marl-book} to train the policy.
 
 Every node $i$ carries a state vector
 \begin{equation}\label{eq:nodefeat}
@@ -127,7 +127,7 @@ The policy is trained using the analytical model described in \eqref{eq:load} an
 
 An episode is a complete routing of one demand matrix, with its flows routed hop by hop. Training maximizes the expected discounted return \eqref{eq:telescope} over the training distribution $\mathcal{D}_{\mathrm{train}}$. That expectation runs over a distribution of \emph{networks} $G$ as well as of demand matrices, which is what makes the trained object a topology-agnostic policy rather than a routing table: $\mathcal{D}_{\mathrm{train}}$ ranges over topologies, none of which is an evaluation network, so the separation is \emph{topological} and the generalization measured is zero-shot transfer to unseen graphs. Sections~\ref{sec:setup-instances} provides instances and traffic.
 
-Each iteration collects $T$ decision steps under $\pi_{\theta_{\mathrm{old}}}$ old and resets to a new matrix at the end of every episode. Advantages $\tilde{A}_t$ are calculated with generalized advantage estimation with a bootstrap at the truncation point. $\tilde{A}_t$  are also standardized across the batch, and the batch is reused for $E$ epochs of minibatch descent on 
+Each iteration collects $T$ decision steps under $\pi_{\theta_{\mathrm{old}}}$ old and resets to a new matrix at the end of every episode. Advantages $\tilde{A}_t$ are calculated with generalized advantage estimation \citep{schulman2016gae} with a bootstrap at the truncation point. $\tilde{A}_t$  are also standardized across the batch, and the batch is reused for $E$ epochs of minibatch descent on 
 \begin{equation}\label{eq:loss}
 \mathcal{L}=-\mathbb{E}_t\bigl[\min(\rho_t\tilde{A}_t,\;
 \mathrm{clip}(\rho_t,1{\pm}\varepsilon)\tilde{A}_t)\bigr]
