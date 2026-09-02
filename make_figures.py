@@ -170,8 +170,7 @@ def training_curve():
                 textcoords="offset points", ha="left", va="center",
                 fontsize=8, color=ARMS[3][2], fontweight="bold")
     ax.legend(frameon=False, loc="lower right", handlelength=1.6)
-    ax.set_title("MARL ($h{=}32$) training return on the 17 training topologies",
-                 color=INK, pad=6)
+    ax.set_title("MARL training return", color=INK, pad=6)
     fig.tight_layout()
     fig.savefig(OUT / "fig_marl_training_curves.png")
     plt.close(fig)

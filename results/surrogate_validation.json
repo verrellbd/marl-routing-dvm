@@ -1,0 +1,100 @@
+{
+  "n_paired_simulations": 594,
+  "ospf_util_check": {
+    "n": 54,
+    "max_abs_diff_pp": 0.0455,
+    "note": "recomputed U(ospf_path) vs the ospf_util stored at export time"
+  },
+  "vs_ns3_loss": {
+    "overload": {
+      "all": {
+        "n": 297,
+        "spearman": 0.765,
+        "pearson": 0.787
+      },
+      "abilene": {
+        "n": 99,
+        "spearman": 0.71,
+        "pearson": 0.798
+      },
+      "geant": {
+        "n": 99,
+        "spearman": 0.912,
+        "pearson": 0.891
+      },
+      "germany50": {
+        "n": 99,
+        "spearman": 0.942,
+        "pearson": 0.954
+      }
+    },
+    "feasible": {
+      "all": {
+        "n": 297,
+        "spearman": 0.472,
+        "pearson": 0.292
+      },
+      "abilene": {
+        "n": 99,
+        "spearman": 0.571,
+        "pearson": 0.673
+      },
+      "geant": {
+        "n": 99,
+        "spearman": 0.465,
+        "pearson": 0.606
+      },
+      "germany50": {
+        "n": 99,
+        "spearman": -0.462,
+        "pearson": -0.189
+      }
+    }
+  },
+  "vs_ns3_offered_load": {
+    "overload": {
+      "all": {
+        "n": 297,
+        "spearman": -0.253,
+        "pearson": -0.145
+      },
+      "abilene": {
+        "n": 99,
+        "spearman": 0.426,
+        "pearson": 0.077
+      },
+      "geant": {
+        "n": 99,
+        "spearman": 0.408,
+        "pearson": 0.489
+      },
+      "germany50": {
+        "n": 99,
+        "spearman": 0.571,
+        "pearson": 0.486
+      }
+    },
+    "feasible": {
+      "all": {
+        "n": 297,
+        "spearman": 0.89,
+        "pearson": 0.838
+      },
+      "abilene": {
+        "n": 99,
+        "spearman": 0.969,
+        "pearson": 0.807
+      },
+      "geant": {
+        "n": 99,
+        "spearman": 0.998,
+        "pearson": 0.918
+      },
+      "germany50": {
+        "n": 99,
+        "spearman": 0.641,
+        "pearson": 0.669
+      }
+    }
+  }
+}
