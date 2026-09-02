@@ -7,8 +7,8 @@
 # time", which is exactly the caveat the Limitations paragraph currently concedes.
 #
 # SETTINGS ARE COPIED, NOT RECHOSEN. Every flag below is taken verbatim from the runs
-# that produced seeds 0-2 (train_matched_hparams.sh for MARL, the _singleH64gRM runs
-# for the single agent, verified against logs/train_singleRM_s0.log). The seed is the
+# that produced seeds 0-2, verified against logs/train_marlh32cm_s0.log and
+# logs/train_singleRM_s0.log. The seed is the
 # only thing that differs, otherwise the ten runs are not one population.
 #
 # ARMS. h=64 is dropped: it is not reported anywhere in the paper. The single agent
@@ -17,7 +17,9 @@
 #
 # COMMIT TO REPORTING ALL TEN before looking at them. Running extra seeds and keeping
 # the flattering subset would invalidate the very variance claim this is meant to fix.
-cd ~/thesis || exit 1
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NS3_DIR="${NS3_DIR:-$REPO/ns-3-dev}"
+cd "$REPO" || exit 1
 
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 SEEDS=${SEEDS:-"3 4 5 6 7 8 9"}

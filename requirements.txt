@@ -6,30 +6,36 @@ ale-py==0.11.2
 annotated-types==0.7.0
 async-timeout==5.0.1
 attrs==26.1.0
+beautifulsoup4==4.15.0
 certifi==2026.5.20
 charset-normalizer==3.4.7
 click==8.1.8
 cloudpickle==3.1.2
 contourpy==1.3.0
 cycler==0.12.1
+Cython==3.2.9
 dm-tree==0.1.8
+-e git+https://github.com/hust-diangroup/ns3-ai.git@b8c9858294b1d6a7f122b5154a3ce25057a54740#egg=ns3ai_python_utils&subdirectory=python_utils
 Farama-Notifications==0.0.6
 filelock==3.19.1
 fonttools==4.60.2
 frozenlist==1.8.0
 fsspec==2025.10.0
+gdown==5.2.2
 grpcio==1.80.0
 gymnasium==1.1.1
 idna==3.15
 importlib_metadata==8.7.1
 importlib_resources==6.5.2
 Jinja2==3.1.6
-jsonschema==4.25.1
+joblib==1.5.3
 jsonschema-specifications==2025.9.1
+jsonschema==4.25.1
+kagglehub==0.3.13
 kiwisolver==1.4.7
 lz4==4.4.5
-Markdown==3.9
 markdown-it-py==3.0.0
+Markdown==3.9
 MarkupSafe==3.0.2
 matplotlib==3.9.4
 mdurl==0.1.2
@@ -38,7 +44,6 @@ msgpack==1.1.2
 multidict==6.7.1
 networkx==3.2.1
 ns3ai_gym_env==0.0.1
--e git+https://github.com/hust-diangroup/ns3-ai.git@b8c9858294b1d6a7f122b5154a3ce25057a54740#egg=ns3ai_python_utils&subdirectory=python_utils
 numpy==2.0.2
 nvidia-cublas-cu12==12.4.5.8
 nvidia-cuda-cupti-cu12==12.4.127
@@ -57,6 +62,7 @@ opencv-python==4.13.0.92
 ormsgpack==1.7.0
 packaging==26.2
 pandas==2.3.3
+patsy==1.0.2
 pillow==11.3.0
 propcache==0.4.1
 protobuf==6.33.6
@@ -68,6 +74,7 @@ pydantic_core==2.46.4
 pygame==2.6.1
 Pygments==2.20.0
 pyparsing==3.3.2
+PySocks==1.7.1
 python-dateutil==2.9.0.post0
 pytz==2026.2
 PyYAML==6.0.3
@@ -76,15 +83,20 @@ referencing==0.36.2
 requests==2.32.5
 rich==15.0.0
 rpds-py==0.27.1
+scikit-learn==1.6.1
 scipy==1.13.1
 six==1.17.0
+soupsieve==2.8.4
 stable_baselines3==2.7.1
+statsmodels==0.14.6
 sympy==1.13.1
-tensorboard==2.20.0
 tensorboard-data-server==0.7.2
+tensorboard==2.20.0
 tensorboardX==2.6.5
-torch==2.6.0+cu124
+threadpoolctl==3.6.0
+tmgen @ git+https://github.com/progwriter/TMgen
 torch-geometric==2.6.1
+torch==2.6.0+cu124
 torchvision==0.21.0+cu124
 tqdm==4.67.3
 triton==3.2.0

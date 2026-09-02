@@ -1,61 +1,45 @@
 # What is in `results/`
 
-Written 2026-07-28, after deleting five superseded measurement batches. The thesis
-reports **one** batch. Anything not listed under "Live" below is not reported.
+Everything here is the reported measurement batch. Superseded runs have been removed, so
+there is nothing in this directory that the tables do not use.
 
-## Live — these are what the thesis uses
+## Aggregated grids
 
-| path | what it is |
+| File | What it is |
+|------|------------|
+| `final_ns3_grid.json` | **The packet-level table.** Loss, delay and utilization by topology, regime and method, over 558 ns-3 simulations with 0 failures. |
+| `offered_grid.json` | The analytical table: maximum offered load on the same six topology/regime cells, so the two are directly comparable. |
+| `reward_decomp.json` | Episode return split into its congestion and delay terms, with detour counts and the final bottleneck as a fraction of OSPF's. |
+| `surrogate_validation.json` | Rank agreement between the analytical training objective and the ns-3 measurement. Produced by `validate_surrogate.py`; re-simulates nothing. |
+| `greedy_k3_grid.json` | Greedy best-response reference. Shares the learned action space exactly, but needs global link state after every hop, so it is an upper reference rather than a deployable method. |
+| `width_selection.json` | Hidden-width choice for the decentralized policy, scored on the **training** topologies with held-out matrices — never on the evaluation backbones. |
+
+## Per-simulation output
+
+`ns3f_<arm>_<topo>_s<seed>/` — 120 directories.
+
+- **Arms**: `ecmp`, `marlh32` (the decentralized policy), `singleRM` (the centralized baseline).
+- **Topologies**: `abilene`, `geant`, `germany50`, plus `g50feas` — Germany50's feasible
+  regime, measured at lower demand scales because its normal scales are entirely overload.
+- **Seeds**: `s0` … `s9`.
+
+Each directory holds `routing_seed<i>.json` (the per-flow paths installed in ns-3, with the
+matching OSPF paths and that matrix's regime label) and `ns3_<tag>_<i>.json` (the simulator
+output: loss, delay, throughput, per-link utilization).
+
+OSPF is deterministic given a matrix, so it was simulated once rather than per seed. Its 18
+runs live inside the `ns3f_marlh32_*_s0`, `_s1` and `_s2` directories as `ns3_ospf_<i>.json`.
+
+That gives 3 arms × 10 seeds × 18 matrices = 540, plus 18 OSPF = **558 simulations**.
+
+## Policies
+
+| Directory | Arm |
 |---|---|
-| `final_ns3_grid.json` | **The results table.** 378 ns-3 sims, 0 failures. Every number in the Results chapter comes from here. |
-| `ns3f_<arm>_<topo>_s<seed>/` | Raw per-simulation measurements behind that grid. 48 dirs. |
-| `width_selection.json` | MARL hidden-width selection, scored on the **training** topologies (not the test backbones). |
+| `marlgnn_tier2m15cm_seed0` … `seed9` | Decentralized MAPPO + GNN, hidden width 32 (`policy.pt`) |
+| `single_singleH64gRM_seed0` … `seed9` | Centralized PPO baseline, hidden width 64 (`policy.zip`) |
 
-Arms in `ns3f_*`: `ospf`, `ecmp`, `single`, `marlh32`, `marlh64`.
-Topos: `abilene`, `geant`, `germany50`, plus `g50feas` (Germany50's feasible regime,
-measured at lower loads because its normal loads are all overload).
+Each also carries `summary.json`, holding the zero-shot evaluation recorded at the end of
+training — on the analytical objective, before any ns-3 run.
 
-## Live policies
-
-| tag | arm | status |
-|---|---|---|
-| `marlgnn_tier2m15cm_seed{0,1,2}` | MARL h=32 | **reported policy** |
-| `marlgnn_tier2m15h64cm_seed{0,1,2}` | MARL h=64 | sensitivity check |
-| `single_singleH64gcap_seed{0,1,2}` | single-agent | baseline |
-| `single_singleH64gRM_seed{0,1,2}` | single-agent, MARL reward form | reward-form ablation |
-
-All four were trained by `train_matched_hparams.sh` (except `RM`, which adds
-`--reward-form marl`) at a matched 1.5M steps with identical PPO hyperparameters.
-
-## Superseded policies — kept, not reported
-
-Older training runs are still on disk because they cost hours of compute and are the
-record of how the work developed. **Do not quote them.** They differ from the live
-arms in at least one of: capacity-blind path construction (`--metric hop`), unmatched
-PPO hyperparameters, a smaller budget, or per-topology rather than zero-shot training.
-
-Rough guide to the tags: `_tier2m15` / `_singleH64g` (capacity-blind), `_cap`
-(capacity-aware but MARL's own PPO defaults), `*_sndlib_*_real_seed*` (per-topology
-specialists, older env), `topoagn_*` / `marlgnn_zoo_*` / `single_singletmgen_*`
-(earlier phases).
-
-## Deleted on 2026-07-28
-
-Five measurement batches whose numbers did not survive re-measurement, plus the
-launchers that produced them. All recoverable from git history:
-
-```
-git log --oneline --diff-filter=D -- results/ns3m_marlh32_geant_s0
-git checkout <commit>^ -- results/ns3m_'*'
-```
-
-Removed: `ns3m_*` (84 dirs — the capacity-blind matched grid and the Abilene
-diagnostic re-runs), `ns3_eval_real{marl,sa}_fresh_*` (18 dirs — per-topology
-specialists), `ns3_topoagn_*` (5 dirs — earliest topology-agnostic runs),
-`matched_ns3_grid.json`, and the scripts `run_ns3_matched.sh`, `run_ns3_ecmp.sh`,
-`run_ns3_ecmpnative.sh`, `run_ns3_g50feas.sh`, `run_ns3_abilene_weighted.sh`,
-`run_ns3_abilene_capaware.sh`, `train_capaware.sh`, `make_matched_grid.py`,
-`eval_g50_feasible.py`.
-
-Why they went: `matched_ns3_grid.json` had four headline claims and three of them
-reversed under correct measurement. Keeping it invited quoting the wrong number.
+Intermediate training checkpoints are not kept; only the final policy of each run is here.

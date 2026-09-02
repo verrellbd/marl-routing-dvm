@@ -18,7 +18,9 @@
 # would yield a feasible-only row. geant/germany50 keep the trainers' TEST_LOADS so the
 # packet-level numbers correspond to the analytical grid. germany50's feasible regime needs
 # loads <=30 and lives in separate _g50feas_ dirs (its TEST_LOADS are all overload).
-cd ~/thesis || exit 1
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NS3_DIR="${NS3_DIR:-$REPO/ns-3-dev}"
+cd "$REPO" || exit 1
 
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 export NS3_TIMEOUT=${NS3_TIMEOUT:-3600}
@@ -83,9 +85,9 @@ for d in results/ns3f_*; do
     if [ "$arm" = ecmp ]; then modes="gnn:ns3_ecmp"; else modes="ospf:ns3_ospf gnn:ns3_gnn"; fi
     for m in $modes; do
       mode=${m%%:*}; pref=${m##*:}
-      st="$HOME/thesis/results/$o/${pref}_$i.json"
+      st="$REPO/results/$o/${pref}_$i.json"
       [ -f "$st" ] && continue
-      echo "cd ~/thesis/ns-3-dev && ./ns3 run \"scratch/abilene-validate/abilene-validate --topo=$HOME/thesis/topologies/$T.json --routing_file=$HOME/thesis/$rf --routing=$mode --state=$st --simTime=$SIMTIME --rateScale=$RATESCALE\" > /dev/null 2>&1 || echo SIMFAIL $o $i $mode" >> $JOBFILE
+      echo "cd $NS3_DIR && ./ns3 run \"scratch/abilene-validate/abilene-validate --topo=$REPO/topologies/$T.json --routing_file=$REPO/$rf --routing=$mode --state=$st --simTime=$SIMTIME --rateScale=$RATESCALE\" > /dev/null 2>&1 || echo SIMFAIL $o $i $mode" >> $JOBFILE
     done
   done
 done

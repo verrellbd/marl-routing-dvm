@@ -10,8 +10,8 @@
 # 126 simulations, ~42 of them Germany50 at ~17 min each, for bit-identical output. The
 # existing seed 0-2 OSPF runs remain the reference for every paired comparison.
 #
-# Loads, flow caps and stratification are copied verbatim from run_ns3_final.sh and
-# run_ns3_rewardform.sh so the new seeds land on exactly the same matrices as 0-2.
+# Loads, flow caps and stratification are copied verbatim from run_ns3_final.sh, so
+# every seed lands on exactly the same matrices.
 # Abilene uses 16/22/28 (a correctly weighted OSPF has no overload regime below ~16);
 # Germany50's feasible regime needs loads <=30 and lives in separate _g50feas_ dirs.
 #
@@ -26,7 +26,9 @@
 # 2026-07-28 and is the same one that produced the reported grid, so skipping the build
 # check is correct as well as necessary. Rebuild deliberately with `./ns3 build` if the
 # scenario source is ever edited.
-cd ~/thesis || exit 1
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NS3_DIR="${NS3_DIR:-$REPO/ns-3-dev}"
+cd "$REPO" || exit 1
 
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 export NS3_TIMEOUT=${NS3_TIMEOUT:-3600}
@@ -89,9 +91,9 @@ for s in $SEEDS; do
       for rf in $d/routing_seed*.json; do
         [ -e "$rf" ] || continue
         i=$(basename "$rf" .json); i=${i#routing_seed}
-        st="$HOME/thesis/results/ns3f_${arm}_${short}_s$s/${pref}_$i.json"
+        st="$REPO/results/ns3f_${arm}_${short}_s$s/${pref}_$i.json"
         [ -f "$st" ] && continue
-        echo "cd ~/thesis/ns-3-dev && ./ns3 run --no-build \"scratch/abilene-validate/abilene-validate --topo=$HOME/thesis/topologies/$T.json --routing_file=$HOME/thesis/$rf --routing=gnn --state=$st --simTime=$SIMTIME --rateScale=$RATESCALE\" > /dev/null 2>&1 || echo SIMFAIL ${arm}_${short}_s$s $i" >> $JOBFILE
+        echo "cd $NS3_DIR && ./ns3 run --no-build \"scratch/abilene-validate/abilene-validate --topo=$REPO/topologies/$T.json --routing_file=$REPO/$rf --routing=gnn --state=$st --simTime=$SIMTIME --rateScale=$RATESCALE\" > /dev/null 2>&1 || echo SIMFAIL ${arm}_${short}_s$s $i" >> $JOBFILE
       done
     done
   done
