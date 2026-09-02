@@ -1,4 +1,4 @@
-# Topology-Agnostic Multi-Agent Reinforcement Learning for Intra-Domain Routing
+# Improving Quality of Service in Network Routing with Graph Neural Network-Based Multi-Agent Reinforcement Learning
 
 One routing policy, trained on seventeen backbone topologies, evaluated **zero-shot** on
 three it has never seen — with real measured operator traffic and packet-level simulation
